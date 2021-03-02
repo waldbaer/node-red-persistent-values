@@ -1,0 +1,314 @@
+<script type="text/javascript">
+
+  const kCommandRead = 'read';
+  const kCommandWrite = 'write';
+  const kCommandDefault = kCommandRead;
+  const kCommands = new Map([
+    [kCommandRead, 'read'],
+    [kCommandWrite, 'write'],
+  ]);
+
+  const kBlockIfRuleEq = 'eq';
+  const kBlockIfRuleNeq = 'neq';
+  const kBlockIfRuleDefault = kBlockIfRuleEq;
+  const kBlockIfRules = new Map([
+    [kBlockIfRuleEq, '=='],
+    [kBlockIfRuleNeq, '!='],
+  ]);
+
+  RED.nodes.registerType('persistent value', {
+    category: 'storage',
+    color: '#E9967A',
+    defaults: {
+      name: {value: ''},
+      valuesConfig: {value: '', type: 'persistent values config'},
+      valueSelect: {required: true},
+      value: {required: true},
+      command: {value: kCommandDefault, required: true},
+      msgProperty: {value: 'payload', required: false},
+      collectValues: {value: false, required: false},
+      collectValuesMsgProperty: {value: 'values', required: false},
+      blockIfEnable: {value: false, required: false},
+      blockIfRule: {value: kBlockIfRuleDefault, required: false},
+      blockIfCompareValue: {
+        value: '',
+        required: false,
+        validate: function(values) {
+          return $('#node-input-blockIfEnable').prop('checked') ?
+            $('#node-input-blockIfCompareValue').typedInput('validate') : true;
+        },
+      },
+    },
+    inputs: 1,
+    inputLabels: 'trigger read/write',
+    outputs: 2,
+    outputLabels: ['current value', 'on change'],
+
+    icon: 'font-awesome/fa-database',
+    label: function() {
+      let blockIfLabel = this.blockIfEnable ? `, block ${kBlockIfRules.get(this.blockIfRule)}${this.blockIfCompareValue}` : ``;
+      const blockIfLabelLimit = 20;
+      if (blockIfLabel.length > blockIfLabelLimit) {
+        blockIfLabel = blockIfLabel.substring(0, blockIfLabelLimit) + '...';
+      }
+      return this.name || `Persistent Value - ${this.value} [${this.command}${blockIfLabel}]`;
+    },
+    oneditprepare: function() {
+      // UI properties
+      const valueConfigField = $('#node-input-valuesConfig');
+      const valueSelectField = $('#node-input-valueSelect');
+      const valueField = $('#node-input-value');
+
+      const commandField = $('#node-input-command');
+      const msgPropertyField = $('#node-input-msgProperty');
+      const msgPropertyLabelFieldInput = $('#node-input-msgProperty-label-input');
+      const msgPropertyLabelFieldOutput = $('#node-input-msgProperty-label-output');
+      const collectValuesField = $('#node-input-collectValues');
+      const collectValuesRow = $('#node-input-collectValues-row');
+      const collectValuesMsgPropertyField = $('#node-input-collectValuesMsgProperty');
+
+      const blockIfEnableField = $('#node-input-blockIfEnable');
+      const blockIfRow = $('#node-input-blockIfRule-row');
+      const blockIfRule = $('#node-input-blockIfRule');
+      const blockIfCompareValueField = $('#node-input-blockIfCompareValue');
+
+      // Initialize all possible types of compare value field. Concrete type dynamically switched based on config.
+      blockIfCompareValueField.typedInput({type: 'str', types: ['str', 'num', 'bool']});
+
+      // Store current configured value name before drop-down repopulation
+      const currentSelectedValue = valueField.val();
+      valueConfigField.change(function() {
+        $.getJSON(httpPathConfigGet, {id: $(this).val()})
+          .done(function(config) {
+            const values = config.values;
+
+            // Re-populate select widget
+            valueSelectField.empty();
+            for (const value of values) {
+              const optionText = `${value.name} [${value.datatype}, ${value.storage}]`;
+              valueSelectField.append(`<option value="${value.name}" data-datatype="${value.datatype}">${optionText}</option>`);
+            }
+
+            // Select the previously selected value or set to invalid if the value is not known anymore
+            if (values.find((value) => value.name === currentSelectedValue)) {
+              valueSelectField.val(currentSelectedValue).change();
+            } else {
+              valueSelectField.val([]);
+              valueField.val(null);
+            }
+          });
+      });
+
+      valueSelectField.change(function() {
+        const selected = $(this).find('option:selected');
+
+        if (selected.val() !== undefined) {
+          // Store actual selected value
+          valueField.val(selected.val());
+
+          // Switch datatype of blockIf compare value input field
+          const selectedDatatype = selected.data('datatype');
+          blockIfCompareValueField.typedInput('type', selectedDatatype);
+          blockIfCompareValueField.typedInput('types', [selectedDatatype]);
+        }
+      });
+
+      // command
+      for (const [value, label] of kCommands) {
+        commandField.append(`<option value="${value}">${label}</option>`);
+      }
+      commandField.val(this.command);
+      commandField.change(function() {
+        if (commandField.val() === kCommandRead) {
+          msgPropertyLabelFieldInput.hide();
+          msgPropertyLabelFieldOutput.show();
+        } else {
+          msgPropertyLabelFieldInput.show();
+          msgPropertyLabelFieldOutput.hide();
+        }
+      });
+
+      // msg property
+      msgPropertyField.typedInput({types: [{label: 'msg.', value: 'str'}]});
+
+      // collectValues property
+      collectValuesField.change(function() {
+        this.checked ? collectValuesRow.show() : collectValuesRow.hide();
+      });
+      collectValuesMsgPropertyField.typedInput({types: [{label: 'msg.', value: 'str'}]});
+
+      // block if property
+      blockIfEnableField.change(function() {
+        this.checked ? blockIfRow.show() : blockIfRow.hide();
+      });
+
+      for (const [value, label] of kBlockIfRules) {
+        blockIfRule.append(`<option value="${value}">${label}</option>`);
+      }
+    },
+});
+</script>
+
+<script type="text/html" data-template-name="persistent value">
+  <div class="form-row">
+      <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+      <input type="text" id="node-input-name" placeholder="Name">
+  </div>
+  <div class="form-row">
+    <label for="node-input-valuesConfig"><i class="fa fa-gears"></i> Config</label>
+    <input type="text" id="node-input-valuesConfig" placeholder="">
+  </div>
+  <div class="form-row">
+    <label for="node-input-value"><i class="fa fa-adjust"></i> Value</label>
+    <select id="node-input-valueSelect"></select>
+    <!-- Store the actually selected value in a hidden field. Required due to dynamic drop-down repopulation -->
+    <input type="hidden" id="node-input-value">
+  </div>
+  <div class="form-row">
+    <label for="node-input-command"><i class="fa fa-comment"></i> Command</label>
+    <select id="node-input-command"></select>
+  </div>
+  <div class="form-row">
+    <label id="node-input-msgProperty-label-input" for="node-input-msgProperty"><i class="fa fa-ellipsis-h"></i> Input</label>
+    <label id="node-input-msgProperty-label-output" for="node-input-msgProperty"><i class="fa fa-ellipsis-h"></i> Output</label>
+    <input type="hidden" id="node-input-msgPropertyType">
+    <input type="text" id="node-input-msgProperty" placeholder="payload">
+  </div>
+  <div class="form-row">
+    <input type="checkbox" id="node-input-collectValues" style="display: inline-block; width: auto; vertical-align: top;">
+    <label for="node-input-collectValues" style="width: auto;"> Collect Values</label>
+    <div id="node-input-collectValues-row" class="hide" style="margin-left: 20px; display: block">
+      <label for="node-input-collectValuesMsgProperty" style="width: auto;"> Store to</label>
+      <input type="text" id="node-input-collectValuesMsgProperty" placeholder="values">
+    </div>
+  </div>
+  <div class="form-row">
+    <input type="checkbox" id="node-input-blockIfEnable" style="display:inline-block; width: auto; vertical-align:top;">
+    <label for="node-input-blockIfEnable" style="width: auto;"> Block further flow processing</label>
+    <div id="node-input-blockIfRule-row" class="hide" style="margin-left: 20px; display: block">
+      <select id="node-input-blockIfRule" style="width: 80px; text-align: center;"></select>
+      <input type="text" id="node-input-blockIfCompareValue" placeholder="" style="margin-left: 5px;">
+    </div>
+  </div>
+</script>
+
+<script type="text/html" data-help-name="persistent value">
+  <p>Concrete usage of a single persistent value.</p>
+
+  <h3>Settings</h3>
+    <dl class="message-properties">
+      <dt class="optional">Name</dt>
+      <dd>Overwrite the default node name.</dd>
+
+      <dt>Config</dt>
+      <dd>
+          Central configuration defining all known persistent values.
+          In complex and large NodeRED setups it's recommended to separate it
+          into multiple configuration (e.g. per domain, per building, per device, ...).
+      </dd>
+
+      <dt>Value</dt>
+      <dd>Concrete persistent value to be handled by this node.
+          The drop-down is populated by the related configuration.
+      </dd>
+
+      <dt>Command <span class="property-type">read | write</span></dt>
+      <dd>Handling type of the persistent value.
+        <ul>
+          <li>Read: Read (<code>get</code>) the current value of the persistent value from the context store.</li>
+          <li>Write: Write (<code>set</code>) a new value to the persistent value in the context store.</li>
+        </ul>
+      </dd>
+
+      <dt>Input / Output</dt>
+      <dd>Overwrite the message property used for reading or writing the new persistent value.</dd>
+
+      <dt>Collect Values</dt>
+      <dd>
+          Append the current persistent value as an object attribute of the configurable <code>msg</code> property.
+          Format of the attributes appended to the message property: <code>[config name with underscores]_[persistent value name with underscores]</code>.
+      </dd>
+
+      <dt>Block further flow processing</dt>
+      <dd>
+          Block the flow processing (no output of the node) in case the persistent value matches the configured rule.
+          Example:
+          No output is send if current value of the persistent value is <code>23</code> and the 'block further flow processing'
+          rule is configured to <code>== 23</code>.
+      </dd>
+    </dl>
+
+  <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>payload <span class="property-type">configured datatype</span></dt>
+        <dd>
+            New value to be stored in the persistent value. Only necessary if command 'write' is used.
+            The default property name <code>msg.payload</code> can be re-configured with the setting 'Input'.
+        </dd>
+    </dl>
+
+  <h3>Outputs</h3>
+    <ol class="node-ports">
+      <li>current value
+        <dl class="message-properties">
+            <dt>payload <span class="property-type">configured datatype</span></dt>
+            <dd>Current value read from context store or last value which was written into context store.
+                The default property name <code>msg.payload</code> can be re-configured with config option 'Input/Output'.
+            </dd>
+        </dl>
+      </li>
+      <li>on change value
+        <dl class="message-properties">
+            <dd>
+                The complete <code>msg</code> if the stored persistent value differed from the previous persistent value.
+                Only relevant if command 'write' is used.
+            </dd>
+        </dl>
+      </li>
+    </ol>
+
+  <h3>Details</h3>
+    <p>
+      The idea behind persistent values is the user-friendly abstraction of
+      the NodeRED core <a href="https://nodered.org/docs/user-guide/context">context functionality</a>.
+    </p>
+
+    <p>
+      Instead of using a string name to access the context storage a central configuration node with
+      all known persistent values are used.
+      This node can then be used to read (<code>get</code>) or write (<code>set</code>) the concrete
+      configured persistent value.
+    </p>
+
+    <p>
+      If a persistent value shall be accessed from multiple flow sections just create multiple persistent value nodes
+      and select the same configuration and value.
+      Every read or write operation will then access the same context data with the correct scope and storage type.
+    </p>
+
+    <h4>Collected Values</h4>
+      <p>
+        In case multiple persistent values shall be evaluated or processed in a single node (e.g. custom function), the
+        'Collect Values' option can be used.
+        Build a chain of multiple persistent value nodes with the same 'Collect Values' <code>msg</code> property.
+        At the end of the flow the <code>msg.[configured property]</code> will contain an <code>Object</code>
+        with attributes for every collected persistent value.
+
+        Example:
+<pre><code>{
+  ...
+  "values": {
+    "House_States_LightOn": true,
+    "House_States_OpenWindows": 5,
+    "House_States_NextGarbageCollection": "Monday, 2023-01-09"
+  },
+  ...
+}
+</code></pre>
+    </p>
+
+  <h3>References</h3>
+    <ul>
+      <li>NodeRED doc <a href="https://nodered.org/docs/user-guide/context">Working with context</a></li>
+    </ul>
+</script>

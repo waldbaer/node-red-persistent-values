@@ -1,0 +1,282 @@
+<style>
+  .persistent-values-row-item {
+    margin: 0px 2px 0px 2px;
+  }
+</style>
+
+<script type='text/javascript'>
+  const httpPathConfigGet = 'persistentvalues/config/get';
+  const httpPathConfigSave = 'persistentvalues/config/save';
+  const httpPathConfigDelete = 'persistentvalues/config/delete';
+
+  const kDefaultValueDefault = false;
+
+  const kDataTypeBoolean = 'boolean';
+  const kDataTypeNumber = 'num';
+  const kDataTypeString = 'string';
+  const kDataTypeDefault = kDataTypeBoolean;
+
+  const kScopeFlow = 'flow';
+  const kScopeGlobal = 'global';
+  const kScopeDefault = kScopeGlobal;
+  const kScopes = [
+    {
+      value: kScopeGlobal,
+      label: 'Global',
+    },
+    {
+      value: kScopeFlow,
+      label: 'Flow',
+    },
+  ];
+
+  const kStorageDefault = 'default';
+  const kStorages = [kStorageDefault];
+  for (const store of RED.settings.context.stores) {
+    kStorages.push(store);
+  }
+
+  (function() {
+    function validate(values) {
+      let result = true;
+
+      for (const value of values) {
+        // Datatype & Default value
+        if ((value.datatype === kDataTypeBoolean) && ((typeof value.default) !== kDataTypeBoolean)) {
+          console.error(`Incorrect default value '${value.default}' of type 'boolean' for value ${value.name}`);
+          result = false;
+        }
+        if (value.datatype === kDataTypeNumber && ((typeof value.default) !== kDataTypeNumber)) {
+          const isANumber = !Number.isNaN(value.default);
+          if (!isANumber) {
+            console.error(`Incorrect default value '${value.default}' of type 'number' for value ${value.name}`);
+          }
+          return !Number.isNaN(value.default);
+        }
+        if ((value.datatype === 'str') && ((typeof value.default) !== kDataTypeString)) {
+          console.error(`Incorrect default value '${value.default}' of type 'string' for value ${value.name}`);
+          result = false;
+        }
+
+        // Storage
+        if (!kStorages.includes(value.storage)) {
+          console.error(`Storage '${value.storage}' is not available or configured`);
+          result = false;
+        }
+      }
+      return result;
+    }
+
+    RED.nodes.registerType('persistent values config', {
+      category: 'config',
+      defaults: {
+        name: {value: '', required: true},
+        values: {
+          value: [
+            {
+              name: '',
+              datatype: kDataTypeDefault,
+              default: kDefaultValueDefault,
+              scope: kScopeDefault,
+              storage: kStorageDefault,
+            }],
+          required: true,
+          validate: function(values) {
+            return validate(values);
+          },
+        },
+      },
+      label: function() {
+        return this.name;
+      },
+      oneditprepare: function() {
+        // Build default config name if not configured
+        if (this.name === null || this.name === undefined || this.name === '') {
+          $.getJSON(httpPathConfigGet, {}) // missing id propery: get all available configs
+            .done(function(configs) {
+              $('#node-config-input-name').val(`Persistent Value Config ${Object.keys(configs).length}`);
+            });
+        }
+
+        // Value config container
+        $('#node-config-input-values-container').css('min-width', '450px').editableList({
+          addItem: function(container, index, data) {
+            const value = data;
+
+            container.css({
+              overflow: 'hidden',
+              whiteSpace: 'nowrap',
+            });
+
+            const inputRows = $('<div></div>', {style: 'flex-grow:1;flex:1'}).appendTo(container);
+            const row0 = $('<div></div>', {style: 'display: flex;', class: 'form-row'}).appendTo(inputRows);
+
+            // Name
+            const nameFieldRowItem = $('<div/>',
+              {style: 'display:flex;flex-grow:1;', class: 'persistent-values-row-item'}).appendTo(row0);
+            const nameField = $('<input/>', {class: 'node-input-value-name', type: 'text', width: '180px'})
+              .appendTo(nameFieldRowItem)
+              .typedInput({types: [{label: 'Name', value: 'str'}]});
+
+
+            // Datatype + Default value
+            const datatypeDefaultFieldRowItem = $('<div/>',
+              {style: 'display:flex;flex-grow:1;', class: 'persistent-values-row-item'}).appendTo(row0);
+            const datatypeDefaultField = $('<input/>',
+              {class: 'node-input-value-datatypedefault', type: 'text', width: '150px'})
+              .appendTo(datatypeDefaultFieldRowItem)
+              .typedInput({default: 'bool', types: ['str', 'num', 'bool']});
+
+            // Scope
+            const scopeFieldRowItem = $('<div/>',
+              {style: 'display:flex;flex-grow:1;', class: 'persistent-values-row-item'}).appendTo(row0);
+            const scopeField = $('<input/>',
+              {class: 'node-input-value-scope', type: 'text', width: '130px'})
+              .appendTo(scopeFieldRowItem)
+              .typedInput({
+                types: [{value: 'scope', label: 'Scope', showLabel: true, options: kScopes}],
+              });
+
+            // Storage
+            const storageFieldRowItem = $('<div/>',
+              {style: 'display:flex;flex-grow:1;', class: 'persistent-values-row-item'}).appendTo(row0);
+            const storageField = $('<input/>', {class: 'node-input-value-storage', type: 'text', width: '165px'})
+              .appendTo(storageFieldRowItem)
+              .typedInput({
+                types: [{value: 'storage', label: 'Storage', showLabel: true, options: kStorages}],
+              });
+
+            // -- Populate --
+            nameField.typedInput('value', value.name || ('Value ' + (index + 1)));
+            datatypeDefaultField.typedInput('type', value.datatype || kDataTypeDefault);
+            datatypeDefaultField.typedInput('value', (value.default !== undefined) ? value.default : kDefaultValueDefault );
+            scopeField.typedInput('value', value.scope || kScopeDefault);
+
+            if (!kStorages.includes(value.storage)) {
+              value.storage = null;
+            }
+            storageField.typedInput('value', value.storage || kStorageDefault);
+          },
+          removable: true,
+          sortable: true,
+        });
+
+        if (!this.values) {
+          this.values = [{name: '', datatype: 'boolean', default: false, scope: 'global', storage: 'file'}];
+        }
+
+        for (const value of this.values) {
+          $('#node-config-input-values-container').editableList('addItem', value);
+        }
+      },
+      oneditdelete: function() {
+        $.post(httpPathConfigDelete, {id: this.id}, function() { }, 'json');
+      },
+      oneditsave: function() {
+        this.values = [];
+
+        const values = $('#node-config-input-values-container').editableList('items');
+        for (const value of values) {
+          const name = value.find('.node-input-value-name').typedInput('value');
+          const datatype = value.find('.node-input-value-datatypedefault').typedInput('type');
+
+          let defaultValue = value.find('.node-input-value-datatypedefault').typedInput('value');
+          if (datatype === 'num') {
+            defaultValue = Number(defaultValue);
+          }
+          if (datatype === 'bool') {
+            defaultValue = (defaultValue === 'true');
+          }
+
+          const scope = value.find('.node-input-value-scope').typedInput('value');
+          const storage = value.find('.node-input-value-storage').typedInput('value');
+
+          this.values.push({name: name, datatype: datatype, default: defaultValue, scope: scope, storage: storage});
+        }
+
+        // Store in server backend. Required for live re-population of state select drop-down
+        $.post(httpPathConfigSave, {id: this.id, name: this.name, values: this.values}, function() { }, 'json');
+      },
+      oneditcancel: function() { },
+    });
+})();
+
+</script>
+
+<script type='text/html' data-template-name='persistent values config'>
+  <div class='form-row'>
+    <label for='node-config-input-name'><i class='fa fa-tag'></i> Name</label>
+    <input type='text' id='node-config-input-name'>
+  </div>
+  <div class='form-row node-config-input-values-container-row'>
+    <label for='node-config-input-values-container'><i class='fa fa-gears'></i> Values</label>
+    <ol id='node-config-input-values-container'></ol>
+  </div>
+</div>
+</script>
+
+<script type="text/html" data-help-name="persistent values config">
+  <p>Static configuration of the used persistent values.</p>
+
+  <h3>Single Persistent Value Configuration</h3>
+    For every configured persistent value a
+
+    the following parameters can be configured:
+
+    <dl class="message-properties">
+        <dt>Name <span class="property-type">string</span></dt>
+        <dd> The name of the persistent value. Must be unique within a configuration.</dd>
+
+        <dt>Datatype and Default Value</dt>
+        <dd>The datatype of the persistent value and it's default value. </dd>
+
+        <dt>Scope</dt>
+        <dd>
+            Storage scope, similar to the
+            <a href="https://nodered.org/docs/user-guide/context#context-scopes">NodeRED context scopes</a>:
+            <ul>
+              <li>Global - visible to all nodes</li>
+              <li>Flow - visible to all nodes on the same flow (or tab in the editor)</li>
+            </ul>
+        </dd>
+
+        <dt>Storage</dt>
+        <dd>
+            Storage type, similar to the
+            <a href="https://nodered.org/docs/user-guide/context#context-stores">NodeRED context stores</a>.
+
+            It is recommended to configure memory and filesystem context stores
+            in the NodeRED <code>settings.js</code> as documented in
+            <a href="https://nodered.org/docs/user-guide/context#using-multiple-context-stores">Using multiple context stores</a>.
+            All configured context stores will be available in the drop-down after a NodeRED restart.
+        </dd>
+    </dl>
+
+  <h3>Details</h3>
+    <p>
+      Persistent values are typically states or configuration options which shall survive a restart of NodeRED.
+    </p>
+
+    <p>
+      In a simple and small NodeRED setup all necessary persistent values might be
+      added to a single configuration.
+      But in case of a very complex and large NodeRED setup it is recommended
+      to separate the persistent values into multiple configurations
+      (e.g. one configuration per technical domain, per building, per device, ...).
+    </p>
+
+    <p>
+      For every configured persistent value an context data entry will be written with the first write operation.
+      Naming scheme of the context data entries: <code>[config name with underscores]_[persistent value name with underscores]</code>.
+    </p>
+
+    <p>
+      <strong>Attention:</strong> The NodeRED context data entries are not automatically deleted by deletion of the persistent value configuration entry.
+      Instead the context data entries must be manually deleted via the NodeRED 'Context Data' editor.
+    </p>
+
+  <h3>References</h3>
+    <ul>
+      <li>NodeRED doc <a href="https://nodered.org/docs/user-guide/context">Working with context</a></li>
+    </ul>
+</script>

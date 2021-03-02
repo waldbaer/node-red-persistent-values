@@ -1,0 +1,57 @@
+{
+  "name": "@waldbaer/node-red-persistent-values",
+  "version": "1.0.0",
+  "description": "Persistent values for Node-RED",
+  "author": "waldbaer",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/waldbaer/node-red-persistent-values.git"
+  },
+  "keywords": [
+    "context",
+    "persistence",
+    "persistency",
+    "state",
+    "config"
+  ],
+  "node-red": {
+    "version": ">=1.3.0",
+    "nodes": {
+      "persistent values config": "nodes/persistent-values-config.js",
+      "persistent value": "nodes/persistent-value.js"
+    }
+  },
+  "engines": {
+    "node": ">=8"
+  },
+  "devDependencies": {
+    "eslint": "^8.17.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-html": "^6.2.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-n": "^15.2.3",
+    "eslint-plugin-promise": "^6.0.0"
+  },
+  "eslintConfig": {
+    "env": {
+      "browser": true,
+      "es2021": true
+    },
+    "extends": [
+      "google"
+    ],
+    "parserOptions": {
+      "ecmaVersion": "latest",
+      "sourceType": "module"
+    },
+    "rules": {
+      "require-jsdoc": "off",
+      "max-len": [2, {"code": 140, "tabWidth": 2, "ignoreUrls": true}],
+      "indent": ["error", 2]
+    },
+    "plugins": [
+      "html"
+    ]
+  }
+}
