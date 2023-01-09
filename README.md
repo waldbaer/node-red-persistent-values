@@ -1,4 +1,4 @@
-# Persistent Values
+# Persistent Values for NodeRED
 
 [![MIT License](https://img.shields.io/github/license/waldbaer/node-red-persistent-values?style=flat-square)](https://opensource.org/licenses/MIT)
 [![GitHub issues open](https://img.shields.io/github/issues/waldbaer/node-red-persistent-values?style=flat-square)](https://github.com/waldbaer/node-red-persistent-values/issues)

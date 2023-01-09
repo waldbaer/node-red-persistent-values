@@ -94,7 +94,7 @@
         if (this.name === null || this.name === undefined || this.name === '') {
           $.getJSON(httpPathConfigGet, {}) // missing id propery: get all available configs
             .done(function(configs) {
-              $('#node-config-input-name').val(`Persistent Value Config ${Object.keys(configs).length}`);
+              $('#node-config-input-name').val(`Persistent Values Config ${Object.keys(configs).length}`);
             });
         }
 
