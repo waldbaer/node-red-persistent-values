@@ -1,9 +1,9 @@
 # Persistent Values
 
-[![MIT License](https://img.shields.io/github/license/waldbaer/node-red-persistent-state?style=flat-square)](https://opensource.org/licenses/MIT)
+[![MIT License](https://img.shields.io/github/license/waldbaer/node-red-persistent-values?style=flat-square)](https://opensource.org/licenses/MIT)
+[![GitHub issues open](https://img.shields.io/github/issues/waldbaer/node-red-persistent-values?style=flat-square)](https://github.com/waldbaer/node-red-persistent-values/issues)
 
 A user-friendly abstraction of the NodeRED context stores.
-
 
 The idea behind persistent values is the user-friendly abstraction of the NodeRED core
 [context functionality](https://nodered.org/docs/user-guide/context).
@@ -31,4 +31,4 @@ Changes can be followed [here](/CHANGELOG.md).
 
 # Usage
 ## Examples
-See folder [/examples](/examples) or via NodeRED → Import → Examples.
+See folder [/examples](/examples) or via NodeRED 🠖 Import 🠖 Examples.
