@@ -1,0 +1,2151 @@
+[
+  {
+      "id": "d364064415987fac",
+      "type": "subflow",
+      "name": "Assert: Not triggered",
+      "info": "",
+      "category": "",
+      "in": [
+          {
+              "x": 40,
+              "y": 40,
+              "wires": [
+                  {
+                      "id": "1ba423e59cdf7c89"
+                  }
+              ]
+          }
+      ],
+      "out": [],
+      "env": [],
+      "meta": {},
+      "color": "#DDAA99"
+  },
+  {
+      "id": "1ba423e59cdf7c89",
+      "type": "function",
+      "z": "d364064415987fac",
+      "name": "assert not triggered",
+      "func": "node.error(`Trigger of 'on change' not expected!`);",
+      "outputs": 1,
+      "noerr": 0,
+      "initialize": "",
+      "finalize": "",
+      "libs": [],
+      "x": 170,
+      "y": 40,
+      "wires": [
+          []
+      ]
+  },
+  {
+      "id": "e0d46eaa915ffcba",
+      "type": "tab",
+      "label": "persistent-values - Tests",
+      "disabled": false,
+      "info": "",
+      "env": []
+  },
+  {
+      "id": "637bb8c366c5d8cb",
+      "type": "group",
+      "z": "e0d46eaa915ffcba",
+      "name": "Command 'Read'",
+      "style": {
+          "label": true
+      },
+      "nodes": [
+          "aa502213a8786fa8",
+          "a743dc8e42184640",
+          "602d2234740c4083",
+          "c44a4acff061a078",
+          "0327d3857218199a",
+          "cb3da7ef521de69c",
+          "4ddd7aa0601617b4",
+          "7fdbbbd5f1764a63",
+          "91edf2710eb88666",
+          "c5369de6872b9903",
+          "598f4140ee1ca6d8",
+          "524ad5132a898913"
+      ],
+      "x": 214,
+      "y": 119,
+      "w": 1012,
+      "h": 262
+  },
+  {
+      "id": "3ad358a1fbaf7a89",
+      "type": "group",
+      "z": "e0d46eaa915ffcba",
+      "name": "Option 'Collect Values'",
+      "style": {
+          "label": true
+      },
+      "nodes": [
+          "607bc943d88770b0",
+          "564d520ca6f96238",
+          "4b01ccc1241ecabe",
+          "6e41a297a9cf168d",
+          "7f51d37ea764368f",
+          "e6f2ec578bade396",
+          "c21a545236b56a95",
+          "4e7346d6743b3f67",
+          "b201604b0b355349",
+          "dbf9d79f1b0eb6ba",
+          "4b976d0d3f1eedc9",
+          "5e923847b981f85b",
+          "d9fa83a788b15e31",
+          "9129bbc721cb31e0"
+      ],
+      "x": 214,
+      "y": 899,
+      "w": 1072,
+      "h": 342
+  },
+  {
+      "id": "57a2dd8e543a4f75",
+      "type": "group",
+      "z": "e0d46eaa915ffcba",
+      "name": "Option 'Block further flow processing'",
+      "style": {
+          "label": true
+      },
+      "nodes": [
+          "f9dc9e3af39db459",
+          "d843f22d863b6f98",
+          "07c9bb0cacca6a57",
+          "5bdbace7f4567684",
+          "7757acc1dec2b72e",
+          "2bda33690ff537a2",
+          "feee5b159b485be7",
+          "02dc7441310f03ac",
+          "8e7291499fc5bc20",
+          "009ba0ce8b733aec",
+          "fadde5e310edfd68",
+          "5bfd77bd761a13bf",
+          "621b3bb7927ada1b",
+          "a6b7559f2c8ea9ca",
+          "23998fd8fc8e1b17",
+          "004e2202f7eaf13f",
+          "5cbe389cef8bbbd4",
+          "d2b6b319cdf671e7",
+          "fc874f835cee5c23",
+          "6dca8f71c0c85e0a",
+          "7bb873e89aad48c4",
+          "995f74635da8ecfd",
+          "5dc65e5c054e2ed6",
+          "2dd5a45767f176b0",
+          "757f93e162e74863",
+          "ba6f719b57672e57",
+          "fe776a0ab8a4a4fc",
+          "c6a3aba22b1f57c7",
+          "56bfbd28b2992d86",
+          "43794b6474594c95",
+          "32eda0b9c429f97c",
+          "2c9a6432c9ed5bfc",
+          "93393abd25b7cffc",
+          "dadab75ce6703193",
+          "0c9045dac6fa8597"
+      ],
+      "x": 214,
+      "y": 1299,
+      "w": 1452,
+      "h": 662
+  },
+  {
+      "id": "90a0b1d58cff333a",
+      "type": "group",
+      "z": "e0d46eaa915ffcba",
+      "name": "Command 'Write'",
+      "style": {
+          "label": true
+      },
+      "nodes": [
+          "820af4bb463b9585",
+          "a52411e4f9226a00",
+          "887ac2d17a91f006",
+          "cc232d80a6188c9b",
+          "87cba3af6c2b402e",
+          "6e3c093eed3a7d99",
+          "43de9906ce527c4f",
+          "1631c31e03474f53",
+          "fe59621161764342",
+          "6e78ff546ba924dc",
+          "e6226e81d1d4cd10",
+          "88171329e15c990f",
+          "8eb021050d46c4f0",
+          "8b2dad77f02849ab",
+          "c9db5d907bf24ef2",
+          "df4d7bdde726b446",
+          "e641303033319e5a",
+          "e972b1c3f2060f51",
+          "5cfb29ccf5731ac4",
+          "83a169ad32f21a09"
+      ],
+      "x": 214,
+      "y": 439,
+      "w": 952,
+      "h": 402
+  },
+  {
+      "id": "9129bbc721cb31e0",
+      "type": "junction",
+      "z": "e0d46eaa915ffcba",
+      "g": "3ad358a1fbaf7a89",
+      "x": 360,
+      "y": 980,
+      "wires": [
+          [
+              "4b01ccc1241ecabe"
+          ]
+      ]
+  },
+  {
+      "id": "93393abd25b7cffc",
+      "type": "junction",
+      "z": "e0d46eaa915ffcba",
+      "g": "57a2dd8e543a4f75",
+      "x": 300,
+      "y": 1380,
+      "wires": [
+          [
+              "dadab75ce6703193",
+              "0c9045dac6fa8597"
+          ]
+      ]
+  },
+  {
+      "id": "dadab75ce6703193",
+      "type": "junction",
+      "z": "e0d46eaa915ffcba",
+      "g": "57a2dd8e543a4f75",
+      "x": 380,
+      "y": 1860,
+      "wires": [
+          [
+              "995f74635da8ecfd",
+              "56bfbd28b2992d86",
+              "43794b6474594c95"
+          ]
+      ]
+  },
+  {
+      "id": "0c9045dac6fa8597",
+      "type": "junction",
+      "z": "e0d46eaa915ffcba",
+      "g": "57a2dd8e543a4f75",
+      "x": 380,
+      "y": 1520,
+      "wires": [
+          [
+              "5bdbace7f4567684",
+              "02dc7441310f03ac",
+              "a6b7559f2c8ea9ca"
+          ]
+      ]
+  },
+  {
+      "id": "524ad5132a898913",
+      "type": "junction",
+      "z": "e0d46eaa915ffcba",
+      "g": "637bb8c366c5d8cb",
+      "x": 360,
+      "y": 200,
+      "wires": [
+          [
+              "a743dc8e42184640",
+              "4ddd7aa0601617b4"
+          ]
+      ]
+  },
+  {
+      "id": "2e69aa943c33e635",
+      "type": "junction",
+      "z": "e0d46eaa915ffcba",
+      "x": 140,
+      "y": 840,
+      "wires": [
+          [
+              "524ad5132a898913",
+              "93393abd25b7cffc",
+              "9129bbc721cb31e0"
+          ]
+      ]
+  },
+  {
+      "id": "83a169ad32f21a09",
+      "type": "junction",
+      "z": "e0d46eaa915ffcba",
+      "g": "90a0b1d58cff333a",
+      "x": 360,
+      "y": 520,
+      "wires": [
+          [
+              "887ac2d17a91f006",
+              "6e3c093eed3a7d99",
+              "c9db5d907bf24ef2"
+          ]
+      ]
+  },
+  {
+      "id": "05f2fbf1c23933a2",
+      "type": "inject",
+      "z": "e0d46eaa915ffcba",
+      "name": "test all",
+      "props": [
+          {
+              "p": "payload"
+          },
+          {
+              "p": "topic",
+              "vt": "str"
+          }
+      ],
+      "repeat": "",
+      "crontab": "",
+      "once": false,
+      "onceDelay": 0.1,
+      "topic": "",
+      "payload": "",
+      "payloadType": "date",
+      "x": 110,
+      "y": 40,
+      "wires": [
+          [
+              "2e69aa943c33e635"
+          ]
+      ]
+  },
+  {
+      "id": "607bc943d88770b0",
+      "type": "inject",
+      "z": "e0d46eaa915ffcba",
+      "g": "3ad358a1fbaf7a89",
+      "name": "test collectValues",
+      "props": [
+          {
+              "p": "payload"
+          },
+          {
+              "p": "topic",
+              "vt": "str"
+          }
+      ],
+      "repeat": "",
+      "crontab": "",
+      "once": false,
+      "onceDelay": 0.1,
+      "topic": "",
+      "payload": "",
+      "payloadType": "date",
+      "x": 340,
+      "y": 940,
+      "wires": [
+          [
+              "9129bbc721cb31e0"
+          ]
+      ]
+  },
+  {
+      "id": "564d520ca6f96238",
+      "type": "persistent value",
+      "z": "e0d46eaa915ffcba",
+      "g": "3ad358a1fbaf7a89",
+      "name": "",
+      "valuesConfig": "4b0803dadcdbb5b0",
+      "valueSelect": "booleanMemory",
+      "value": "booleanMemory",
+      "command": "write",
+      "msgProperty": "input",
+      "collectValues": true,
+      "collectValuesMsgProperty": "states1",
+      "x": 880,
+      "y": 980,
+      "wires": [
+          [
+              "6e41a297a9cf168d"
+          ],
+          []
+      ]
+  },
+  {
+      "id": "4b01ccc1241ecabe",
+      "type": "change",
+      "z": "e0d46eaa915ffcba",
+      "g": "3ad358a1fbaf7a89",
+      "name": "true",
+      "rules": [
+          {
+              "t": "set",
+              "p": "input",
+              "pt": "msg",
+              "to": "true",
+              "tot": "bool"
+          }
+      ],
+      "action": "",
+      "property": "",
+      "from": "",
+      "to": "",
+      "reg": false,
+      "x": 530,
+      "y": 980,
+      "wires": [
+          [
+              "564d520ca6f96238"
+          ]
+      ]
+  },
+  {
+      "id": "6e41a297a9cf168d",
+      "type": "change",
+      "z": "e0d46eaa915ffcba",
+      "g": "3ad358a1fbaf7a89",
+      "name": "input=400",
+      "rules": [
+          {
+              "t": "set",
+              "p": "input",
+              "pt": "msg",
+              "to": "400",
+              "tot": "num"
+          }
+      ],
+      "action": "",
+      "property": "",
+      "from": "",
+      "to": "",
+      "reg": false,
+      "x": 540,
+      "y": 1020,
+      "wires": [
+          [
+              "7f51d37ea764368f"
+          ]
+      ]
+  },
+  {
+      "id": "7f51d37ea764368f",
+      "type": "persistent value",
+      "z": "e0d46eaa915ffcba",
+      "g": "3ad358a1fbaf7a89",
+      "name": "",
+      "valuesConfig": "4b0803dadcdbb5b0",
+      "valueSelect": "numberMemory",
+      "value": "numberMemory",
+      "command": "write",
+      "msgProperty": "input",
+      "collectValues": true,
+      "collectValuesMsgProperty": "states1",
+      "x": 880,
+      "y": 1020,
+      "wires": [
+          [
+              "e6f2ec578bade396"
+          ],
+          []
+      ]
+  },
+  {
+      "id": "e6f2ec578bade396",
+      "type": "change",
+      "z": "e0d46eaa915ffcba",
+      "g": "3ad358a1fbaf7a89",
+      "name": "input=testCollectValues",
+      "rules": [
+          {
+              "t": "set",
+              "p": "input",
+              "pt": "msg",
+              "to": "testCollectValues",
+              "tot": "str"
+          }
+      ],
+      "action": "",
+      "property": "",
+      "from": "",
+      "to": "",
+      "reg": false,
+      "x": 590,
+      "y": 1060,
+      "wires": [
+          [
+              "c21a545236b56a95"
+          ]
+      ]
+  },
+  {
+      "id": "c21a545236b56a95",
+      "type": "persistent value",
+      "z": "e0d46eaa915ffcba",
+      "g": "3ad358a1fbaf7a89",
+      "name": "",
+      "valuesConfig": "4b0803dadcdbb5b0",
+      "valueSelect": "stringMemory",
+      "value": "stringMemory",
+      "command": "write",
+      "msgProperty": "input",
+      "collectValues": true,
+      "collectValuesMsgProperty": "states2",
+      "x": 880,
+      "y": 1060,
+      "wires": [
+          [
+              "4e7346d6743b3f67"
+          ],
+          []
+      ]
+  },
+  {
+      "id": "4e7346d6743b3f67",
+      "type": "function",
+      "z": "e0d46eaa915ffcba",
+      "g": "3ad358a1fbaf7a89",
+      "name": "assert collected values",
+      "func": "if(msg.states1.TestValueWrite_booleanMemory != true) {\n    node.error(`Mismatch TestValueWrite_booleanMemory!`);\n}\nif (msg.states1.TestValueWrite_numberMemory != 400) {\n    node.error(`Mismatch TestValueWrite_numberMemory!`);\n}\nif (msg.states2.TestValueWrite_stringMemory != 'testCollectValues') {\n    node.error(`Mismatch TestValueWrite_stringMemory!`);\n}\n\nreturn msg;",
+      "outputs": 1,
+      "noerr": 0,
+      "initialize": "",
+      "finalize": "",
+      "libs": [],
+      "x": 1160,
+      "y": 1060,
+      "wires": [
+          [
+              "5e923847b981f85b"
+          ]
+      ]
+  },
+  {
+      "id": "b201604b0b355349",
+      "type": "persistent value",
+      "z": "e0d46eaa915ffcba",
+      "g": "3ad358a1fbaf7a89",
+      "name": "",
+      "valuesConfig": "4b0803dadcdbb5b0",
+      "valueSelect": "booleanMemory",
+      "value": "booleanMemory",
+      "command": "read",
+      "msgProperty": "input",
+      "collectValues": true,
+      "collectValuesMsgProperty": "states1",
+      "x": 880,
+      "y": 1120,
+      "wires": [
+          [
+              "dbf9d79f1b0eb6ba"
+          ],
+          []
+      ]
+  },
+  {
+      "id": "dbf9d79f1b0eb6ba",
+      "type": "persistent value",
+      "z": "e0d46eaa915ffcba",
+      "g": "3ad358a1fbaf7a89",
+      "name": "",
+      "valuesConfig": "4b0803dadcdbb5b0",
+      "valueSelect": "numberMemory",
+      "value": "numberMemory",
+      "command": "read",
+      "msgProperty": "input",
+      "collectValues": true,
+      "collectValuesMsgProperty": "states1",
+      "x": 880,
+      "y": 1160,
+      "wires": [
+          [
+              "4b976d0d3f1eedc9"
+          ],
+          []
+      ]
+  },
+  {
+      "id": "4b976d0d3f1eedc9",
+      "type": "persistent value",
+      "z": "e0d46eaa915ffcba",
+      "g": "3ad358a1fbaf7a89",
+      "name": "",
+      "valuesConfig": "4b0803dadcdbb5b0",
+      "valueSelect": "stringMemory",
+      "value": "stringMemory",
+      "command": "read",
+      "msgProperty": "input",
+      "collectValues": true,
+      "collectValuesMsgProperty": "states2",
+      "x": 880,
+      "y": 1200,
+      "wires": [
+          [
+              "d9fa83a788b15e31"
+          ],
+          []
+      ]
+  },
+  {
+      "id": "5e923847b981f85b",
+      "type": "function",
+      "z": "e0d46eaa915ffcba",
+      "g": "3ad358a1fbaf7a89",
+      "name": "clear msg",
+      "func": "return { payload: null, topic: null };",
+      "outputs": 1,
+      "noerr": 0,
+      "initialize": "",
+      "finalize": "",
+      "libs": [],
+      "x": 540,
+      "y": 1120,
+      "wires": [
+          [
+              "b201604b0b355349"
+          ]
+      ]
+  },
+  {
+      "id": "d9fa83a788b15e31",
+      "type": "function",
+      "z": "e0d46eaa915ffcba",
+      "g": "3ad358a1fbaf7a89",
+      "name": "assert collected values",
+      "func": "if(msg.states1.TestValueWrite_booleanMemory != true) {\n    node.error(`Mismatch TestValueWrite_booleanMemory!`);\n}\nif (msg.states1.TestValueWrite_numberMemory != 400) {\n    node.error(`Mismatch TestValueWrite_numberMemory!`);\n}\nif (msg.states2.TestValueWrite_stringMemory != 'testCollectValues') {\n    node.error(`Mismatch TestValueWrite_stringMemory!`);\n}\n\nreturn msg;",
+      "outputs": 1,
+      "noerr": 0,
+      "initialize": "",
+      "finalize": "",
+      "libs": [],
+      "x": 1160,
+      "y": 1200,
+      "wires": [
+          []
+      ]
+  },
+  {
+      "id": "f9dc9e3af39db459",
+      "type": "inject",
+      "z": "e0d46eaa915ffcba",
+      "g": "57a2dd8e543a4f75",
+      "name": "test BlockIf",
+      "props": [
+          {
+              "p": "payload"
+          },
+          {
+              "p": "topic",
+              "vt": "str"
+          }
+      ],
+      "repeat": "",
+      "crontab": "",
+      "once": false,
+      "onceDelay": 0.1,
+      "topic": "",
+      "payload": "",
+      "payloadType": "date",
+      "x": 320,
+      "y": 1340,
+      "wires": [
+          [
+              "93393abd25b7cffc"
+          ]
+      ]
+  },
+  {
+      "id": "d843f22d863b6f98",
+      "type": "persistent value",
+      "z": "e0d46eaa915ffcba",
+      "g": "57a2dd8e543a4f75",
+      "name": "",
+      "valuesConfig": "ca21619490edc467",
+      "valueSelect": "numberMemory",
+      "value": "numberMemory",
+      "command": "write",
+      "msgProperty": "",
+      "collectValues": false,
+      "collectValuesMsgProperty": "states1",
+      "blockIfEnable": false,
+      "blockIfRule": "eq",
+      "blockIfCompareValue": "15",
+      "x": 800,
+      "y": 1380,
+      "wires": [
+          [
+              "7757acc1dec2b72e",
+              "2bda33690ff537a2",
+              "6dca8f71c0c85e0a"
+          ],
+          []
+      ]
+  },
+  {
+      "id": "07c9bb0cacca6a57",
+      "type": "function",
+      "z": "e0d46eaa915ffcba",
+      "g": "57a2dd8e543a4f75",
+      "name": "assert(is blocked)",
+      "func": "node.error(`block-if did not block`);\n",
+      "outputs": 1,
+      "noerr": 0,
+      "initialize": "",
+      "finalize": "",
+      "libs": [],
+      "x": 1550,
+      "y": 1380,
+      "wires": [
+          []
+      ]
+  },
+  {
+      "id": "5bdbace7f4567684",
+      "type": "change",
+      "z": "e0d46eaa915ffcba",
+      "g": "57a2dd8e543a4f75",
+      "name": "payload=15",
+      "rules": [
+          {
+              "t": "set",
+              "p": "payload",
+              "pt": "msg",
+              "to": "15",
+              "tot": "num"
+          }
+      ],
+      "action": "",
+      "property": "",
+      "from": "",
+      "to": "",
+      "reg": false,
+      "x": 490,
+      "y": 1380,
+      "wires": [
+          [
+              "d843f22d863b6f98"
+          ]
+      ]
+  },
+  {
+      "id": "7757acc1dec2b72e",
+      "type": "persistent value",
+      "z": "e0d46eaa915ffcba",
+      "g": "57a2dd8e543a4f75",
+      "name": "",
+      "valuesConfig": "ca21619490edc467",
+      "valueSelect": "numberMemory",
+      "value": "numberMemory",
+      "command": "read",
+      "msgProperty": "",
+      "collectValues": false,
+      "collectValuesMsgProperty": "states1",
+      "blockIfEnable": true,
+      "blockIfRule": "eq",
+      "blockIfCompareValue": "15",
+      "x": 1200,
+      "y": 1380,
+      "wires": [
+          [
+              "07c9bb0cacca6a57"
+          ],
+          []
+      ]
+  },
+  {
+      "id": "2bda33690ff537a2",
+      "type": "persistent value",
+      "z": "e0d46eaa915ffcba",
+      "g": "57a2dd8e543a4f75",
+      "name": "",
+      "valuesConfig": "ca21619490edc467",
+      "valueSelect": "numberMemory",
+      "value": "numberMemory",
+      "command": "read",
+      "msgProperty": "",
+      "collectValues": false,
+      "collectValuesMsgProperty": "states1",
+      "blockIfEnable": true,
+      "blockIfRule": "eq",
+      "blockIfCompareValue": "15",
+      "x": 1200,
+      "y": 1460,
+      "wires": [
+          [
+              "feee5b159b485be7"
+          ],
+          []
+      ]
+  },
+  {
+      "id": "feee5b159b485be7",
+      "type": "function",
+      "z": "e0d46eaa915ffcba",
+      "g": "57a2dd8e543a4f75",
+      "name": "assert(passed)",
+      "func": "const expected_payload = 15;\nif(msg.payload != expected_payload) {\n    node.error(`Received value (${msg.payload}) does not match with expected payload (${expected_payload})`);\n} else {\n    node.status({ fill: \"green\", shape: \"ring\", text: msg.payload });\n}",
+      "outputs": 1,
+      "noerr": 0,
+      "initialize": "",
+      "finalize": "",
+      "libs": [],
+      "x": 1540,
+      "y": 1460,
+      "wires": [
+          []
+      ]
+  },
+  {
+      "id": "02dc7441310f03ac",
+      "type": "change",
+      "z": "e0d46eaa915ffcba",
+      "g": "57a2dd8e543a4f75",
+      "name": "payload=true",
+      "rules": [
+          {
+              "t": "set",
+              "p": "payload",
+              "pt": "msg",
+              "to": "true",
+              "tot": "bool"
+          }
+      ],
+      "action": "",
+      "property": "",
+      "from": "",
+      "to": "",
+      "reg": false,
+      "x": 490,
+      "y": 1520,
+      "wires": [
+          [
+              "8e7291499fc5bc20"
+          ]
+      ]
+  },
+  {
+      "id": "8e7291499fc5bc20",
+      "type": "persistent value",
+      "z": "e0d46eaa915ffcba",
+      "g": "57a2dd8e543a4f75",
+      "name": "",
+      "valuesConfig": "ca21619490edc467",
+      "valueSelect": "booleanFile",
+      "value": "booleanFile",
+      "command": "write",
+      "msgProperty": "",
+      "collectValues": false,
+      "collectValuesMsgProperty": "states1",
+      "blockIfEnable": false,
+      "blockIfRule": "eq",
+      "blockIfCompareValue": "true",
+      "x": 790,
+      "y": 1520,
+      "wires": [
+          [
+              "009ba0ce8b733aec",
+              "5bfd77bd761a13bf"
+          ],
+          []
+      ]
+  },
+  {
+      "id": "009ba0ce8b733aec",
+      "type": "persistent value",
+      "z": "e0d46eaa915ffcba",
+      "g": "57a2dd8e543a4f75",
+      "name": "",
+      "valuesConfig": "ca21619490edc467",
+      "valueSelect": "booleanFile",
+      "value": "booleanFile",
+      "command": "read",
+      "msgProperty": "",
+      "collectValues": false,
+      "collectValuesMsgProperty": "states1",
+      "blockIfEnable": true,
+      "blockIfRule": "eq",
+      "blockIfCompareValue": "true",
+      "x": 1190,
+      "y": 1520,
+      "wires": [
+          [
+              "fadde5e310edfd68"
+          ],
+          []
+      ]
+  },
+  {
+      "id": "fadde5e310edfd68",
+      "type": "function",
+      "z": "e0d46eaa915ffcba",
+      "g": "57a2dd8e543a4f75",
+      "name": "assert(is blocked)",
+      "func": "node.error(`block-if did not block`);\n",
+      "outputs": 1,
+      "noerr": 0,
+      "initialize": "",
+      "finalize": "",
+      "libs": [],
+      "x": 1550,
+      "y": 1520,
+      "wires": [
+          []
+      ]
+  },
+  {
+      "id": "5bfd77bd761a13bf",
+      "type": "persistent value",
+      "z": "e0d46eaa915ffcba",
+      "g": "57a2dd8e543a4f75",
+      "name": "",
+      "valuesConfig": "ca21619490edc467",
+      "valueSelect": "booleanFile",
+      "value": "booleanFile",
+      "command": "read",
+      "msgProperty": "",
+      "collectValues": false,
+      "collectValuesMsgProperty": "states1",
+      "blockIfEnable": true,
+      "blockIfRule": "eq",
+      "blockIfCompareValue": "true",
+      "x": 1190,
+      "y": 1580,
+      "wires": [
+          [
+              "621b3bb7927ada1b"
+          ],
+          []
+      ]
+  },
+  {
+      "id": "621b3bb7927ada1b",
+      "type": "function",
+      "z": "e0d46eaa915ffcba",
+      "g": "57a2dd8e543a4f75",
+      "name": "assert(passed)",
+      "func": "const expected_payload = true;\nif(msg.payload != expected_payload) {\n    node.error(`Received value (${msg.payload}) does not match with expected payload (${expected_payload})`);\n} else {\n    node.status({ fill: \"green\", shape: \"ring\", text: msg.payload });\n}",
+      "outputs": 1,
+      "noerr": 0,
+      "initialize": "",
+      "finalize": "",
+      "libs": [],
+      "x": 1540,
+      "y": 1580,
+      "wires": [
+          []
+      ]
+  },
+  {
+      "id": "a6b7559f2c8ea9ca",
+      "type": "change",
+      "z": "e0d46eaa915ffcba",
+      "g": "57a2dd8e543a4f75",
+      "name": "payload=BlockIfTest",
+      "rules": [
+          {
+              "t": "set",
+              "p": "payload",
+              "pt": "msg",
+              "to": "BlockIfTest",
+              "tot": "str"
+          }
+      ],
+      "action": "",
+      "property": "",
+      "from": "",
+      "to": "",
+      "reg": false,
+      "x": 520,
+      "y": 1640,
+      "wires": [
+          [
+              "23998fd8fc8e1b17"
+          ]
+      ]
+  },
+  {
+      "id": "23998fd8fc8e1b17",
+      "type": "persistent value",
+      "z": "e0d46eaa915ffcba",
+      "g": "57a2dd8e543a4f75",
+      "name": "",
+      "valuesConfig": "ca21619490edc467",
+      "valueSelect": "stringMemory",
+      "value": "stringMemory",
+      "command": "write",
+      "msgProperty": "",
+      "collectValues": false,
+      "collectValuesMsgProperty": "states1",
+      "blockIfEnable": false,
+      "blockIfRule": "eq",
+      "blockIfCompareValue": "true",
+      "x": 800,
+      "y": 1640,
+      "wires": [
+          [
+              "004e2202f7eaf13f",
+              "d2b6b319cdf671e7"
+          ],
+          []
+      ]
+  },
+  {
+      "id": "004e2202f7eaf13f",
+      "type": "persistent value",
+      "z": "e0d46eaa915ffcba",
+      "g": "57a2dd8e543a4f75",
+      "name": "",
+      "valuesConfig": "ca21619490edc467",
+      "valueSelect": "stringMemory",
+      "value": "stringMemory",
+      "command": "read",
+      "msgProperty": "",
+      "collectValues": false,
+      "collectValuesMsgProperty": "states1",
+      "blockIfEnable": true,
+      "blockIfRule": "eq",
+      "blockIfCompareValue": "BlockIfTest",
+      "x": 1220,
+      "y": 1640,
+      "wires": [
+          [
+              "5cbe389cef8bbbd4"
+          ],
+          []
+      ]
+  },
+  {
+      "id": "5cbe389cef8bbbd4",
+      "type": "function",
+      "z": "e0d46eaa915ffcba",
+      "g": "57a2dd8e543a4f75",
+      "name": "assert(is blocked)",
+      "func": "node.error(`block-if did not block`);\n",
+      "outputs": 1,
+      "noerr": 0,
+      "initialize": "",
+      "finalize": "",
+      "libs": [],
+      "x": 1550,
+      "y": 1640,
+      "wires": [
+          []
+      ]
+  },
+  {
+      "id": "d2b6b319cdf671e7",
+      "type": "persistent value",
+      "z": "e0d46eaa915ffcba",
+      "g": "57a2dd8e543a4f75",
+      "name": "",
+      "valuesConfig": "ca21619490edc467",
+      "valueSelect": "stringMemory",
+      "value": "stringMemory",
+      "command": "read",
+      "msgProperty": "",
+      "collectValues": false,
+      "collectValuesMsgProperty": "states1",
+      "blockIfEnable": true,
+      "blockIfRule": "eq",
+      "blockIfCompareValue": "BlockIfTest",
+      "x": 1220,
+      "y": 1700,
+      "wires": [
+          [
+              "fc874f835cee5c23"
+          ],
+          []
+      ]
+  },
+  {
+      "id": "fc874f835cee5c23",
+      "type": "function",
+      "z": "e0d46eaa915ffcba",
+      "g": "57a2dd8e543a4f75",
+      "name": "assert(passed)",
+      "func": "const expected_payload = 'BlockIfTest';\nif(msg.payload != expected_payload) {\n    node.error(`Received value (${msg.payload}) does not match with expected payload (${expected_payload})`);\n} else {\n    node.status({ fill: \"green\", shape: \"ring\", text: msg.payload });\n}\n",
+      "outputs": 1,
+      "noerr": 0,
+      "initialize": "",
+      "finalize": "",
+      "libs": [],
+      "x": 1540,
+      "y": 1700,
+      "wires": [
+          []
+      ]
+  },
+  {
+      "id": "6dca8f71c0c85e0a",
+      "type": "persistent value",
+      "z": "e0d46eaa915ffcba",
+      "g": "57a2dd8e543a4f75",
+      "name": "",
+      "valuesConfig": "ca21619490edc467",
+      "valueSelect": "numberMemory",
+      "value": "numberMemory",
+      "command": "read",
+      "msgProperty": "",
+      "collectValues": false,
+      "collectValuesMsgProperty": "states1",
+      "blockIfEnable": true,
+      "blockIfRule": "eq",
+      "blockIfCompareValue": "14",
+      "x": 1200,
+      "y": 1420,
+      "wires": [
+          [
+              "7bb873e89aad48c4"
+          ],
+          []
+      ]
+  },
+  {
+      "id": "7bb873e89aad48c4",
+      "type": "function",
+      "z": "e0d46eaa915ffcba",
+      "g": "57a2dd8e543a4f75",
+      "name": "assert(passed)",
+      "func": "const expected_payload = 15;\nif(msg.payload != expected_payload) {\n    node.error(`Received value (${msg.payload}) does not match with expected payload (${expected_payload})`);\n} else {\n    node.status({ fill: \"green\", shape: \"ring\", text: msg.payload });\n}",
+      "outputs": 1,
+      "noerr": 0,
+      "initialize": "",
+      "finalize": "",
+      "libs": [],
+      "x": 1540,
+      "y": 1420,
+      "wires": [
+          []
+      ]
+  },
+  {
+      "id": "995f74635da8ecfd",
+      "type": "change",
+      "z": "e0d46eaa915ffcba",
+      "g": "57a2dd8e543a4f75",
+      "name": "payload=15",
+      "rules": [
+          {
+              "t": "set",
+              "p": "payload",
+              "pt": "msg",
+              "to": "15",
+              "tot": "num"
+          }
+      ],
+      "action": "",
+      "property": "",
+      "from": "",
+      "to": "",
+      "reg": false,
+      "x": 490,
+      "y": 1800,
+      "wires": [
+          [
+              "5dc65e5c054e2ed6"
+          ]
+      ]
+  },
+  {
+      "id": "5dc65e5c054e2ed6",
+      "type": "persistent value",
+      "z": "e0d46eaa915ffcba",
+      "g": "57a2dd8e543a4f75",
+      "name": "",
+      "valuesConfig": "ca21619490edc467",
+      "valueSelect": "numberFile",
+      "value": "numberFile",
+      "command": "write",
+      "msgProperty": "",
+      "collectValues": false,
+      "collectValuesMsgProperty": "states1",
+      "blockIfEnable": true,
+      "blockIfRule": "eq",
+      "blockIfCompareValue": "15",
+      "x": 820,
+      "y": 1800,
+      "wires": [
+          [
+              "2dd5a45767f176b0"
+          ],
+          []
+      ]
+  },
+  {
+      "id": "2dd5a45767f176b0",
+      "type": "function",
+      "z": "e0d46eaa915ffcba",
+      "g": "57a2dd8e543a4f75",
+      "name": "assert(is blocked)",
+      "func": "node.error(`block-if did not block`);\n",
+      "outputs": 1,
+      "noerr": 0,
+      "initialize": "",
+      "finalize": "",
+      "libs": [],
+      "x": 1550,
+      "y": 1800,
+      "wires": [
+          []
+      ]
+  },
+  {
+      "id": "757f93e162e74863",
+      "type": "persistent value",
+      "z": "e0d46eaa915ffcba",
+      "g": "57a2dd8e543a4f75",
+      "name": "",
+      "valuesConfig": "ca21619490edc467",
+      "valueSelect": "booleanMemory",
+      "value": "booleanMemory",
+      "command": "write",
+      "msgProperty": "",
+      "collectValues": false,
+      "collectValuesMsgProperty": "states1",
+      "blockIfEnable": true,
+      "blockIfRule": "eq",
+      "blockIfCompareValue": "false",
+      "x": 850,
+      "y": 1860,
+      "wires": [
+          [
+              "32eda0b9c429f97c"
+          ],
+          []
+      ]
+  },
+  {
+      "id": "ba6f719b57672e57",
+      "type": "persistent value",
+      "z": "e0d46eaa915ffcba",
+      "g": "57a2dd8e543a4f75",
+      "name": "",
+      "valuesConfig": "ca21619490edc467",
+      "valueSelect": "stringFile",
+      "value": "stringFile",
+      "command": "write",
+      "msgProperty": "",
+      "collectValues": false,
+      "collectValuesMsgProperty": "states1",
+      "blockIfEnable": true,
+      "blockIfRule": "eq",
+      "blockIfCompareValue": "block me",
+      "x": 840,
+      "y": 1920,
+      "wires": [
+          [
+              "2c9a6432c9ed5bfc"
+          ],
+          []
+      ]
+  },
+  {
+      "id": "fe776a0ab8a4a4fc",
+      "type": "comment",
+      "z": "e0d46eaa915ffcba",
+      "g": "57a2dd8e543a4f75",
+      "name": "read",
+      "info": "",
+      "x": 470,
+      "y": 1340,
+      "wires": []
+  },
+  {
+      "id": "c6a3aba22b1f57c7",
+      "type": "comment",
+      "z": "e0d46eaa915ffcba",
+      "g": "57a2dd8e543a4f75",
+      "name": "write",
+      "info": "",
+      "x": 470,
+      "y": 1760,
+      "wires": []
+  },
+  {
+      "id": "56bfbd28b2992d86",
+      "type": "change",
+      "z": "e0d46eaa915ffcba",
+      "g": "57a2dd8e543a4f75",
+      "name": "payload=false",
+      "rules": [
+          {
+              "t": "set",
+              "p": "payload",
+              "pt": "msg",
+              "to": "false",
+              "tot": "bool"
+          }
+      ],
+      "action": "",
+      "property": "",
+      "from": "",
+      "to": "",
+      "reg": false,
+      "x": 500,
+      "y": 1860,
+      "wires": [
+          [
+              "757f93e162e74863"
+          ]
+      ]
+  },
+  {
+      "id": "43794b6474594c95",
+      "type": "change",
+      "z": "e0d46eaa915ffcba",
+      "g": "57a2dd8e543a4f75",
+      "name": "payload=block me",
+      "rules": [
+          {
+              "t": "set",
+              "p": "payload",
+              "pt": "msg",
+              "to": "block me",
+              "tot": "str"
+          }
+      ],
+      "action": "",
+      "property": "",
+      "from": "",
+      "to": "",
+      "reg": false,
+      "x": 510,
+      "y": 1920,
+      "wires": [
+          [
+              "ba6f719b57672e57"
+          ]
+      ]
+  },
+  {
+      "id": "32eda0b9c429f97c",
+      "type": "function",
+      "z": "e0d46eaa915ffcba",
+      "g": "57a2dd8e543a4f75",
+      "name": "assert(is blocked)",
+      "func": "node.error(`block-if did not block`);\n",
+      "outputs": 1,
+      "noerr": 0,
+      "initialize": "",
+      "finalize": "",
+      "libs": [],
+      "x": 1550,
+      "y": 1860,
+      "wires": [
+          []
+      ]
+  },
+  {
+      "id": "2c9a6432c9ed5bfc",
+      "type": "function",
+      "z": "e0d46eaa915ffcba",
+      "g": "57a2dd8e543a4f75",
+      "name": "assert(is blocked)",
+      "func": "node.error(`block-if did not block`);\n",
+      "outputs": 1,
+      "noerr": 0,
+      "initialize": "",
+      "finalize": "",
+      "libs": [],
+      "x": 1550,
+      "y": 1920,
+      "wires": [
+          []
+      ]
+  },
+  {
+      "id": "aa502213a8786fa8",
+      "type": "persistent value",
+      "z": "e0d46eaa915ffcba",
+      "g": "637bb8c366c5d8cb",
+      "name": "",
+      "valuesConfig": "267663fd4c41bebe",
+      "valueSelect": "boolean_default_true",
+      "value": "boolean_default_true",
+      "command": "read",
+      "msgProperty": "payload",
+      "collectValues": true,
+      "x": 780,
+      "y": 200,
+      "wires": [
+          [
+              "602d2234740c4083"
+          ],
+          [
+              "c44a4acff061a078"
+          ]
+      ]
+  },
+  {
+      "id": "a743dc8e42184640",
+      "type": "change",
+      "z": "e0d46eaa915ffcba",
+      "g": "637bb8c366c5d8cb",
+      "name": "read default",
+      "rules": [
+          {
+              "t": "set",
+              "p": "payload",
+              "pt": "msg",
+              "to": "",
+              "tot": "num"
+          }
+      ],
+      "action": "",
+      "property": "",
+      "from": "",
+      "to": "",
+      "reg": false,
+      "x": 510,
+      "y": 200,
+      "wires": [
+          [
+              "aa502213a8786fa8"
+          ]
+      ]
+  },
+  {
+      "id": "602d2234740c4083",
+      "type": "function",
+      "z": "e0d46eaa915ffcba",
+      "g": "637bb8c366c5d8cb",
+      "name": "assert default value",
+      "func": "const expectedDefault = true;\nif(msg.payload !== expectedDefault) {\n    node.error(`Does not contain expected default value '${expectedDefault}'`);\n}",
+      "outputs": 1,
+      "noerr": 0,
+      "initialize": "",
+      "finalize": "",
+      "libs": [],
+      "x": 1090,
+      "y": 180,
+      "wires": [
+          []
+      ]
+  },
+  {
+      "id": "c44a4acff061a078",
+      "type": "subflow:d364064415987fac",
+      "z": "e0d46eaa915ffcba",
+      "g": "637bb8c366c5d8cb",
+      "name": "",
+      "x": 1100,
+      "y": 220,
+      "wires": []
+  },
+  {
+      "id": "0327d3857218199a",
+      "type": "persistent value",
+      "z": "e0d46eaa915ffcba",
+      "g": "637bb8c366c5d8cb",
+      "name": "",
+      "valuesConfig": "267663fd4c41bebe",
+      "valueSelect": "boolean",
+      "value": "boolean",
+      "command": "read",
+      "msgProperty": "output",
+      "x": 760,
+      "y": 320,
+      "wires": [
+          [
+              "c5369de6872b9903"
+          ],
+          [
+              "91edf2710eb88666"
+          ]
+      ]
+  },
+  {
+      "id": "cb3da7ef521de69c",
+      "type": "persistent value",
+      "z": "e0d46eaa915ffcba",
+      "g": "637bb8c366c5d8cb",
+      "name": "",
+      "valuesConfig": "267663fd4c41bebe",
+      "valueSelect": "boolean",
+      "value": "boolean",
+      "command": "write",
+      "msgProperty": "payload",
+      "collectValues": false,
+      "collectValuesMsgProperty": "",
+      "x": 740,
+      "y": 280,
+      "wires": [
+          [
+              "7fdbbbd5f1764a63"
+          ],
+          []
+      ]
+  },
+  {
+      "id": "4ddd7aa0601617b4",
+      "type": "change",
+      "z": "e0d46eaa915ffcba",
+      "g": "637bb8c366c5d8cb",
+      "name": "write: true",
+      "rules": [
+          {
+              "t": "set",
+              "p": "payload",
+              "pt": "msg",
+              "to": "true",
+              "tot": "bool"
+          }
+      ],
+      "action": "",
+      "property": "",
+      "from": "",
+      "to": "",
+      "reg": false,
+      "x": 500,
+      "y": 280,
+      "wires": [
+          [
+              "cb3da7ef521de69c"
+          ]
+      ]
+  },
+  {
+      "id": "7fdbbbd5f1764a63",
+      "type": "change",
+      "z": "e0d46eaa915ffcba",
+      "g": "637bb8c366c5d8cb",
+      "name": "reset payload",
+      "rules": [
+          {
+              "t": "set",
+              "p": "payload",
+              "pt": "msg",
+              "to": "0",
+              "tot": "num"
+          }
+      ],
+      "action": "",
+      "property": "",
+      "from": "",
+      "to": "",
+      "reg": false,
+      "x": 520,
+      "y": 320,
+      "wires": [
+          [
+              "0327d3857218199a"
+          ]
+      ]
+  },
+  {
+      "id": "91edf2710eb88666",
+      "type": "subflow:d364064415987fac",
+      "z": "e0d46eaa915ffcba",
+      "g": "637bb8c366c5d8cb",
+      "name": "",
+      "x": 1100,
+      "y": 340,
+      "wires": []
+  },
+  {
+      "id": "c5369de6872b9903",
+      "type": "function",
+      "z": "e0d46eaa915ffcba",
+      "g": "637bb8c366c5d8cb",
+      "name": "assert value",
+      "func": "const expectedValue = true;\nif(msg.output !== expectedValue) {\n    node.error(`Does not contain expected value '${expectedValue}'`);\n}",
+      "outputs": 1,
+      "noerr": 0,
+      "initialize": "",
+      "finalize": "",
+      "libs": [],
+      "x": 1070,
+      "y": 300,
+      "wires": [
+          []
+      ]
+  },
+  {
+      "id": "598f4140ee1ca6d8",
+      "type": "inject",
+      "z": "e0d46eaa915ffcba",
+      "g": "637bb8c366c5d8cb",
+      "name": "test read",
+      "props": [
+          {
+              "p": "payload"
+          },
+          {
+              "p": "topic",
+              "vt": "str"
+          }
+      ],
+      "repeat": "",
+      "crontab": "",
+      "once": false,
+      "onceDelay": 0.1,
+      "topic": "",
+      "payload": "",
+      "payloadType": "date",
+      "x": 320,
+      "y": 160,
+      "wires": [
+          [
+              "524ad5132a898913"
+          ]
+      ]
+  },
+  {
+      "id": "820af4bb463b9585",
+      "type": "persistent value",
+      "z": "e0d46eaa915ffcba",
+      "g": "90a0b1d58cff333a",
+      "name": "",
+      "valuesConfig": "4b0803dadcdbb5b0",
+      "valueSelect": "booleanFile",
+      "value": "booleanFile",
+      "command": "write",
+      "msgProperty": "payload",
+      "collectValues": false,
+      "collectValuesMsgProperty": "",
+      "x": 770,
+      "y": 520,
+      "wires": [
+          [
+              "cc232d80a6188c9b"
+          ],
+          []
+      ]
+  },
+  {
+      "id": "a52411e4f9226a00",
+      "type": "inject",
+      "z": "e0d46eaa915ffcba",
+      "g": "90a0b1d58cff333a",
+      "name": "test write",
+      "props": [
+          {
+              "p": "payload"
+          },
+          {
+              "p": "topic",
+              "vt": "str"
+          }
+      ],
+      "repeat": "",
+      "crontab": "",
+      "once": false,
+      "onceDelay": 0.1,
+      "topic": "",
+      "payload": "",
+      "payloadType": "date",
+      "x": 320,
+      "y": 480,
+      "wires": [
+          [
+              "83a169ad32f21a09"
+          ]
+      ]
+  },
+  {
+      "id": "887ac2d17a91f006",
+      "type": "change",
+      "z": "e0d46eaa915ffcba",
+      "g": "90a0b1d58cff333a",
+      "name": "true",
+      "rules": [
+          {
+              "t": "set",
+              "p": "payload",
+              "pt": "msg",
+              "to": "true",
+              "tot": "bool"
+          }
+      ],
+      "action": "",
+      "property": "",
+      "from": "",
+      "to": "",
+      "reg": false,
+      "x": 490,
+      "y": 520,
+      "wires": [
+          [
+              "820af4bb463b9585"
+          ]
+      ]
+  },
+  {
+      "id": "cc232d80a6188c9b",
+      "type": "function",
+      "z": "e0d46eaa915ffcba",
+      "g": "90a0b1d58cff333a",
+      "name": "assert current value",
+      "func": "const currentValue = global.get(\"TestValueWrite_booleanFile\", \"file\");\n\nconst expectedValue = true;\nif(currentValue !== expectedValue) {\n    node.error(`Current value (${currentValue}) != expected value (${expectedValue})`);\n}\nreturn msg;",
+      "outputs": 1,
+      "noerr": 0,
+      "initialize": "",
+      "finalize": "",
+      "libs": [],
+      "x": 1050,
+      "y": 520,
+      "wires": [
+          [
+              "1631c31e03474f53"
+          ]
+      ]
+  },
+  {
+      "id": "87cba3af6c2b402e",
+      "type": "persistent value",
+      "z": "e0d46eaa915ffcba",
+      "g": "90a0b1d58cff333a",
+      "name": "",
+      "valuesConfig": "4b0803dadcdbb5b0",
+      "valueSelect": "numberFile",
+      "value": "numberFile",
+      "command": "write",
+      "msgProperty": "input",
+      "x": 770,
+      "y": 640,
+      "wires": [
+          [
+              "6e78ff546ba924dc"
+          ],
+          []
+      ]
+  },
+  {
+      "id": "6e3c093eed3a7d99",
+      "type": "change",
+      "z": "e0d46eaa915ffcba",
+      "g": "90a0b1d58cff333a",
+      "name": "input=500",
+      "rules": [
+          {
+              "t": "set",
+              "p": "input",
+              "pt": "msg",
+              "to": "500",
+              "tot": "num"
+          }
+      ],
+      "action": "",
+      "property": "",
+      "from": "",
+      "to": "",
+      "reg": false,
+      "x": 500,
+      "y": 640,
+      "wires": [
+          [
+              "87cba3af6c2b402e"
+          ]
+      ]
+  },
+  {
+      "id": "43de9906ce527c4f",
+      "type": "persistent value",
+      "z": "e0d46eaa915ffcba",
+      "g": "90a0b1d58cff333a",
+      "name": "",
+      "valuesConfig": "4b0803dadcdbb5b0",
+      "valueSelect": "booleanFile",
+      "value": "booleanFile",
+      "command": "write",
+      "msgProperty": "payload",
+      "x": 770,
+      "y": 560,
+      "wires": [
+          [
+              "fe59621161764342"
+          ],
+          [
+              "fe59621161764342"
+          ]
+      ]
+  },
+  {
+      "id": "1631c31e03474f53",
+      "type": "change",
+      "z": "e0d46eaa915ffcba",
+      "g": "90a0b1d58cff333a",
+      "name": "false",
+      "rules": [
+          {
+              "t": "set",
+              "p": "payload",
+              "pt": "msg",
+              "to": "false",
+              "tot": "bool"
+          }
+      ],
+      "action": "",
+      "property": "",
+      "from": "",
+      "to": "",
+      "reg": false,
+      "x": 490,
+      "y": 560,
+      "wires": [
+          [
+              "43de9906ce527c4f"
+          ]
+      ]
+  },
+  {
+      "id": "fe59621161764342",
+      "type": "function",
+      "z": "e0d46eaa915ffcba",
+      "g": "90a0b1d58cff333a",
+      "name": "assert current value",
+      "func": "const currentValue = global.get(\"TestValueWrite_booleanFile\", \"file\");\n\nconst expectedValue = false;\nif(currentValue !== expectedValue) {\n    node.error(`Current value (${currentValue}) != expected value (${expectedValue})`);\n}",
+      "outputs": 1,
+      "noerr": 0,
+      "initialize": "",
+      "finalize": "",
+      "libs": [],
+      "x": 1050,
+      "y": 560,
+      "wires": [
+          []
+      ]
+  },
+  {
+      "id": "6e78ff546ba924dc",
+      "type": "function",
+      "z": "e0d46eaa915ffcba",
+      "g": "90a0b1d58cff333a",
+      "name": "assert current value",
+      "func": "const currentValue = global.get(\"TestValueWrite_numberFile\", \"file\");\nconst expectedValue = 500;\n\nif(currentValue !== expectedValue) {\n    node.error(`Current value (${currentValue}) != expected value (${expectedValue})`);\n}\nreturn msg;",
+      "outputs": 1,
+      "noerr": 0,
+      "initialize": "",
+      "finalize": "",
+      "libs": [],
+      "x": 1030,
+      "y": 640,
+      "wires": [
+          [
+              "88171329e15c990f"
+          ]
+      ]
+  },
+  {
+      "id": "e6226e81d1d4cd10",
+      "type": "persistent value",
+      "z": "e0d46eaa915ffcba",
+      "g": "90a0b1d58cff333a",
+      "name": "",
+      "valuesConfig": "4b0803dadcdbb5b0",
+      "valueSelect": "numberFile",
+      "value": "numberFile",
+      "command": "write",
+      "msgProperty": "input",
+      "x": 770,
+      "y": 680,
+      "wires": [
+          [
+              "8eb021050d46c4f0"
+          ],
+          []
+      ]
+  },
+  {
+      "id": "88171329e15c990f",
+      "type": "change",
+      "z": "e0d46eaa915ffcba",
+      "g": "90a0b1d58cff333a",
+      "name": "input=600",
+      "rules": [
+          {
+              "t": "set",
+              "p": "input",
+              "pt": "msg",
+              "to": "600",
+              "tot": "num"
+          }
+      ],
+      "action": "",
+      "property": "",
+      "from": "",
+      "to": "",
+      "reg": false,
+      "x": 500,
+      "y": 680,
+      "wires": [
+          [
+              "e6226e81d1d4cd10"
+          ]
+      ]
+  },
+  {
+      "id": "8eb021050d46c4f0",
+      "type": "function",
+      "z": "e0d46eaa915ffcba",
+      "g": "90a0b1d58cff333a",
+      "name": "assert current value",
+      "func": "const currentValue = global.get(\"TestValueWrite_numberFile\", \"file\");\nconst expectedValue = 600;\n\nif(currentValue !== expectedValue) {\n    node.error(`Current value (${currentValue}) != expected value (${expectedValue})`);\n}",
+      "outputs": 1,
+      "noerr": 0,
+      "initialize": "",
+      "finalize": "",
+      "libs": [],
+      "x": 1030,
+      "y": 680,
+      "wires": [
+          []
+      ]
+  },
+  {
+      "id": "8b2dad77f02849ab",
+      "type": "persistent value",
+      "z": "e0d46eaa915ffcba",
+      "g": "90a0b1d58cff333a",
+      "name": "",
+      "valuesConfig": "4b0803dadcdbb5b0",
+      "valueSelect": "stringFile",
+      "value": "stringFile",
+      "command": "write",
+      "msgProperty": "input",
+      "x": 760,
+      "y": 760,
+      "wires": [
+          [
+              "df4d7bdde726b446"
+          ],
+          []
+      ]
+  },
+  {
+      "id": "c9db5d907bf24ef2",
+      "type": "change",
+      "z": "e0d46eaa915ffcba",
+      "g": "90a0b1d58cff333a",
+      "name": "input=run1",
+      "rules": [
+          {
+              "t": "set",
+              "p": "input",
+              "pt": "msg",
+              "to": "run1",
+              "tot": "str"
+          }
+      ],
+      "action": "",
+      "property": "",
+      "from": "",
+      "to": "",
+      "reg": false,
+      "x": 510,
+      "y": 760,
+      "wires": [
+          [
+              "8b2dad77f02849ab"
+          ]
+      ]
+  },
+  {
+      "id": "df4d7bdde726b446",
+      "type": "function",
+      "z": "e0d46eaa915ffcba",
+      "g": "90a0b1d58cff333a",
+      "name": "assert current value",
+      "func": "const currentValue = global.get(\"TestValueWrite_stringFile\", \"file\");\nconst expectedValue = 'run1';\n\nif(currentValue !== expectedValue) {\n    node.error(`Current value (${currentValue}) != expected value (${expectedValue})`);\n}\nreturn msg;",
+      "outputs": 1,
+      "noerr": 0,
+      "initialize": "",
+      "finalize": "",
+      "libs": [],
+      "x": 1030,
+      "y": 760,
+      "wires": [
+          [
+              "e972b1c3f2060f51"
+          ]
+      ]
+  },
+  {
+      "id": "e641303033319e5a",
+      "type": "persistent value",
+      "z": "e0d46eaa915ffcba",
+      "g": "90a0b1d58cff333a",
+      "name": "",
+      "valuesConfig": "4b0803dadcdbb5b0",
+      "valueSelect": "stringFile",
+      "value": "stringFile",
+      "command": "write",
+      "msgProperty": "input",
+      "x": 760,
+      "y": 800,
+      "wires": [
+          [
+              "5cfb29ccf5731ac4"
+          ],
+          []
+      ]
+  },
+  {
+      "id": "e972b1c3f2060f51",
+      "type": "change",
+      "z": "e0d46eaa915ffcba",
+      "g": "90a0b1d58cff333a",
+      "name": "input=run2",
+      "rules": [
+          {
+              "t": "set",
+              "p": "input",
+              "pt": "msg",
+              "to": "run2",
+              "tot": "str"
+          }
+      ],
+      "action": "",
+      "property": "",
+      "from": "",
+      "to": "",
+      "reg": false,
+      "x": 510,
+      "y": 800,
+      "wires": [
+          [
+              "e641303033319e5a"
+          ]
+      ]
+  },
+  {
+      "id": "5cfb29ccf5731ac4",
+      "type": "function",
+      "z": "e0d46eaa915ffcba",
+      "g": "90a0b1d58cff333a",
+      "name": "assert current value",
+      "func": "const currentValue = global.get(\"TestValueWrite_stringFile\", \"file\");\nconst expectedValue = 'run2';\n\nif(currentValue !== expectedValue) {\n    node.error(`Current value (${currentValue}) != expected value (${expectedValue})`);\n}\nreturn msg;",
+      "outputs": 1,
+      "noerr": 0,
+      "initialize": "",
+      "finalize": "",
+      "libs": [],
+      "x": 1030,
+      "y": 800,
+      "wires": [
+          []
+      ]
+  },
+  {
+      "id": "4b0803dadcdbb5b0",
+      "type": "persistent values config",
+      "name": "TestValueWrite",
+      "values": [
+          {
+              "name": "booleanFile",
+              "datatype": "bool",
+              "default": false,
+              "scope": "global",
+              "storage": "file"
+          },
+          {
+              "name": "numberFile",
+              "datatype": "num",
+              "default": 5,
+              "scope": "global",
+              "storage": "file"
+          },
+          {
+              "name": "stringFile",
+              "datatype": "str",
+              "default": "empty",
+              "scope": "global",
+              "storage": "file"
+          },
+          {
+              "name": "booleanMemory",
+              "datatype": "bool",
+              "default": true,
+              "scope": "global",
+              "storage": "memory"
+          },
+          {
+              "name": "numberMemory",
+              "datatype": "num",
+              "default": 5,
+              "scope": "global",
+              "storage": "memory"
+          },
+          {
+              "name": "stringMemory",
+              "datatype": "str",
+              "default": "default",
+              "scope": "global",
+              "storage": "memory"
+          }
+      ]
+  },
+  {
+      "id": "ca21619490edc467",
+      "type": "persistent values config",
+      "name": "BlockFurtherFlowProcessingConfig",
+      "values": [
+          {
+              "name": "booleanFile",
+              "datatype": "bool",
+              "default": false,
+              "scope": "global",
+              "storage": "file"
+          },
+          {
+              "name": "numberFile",
+              "datatype": "num",
+              "default": 5,
+              "scope": "global",
+              "storage": "file"
+          },
+          {
+              "name": "stringFile",
+              "datatype": "str",
+              "default": "empty",
+              "scope": "global",
+              "storage": "file"
+          },
+          {
+              "name": "booleanMemory",
+              "datatype": "bool",
+              "default": true,
+              "scope": "global",
+              "storage": "memory"
+          },
+          {
+              "name": "numberMemory",
+              "datatype": "num",
+              "default": 5,
+              "scope": "global",
+              "storage": "memory"
+          },
+          {
+              "name": "stringMemory",
+              "datatype": "str",
+              "default": "default",
+              "scope": "global",
+              "storage": "memory"
+          }
+      ]
+  },
+  {
+      "id": "267663fd4c41bebe",
+      "type": "persistent values config",
+      "name": "TestValuesRead",
+      "values": [
+          {
+              "name": "boolean",
+              "datatype": "bool",
+              "default": false,
+              "scope": "global",
+              "storage": "default"
+          },
+          {
+              "name": "boolean_default_true",
+              "datatype": "bool",
+              "default": true,
+              "scope": "global",
+              "storage": "file"
+          },
+          {
+              "name": "number",
+              "datatype": "num",
+              "default": 3,
+              "scope": "global",
+              "storage": "file"
+          }
+      ]
+  }
+]
