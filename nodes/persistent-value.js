@@ -28,7 +28,9 @@ module.exports = function(RED) {
   function buildNodeStatus(node, msgProperty, blockFlow) {
     let storage = node.config.storage;
     if (storage === kStorageDefault) {
-      storage += ` (${RED.settings.contextStorage.default})`;
+      if (RED.settings.contextStorage !== undefined && RED.settings.contextStorage.default !== undefined) {
+        storage += ` (${RED.settings.contextStorage.default})`;
+      }
     }
     const blocked = blockFlow ? '[blocked]' : '';
 
