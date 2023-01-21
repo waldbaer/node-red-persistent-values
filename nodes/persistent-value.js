@@ -24,6 +24,10 @@ module.exports = function(RED) {
   const kBlockIfRuleDefault = kBlockIfRuleEq;
 
   // ---- Utility functions -----------------------------------------------------------------------
+  function reportIncorrectConfiguration(node) {
+    node.error(`Incorrect or inconsistent configuration of persistent-values node ` +
+                    `'${node.name}' with ID ${node.id}. Skipping further processing.`, node);
+  }
 
   function buildNodeStatus(node, msgProperty, blockFlow) {
     let storage = node.config.storage;
@@ -168,10 +172,15 @@ module.exports = function(RED) {
 
     // Retrieve the selected config
     const configNode = RED.nodes.getNode(nodeConfig.valuesConfig);
+    if (configNode === null) {
+      reportIncorrectConfiguration(node);
+      return null;
+    }
+
     node.config = configNode.values.find((value) => value.name === nodeConfig.value);
     node.configName = configNode.name; // Name of the referenced configuration
-
     node.value = nodeConfig.value; // selected value
+
     node.command = nodeConfig.command || kCommandDefault;
     node.msgProperty = nodeConfig.msgProperty || kMsgPropertyDefault;
 
@@ -183,9 +192,12 @@ module.exports = function(RED) {
     node.blockIfCompareValue = node.blockIfEnable ?
       convertToExpectedType(node, nodeConfig.blockIfCompareValue) : undefined;
 
-    node.on('input', function(msg) {
-      // ---- Check Inputs ----
+    if (node.value === '' || node.value === undefined || node.value === null) {
+      reportIncorrectConfiguration(node);
+      return null;
+    }
 
+    node.on('input', function(msg) {
       // ---- Execute ----
       const context = getUsedContext(node);
       const contextKey = buildContextKeyName(node);
