@@ -41,6 +41,18 @@
       let result = true;
 
       for (const value of values) {
+        // Name
+        if (!value.name.trim()) {
+          console.error(`Persistent value name (${value.name}) must not be empty!`);
+          result = false;
+        }
+
+        const valuesWithIdenticalName = values.filter((item) => item.name === value.name);
+        if (valuesWithIdenticalName.length > 1) {
+          console.error(`Persistent value name '${value.name}' is not unique! The name is used ${valuesWithIdenticalName.length} times.`);
+          result = false;
+        }
+
         // Datatype & Default value
         if ((value.datatype === kDataTypeBoolean) && ((typeof value.default) !== kDataTypeBoolean)) {
           console.error(`Incorrect default value '${value.default}' of type 'boolean' for value ${value.name}`);
