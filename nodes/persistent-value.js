@@ -17,8 +17,6 @@ module.exports = function(RED) {
 
   const kBlockIfRuleEq = 'eq';
   const kBlockIfRuleNeq = 'neq';
-  const kBlockIfRuleTrue = 'true';
-  const kBlockIfRuleFalse = 'false';
 
   const kBlockIfEnableDefault = false;
   const kBlockIfRuleDefault = kBlockIfRuleEq;
@@ -144,12 +142,6 @@ module.exports = function(RED) {
           break;
         case kBlockIfRuleNeq:
           blockFlow = (currentValue !== node.blockIfCompareValue);
-          break;
-        case kBlockIfRuleTrue:
-          blockFlow = (currentValue === true);
-          break;
-        case kBlockIfRuleFalse:
-          blockFlow = (currentValue === false);
           break;
         default:
           node.warn(`Unknown block-if rule '${node.blockIfRule}'. Skipping blocking value check.`);
