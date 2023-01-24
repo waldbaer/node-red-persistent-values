@@ -1,0 +1,32 @@
+# Workflow for testing of node-red-persistent-values using github actions / Node.js.
+# The workflow will do a checkout, installation of dependencies and run tests.
+#
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+name: Node.js CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        # https://nodered.org/docs/faq/node-versions
+        # only >18.x due to used structuredClone used in test implementation
+        node-version: [18.x, 19.x]
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: Install dependencies
+      run: npm install
+    - name: Run unit tests
+      run: npm test
