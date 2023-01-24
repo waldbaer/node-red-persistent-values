@@ -59,6 +59,8 @@
     ]
   },
   "scripts": {
-    "test": "nyc mocha \"test/**/*_spec.js\""
+    "test": "mocha \"test/**/*_spec.js\"",
+    "coverage": "nyc --reporter=lcov npm test",
+    "coverage_local": "nyc npm test"
   }
 }

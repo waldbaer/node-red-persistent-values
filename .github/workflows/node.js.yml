@@ -6,9 +6,9 @@ name: CI Test
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "master", "ci" ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "master", "ci" ]
 
 jobs:
   build:
@@ -29,4 +29,10 @@ jobs:
     - name: Install dependencies
       run: npm install
     - name: Run unit tests
-      run: npm test
+      run: npm run coverage
+
+    # Save coverage report in https://coveralls.io
+    - name: Coveralls
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
