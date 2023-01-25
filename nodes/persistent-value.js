@@ -3,6 +3,12 @@ module.exports = function(RED) {
   const kConfigDatatypeBool = 'bool';
   const kConfigDatatypeNumber = 'num';
   const kConfigDatatypeString = 'str';
+  const kConfigSupportedDatatype = new Map([
+    // java typeof | config typed input
+    ['boolean', kConfigDatatypeBool],
+    ['number', kConfigDatatypeNumber],
+    ['string', kConfigDatatypeString],
+  ]);
 
   // elements of the node
   const kStorageDefault = 'default';
@@ -119,6 +125,7 @@ module.exports = function(RED) {
       }
       break;
     default:
+      node.error(`Unsupported compare value type '${node.config.datatype}' configured!`);
     }
 
     if (convertedValue === undefined) {
@@ -126,6 +133,11 @@ module.exports = function(RED) {
     }
 
     return convertedValue;
+  }
+
+  function compareToConfiguredDatatype(node, value) {
+    const typeOfValue = typeof value;
+    return kConfigSupportedDatatype.has(typeOfValue) && (kConfigSupportedDatatype.get(typeOfValue) === node.config.datatype);
   }
 
   function checkBlockIfCondition(node, currentValue) {
@@ -195,6 +207,11 @@ module.exports = function(RED) {
       const contextKey = buildContextKeyName(node);
 
       let currentValue = getContext(node, context, contextKey);
+      if (!compareToConfiguredDatatype(node, currentValue)) {
+        node.warn(`Persisted value ${node.configName} / ${node.value} does not have the configured datatype ` +
+                  `'${node.config.datatype}'!`);
+      }
+
       let onChangeMsg = null;
 
       // -- Command: Read --
@@ -210,6 +227,13 @@ module.exports = function(RED) {
         }
 
         const inputValue = msg[node.msgProperty];
+
+        if (!compareToConfiguredDatatype(node, inputValue)) {
+          node.error(`Passed value in msg.${node.msgProperty} does not have the configured datatype ` +
+                     `'${node.config.datatype}'! Persistent value config: ${node.configName} / ${node.value}`);
+          return;
+        }
+
         updateCollectedValues(node, msg, inputValue);
 
         if (inputValue !== currentValue) {

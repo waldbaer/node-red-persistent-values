@@ -265,7 +265,6 @@ describe('persistent value node', function() {
     flow[0].value = ConfigValueNumber;
 
     helper.load([configNode, valueNode], flow, function() {
-      const c = helper.getNode(NodeIdConfig);
       const v = helper.getNode(NodeIdPersistentValue);
       const h = helper.getNode(NodeIdHelperCurrentValue);
 
@@ -347,6 +346,30 @@ describe('persistent value node', function() {
       h.on(InputFunction, function(msg) {
         try {
           msg.should.have.property(OutputMsgProperty, simulatedValue);
+          done();
+        } catch (err) {
+          done(err);
+        }
+      });
+      v.receive({payload: AnyInputString});
+    });
+  });
+
+  it('should warn persisted value datatype is not matching to configured datatype', function(done) {
+    const flow = structuredClone(FlowNodeAllVariants);
+    flow[0].value = ConfigValueNumber;
+
+    helper.load([configNode, valueNode], flow, function() {
+      const v = helper.getNode(NodeIdPersistentValue);
+      const h = helper.getNode(NodeIdHelperCurrentValue);
+
+      const simulatedValue = true; // not matching configured type 'number'
+      setContextValue(v, simulatedValue);
+
+      h.on(InputFunction, function(msg) {
+        try {
+          msg.should.have.property(PropertyPayload, simulatedValue);
+          v.warn.should.be.calledWithMatch(`Persisted value TestConfig / number does not have the configured datatype 'num'`);
           done();
         } catch (err) {
           done(err);
@@ -507,6 +530,22 @@ describe('persistent value node', function() {
     });
   });
 
+  it('should abort if non-existing input msg property is used', function(done) {
+    const flow = structuredClone(FlowNodeAllVariants);
+    flow[0].command = CommandWrite;
+    const InputMsgProperty = 'non_default_input_property';
+    flow[0].msgProperty = InputMsgProperty;
+
+    helper.load([configNode, valueNode], flow, function() {
+      const v = helper.getNode(NodeIdPersistentValue);
+
+      v.receive({incorrect_msg_property: false});
+      v.error.should.be.calledWithMatch(`Passed msg does not have the configured property '${InputMsgProperty}'`);
+      v.send.should.have.callCount(0);
+      done();
+    });
+  });
+
   it('should write to the context storage and notify about changed value', function(done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].value = ConfigValueString;
@@ -545,6 +584,21 @@ describe('persistent value node', function() {
       const msg = {payload: simulatedValue};
       v.receive(msg);
       v.send.should.be.calledWithExactly([msg, null]); // no onChange message expected
+      done();
+    });
+  });
+
+  it('should abort if input value datatype is not matching to configured datatype', function(done) {
+    const flow = structuredClone(FlowNodeAllVariants);
+    flow[0].value = ConfigValueString;
+    flow[0].command = CommandWrite;
+
+    helper.load([configNode, valueNode], flow, function() {
+      const v = helper.getNode(NodeIdPersistentValue);
+
+      v.receive({payload: true}); // not matching to configured type 'string'
+      v.error.should.be.calledWithMatch(`Passed value in msg.payload does not have the configured datatype 'str'`);
+      v.send.should.have.callCount(0);
       done();
     });
   });
@@ -844,12 +898,38 @@ describe('persistent value node', function() {
     flow[0].blockIfRule = BlockIfRuleEqual;
     flow[0].blockIfCompareValue = undefined;
 
-
     helper.load([configNode, valueNode], flow, function() {
       const v = helper.getNode(NodeIdPersistentValue);
       const h = helper.getNode(NodeIdHelperCurrentValue);
 
       const simulatedContextValue = "valid string";
+      setContextValue(v, simulatedContextValue);
+
+      h.on(InputFunction, function(msg) {
+        try {
+          msg.should.have.property(PropertyPayload, simulatedContextValue);
+          done();
+        } catch (err) {
+          done(err);
+        }
+      });
+      v.receive({payload: AnyInputString});
+    });
+  });
+
+  it('should not block further processing if not supported compare value type is used', function(done) {
+    const flow = structuredClone(FlowNodeAllVariants);
+    flow[0].value = ConfigValueString;
+    flow[0].blockIfEnable = true;
+    flow[0].blockIfRule = BlockIfRuleEqual;
+    flow[0].blockIfCompareValue = true;
+    flow[1].values[2].datatype = 'not supported datatype';
+
+    helper.load([configNode, valueNode], flow, function() {
+      const v = helper.getNode(NodeIdPersistentValue);
+      const h = helper.getNode(NodeIdHelperCurrentValue);
+
+      const simulatedContextValue = true;
       setContextValue(v, simulatedContextValue);
 
       h.on(InputFunction, function(msg) {
