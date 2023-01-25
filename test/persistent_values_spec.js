@@ -809,4 +809,58 @@ describe('persistent value node', function() {
       v.receive({payload: AnyInputString});
     });
   });
+
+  it('should not block further processing if compare value type cannot be parsed - number', function(done) {
+    const flow = structuredClone(FlowNodeAllVariants);
+    flow[0].value = ConfigValueNumber;
+    flow[0].blockIfEnable = true;
+    flow[0].blockIfRule = BlockIfRuleEqual;
+    const BlockIfCompareValue = "not a number";
+    flow[0].blockIfCompareValue = BlockIfCompareValue;
+
+
+    helper.load([configNode, valueNode], flow, function() {
+      const v = helper.getNode(NodeIdPersistentValue);
+      const h = helper.getNode(NodeIdHelperCurrentValue);
+
+      setContextValue(v, BlockIfCompareValue);
+
+      h.on(InputFunction, function(msg) {
+        try {
+          msg.should.have.property(PropertyPayload, BlockIfCompareValue);
+          done();
+        } catch (err) {
+          done(err);
+        }
+      });
+      v.receive({payload: AnyInputString});
+    });
+  });
+
+  it('should not block further processing if compare value type cannot be parsed - string', function(done) {
+    const flow = structuredClone(FlowNodeAllVariants);
+    flow[0].value = ConfigValueString;
+    flow[0].blockIfEnable = true;
+    flow[0].blockIfRule = BlockIfRuleEqual;
+    flow[0].blockIfCompareValue = undefined;
+
+
+    helper.load([configNode, valueNode], flow, function() {
+      const v = helper.getNode(NodeIdPersistentValue);
+      const h = helper.getNode(NodeIdHelperCurrentValue);
+
+      const simulatedContextValue = "valid string";
+      setContextValue(v, simulatedContextValue);
+
+      h.on(InputFunction, function(msg) {
+        try {
+          msg.should.have.property(PropertyPayload, simulatedContextValue);
+          done();
+        } catch (err) {
+          done(err);
+        }
+      });
+      v.receive({payload: AnyInputString});
+    });
+  });
 });
