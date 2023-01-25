@@ -30,7 +30,7 @@ module.exports = function(RED) {
   // ---- Utility functions -----------------------------------------------------------------------
   function reportIncorrectConfiguration(node) {
     node.error(`Incorrect or inconsistent configuration of persistent-values node ` +
-                    `'${node.name}' with ID ${node.id}. Skipping further processing.`, node);
+               `'${node.name}' with ID ${node.id}. Skipping further processing.`, node);
   }
 
   function buildNodeStatus(node, msgProperty, blockFlow) {
@@ -173,10 +173,12 @@ module.exports = function(RED) {
     const node = this;
 
     // ---- Retrieve node properties and referenced config properties ----
+    node.configIsValid = true;
 
     // Retrieve the selected config
     const configNode = RED.nodes.getNode(nodeConfig.valuesConfig);
     if (configNode === null) {
+      node.configIsValid = false;
       reportIncorrectConfiguration(node);
       return null;
     }
@@ -184,6 +186,11 @@ module.exports = function(RED) {
     node.config = configNode.values.find((value) => value.name === nodeConfig.value);
     node.configName = configNode.name; // Name of the referenced configuration
     node.value = nodeConfig.value; // selected value
+    if (node.value === '' || node.value === undefined || node.value === null) {
+      node.configIsValid = false;
+      reportIncorrectConfiguration(node);
+      return null;
+    }
 
     node.command = nodeConfig.command || kCommandDefault;
     node.msgProperty = nodeConfig.msgProperty || kMsgPropertyDefault;
@@ -196,12 +203,14 @@ module.exports = function(RED) {
     node.blockIfCompareValue = node.blockIfEnable ?
       convertToExpectedType(node, nodeConfig.blockIfCompareValue) : undefined;
 
-    if (node.value === '' || node.value === undefined || node.value === null) {
-      reportIncorrectConfiguration(node);
-      return null;
-    }
 
     node.on('input', function(msg) {
+      // ---- Configuration valid? ----
+      if (!node.configIsValid) {
+        reportIncorrectConfiguration(node);
+        return;
+      }
+
       // ---- Execute ----
       const context = getUsedContext(node);
       const contextKey = buildContextKeyName(node);

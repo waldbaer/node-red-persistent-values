@@ -170,6 +170,32 @@ describe('persistent value node', function() {
     });
   });
 
+  it('should be not loaded without configuration', function(done) {
+    const flow = structuredClone(FlowNodeAllVariants);
+    flow[0].valuesConfig = ''; // No persistent value configuration selected
+
+    helper.load([configNode, valueNode], flow, function() {
+      const pv = helper.getNode(NodeIdPersistentValue);
+      pv.should.have.property('_inputCallback', null);
+      pv.should.have.property('_inputCallbacks', null);
+      pv.error.should.be.calledWithMatch('Incorrect or inconsistent configuration');
+      done();
+    });
+  });
+
+  it('should be not loaded without selected value', function(done) {
+    const flow = structuredClone(FlowNodeAllVariants);
+    flow[0].value = ''; // No persistent value selected
+
+    helper.load([configNode, valueNode], flow, function() {
+      const pv = helper.getNode(NodeIdPersistentValue);
+      pv.should.have.property('_inputCallback', null);
+      pv.should.have.property('_inputCallbacks', null);
+      pv.error.should.be.calledWithMatch('Incorrect or inconsistent configuration');
+      done();
+    });
+  });
+
   // ==== Read Tests ==========================================================
 
   it('should read the default value - boolean', function(done) {
