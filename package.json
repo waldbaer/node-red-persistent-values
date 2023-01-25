@@ -9,6 +9,7 @@
     "url": "https://github.com/waldbaer/node-red-persistent-values.git"
   },
   "keywords": [
+    "node-red",
     "context",
     "persistence",
     "persistency",
@@ -61,6 +62,7 @@
   "scripts": {
     "test": "mocha \"test/**/*_spec.js\"",
     "coverage": "nyc --reporter=lcov npm test",
-    "coverage_local": "nyc npm test"
+    "coverage_local": "nyc npm test",
+    "node-red-dev-validate": "node-red-dev validate -p ."
   }
 }
