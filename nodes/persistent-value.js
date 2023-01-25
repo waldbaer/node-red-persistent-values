@@ -173,12 +173,10 @@ module.exports = function(RED) {
     const node = this;
 
     // ---- Retrieve node properties and referenced config properties ----
-    node.configIsValid = true;
 
     // Retrieve the selected config
     const configNode = RED.nodes.getNode(nodeConfig.valuesConfig);
     if (configNode === null) {
-      node.configIsValid = false;
       reportIncorrectConfiguration(node);
       return null;
     }
@@ -187,7 +185,6 @@ module.exports = function(RED) {
     node.configName = configNode.name; // Name of the referenced configuration
     node.value = nodeConfig.value; // selected value
     if (node.value === '' || node.value === undefined || node.value === null) {
-      node.configIsValid = false;
       reportIncorrectConfiguration(node);
       return null;
     }
@@ -205,12 +202,6 @@ module.exports = function(RED) {
 
 
     node.on('input', function(msg) {
-      // ---- Configuration valid? ----
-      if (!node.configIsValid) {
-        reportIncorrectConfiguration(node);
-        return;
-      }
-
       // ---- Execute ----
       const context = getUsedContext(node);
       const contextKey = buildContextKeyName(node);
