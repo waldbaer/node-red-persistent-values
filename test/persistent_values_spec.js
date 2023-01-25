@@ -686,17 +686,17 @@ describe('persistent value node', function() {
 
   it('should block further processing if not-equal rule matches', function(done) {
     const flow = structuredClone(FlowNodeAllVariants);
-    flow[0].value = ConfigValueNumber;
+    flow[0].value = ConfigValueBoolean;
     flow[0].blockIfEnable = true;
     flow[0].blockIfRule = BlockIfRuleNotEqual;
-    const BlockIfCompareValue = 2305;
-    flow[0].blockIfCompareValue = BlockIfCompareValue;
+    const BlockIfCompareValue = false;
+    flow[0].blockIfCompareValue = BlockIfCompareValue.toString(); // Stored as string by typed input
 
 
     helper.load([configNode, valueNode], flow, function() {
       const v = helper.getNode(NodeIdPersistentValue);
 
-      setContextValue(v, BlockIfCompareValue + 1);
+      setContextValue(v, !BlockIfCompareValue);
 
       v.receive({payload: AnyInputString});
       v.send.should.calledWithExactly([null, null]);

@@ -3,7 +3,7 @@
 [![MIT License](https://img.shields.io/github/license/waldbaer/node-red-persistent-values?style=flat-square)](https://opensource.org/licenses/MIT)
 [![GitHub issues open](https://img.shields.io/github/issues/waldbaer/node-red-persistent-values?style=flat-square)](https://github.com/waldbaer/node-red-persistent-values/issues)
 [![GitHub Actions](https://github.com/waldbaer/node-red-persistent-values/actions/workflows/node.js.yml/badge.svg?branch=master)](https://github.com/waldbaer/node-red-persistent-values/actions/workflows/node.js.yml)
-[![Coverage Status](https://coveralls.io/repos/github/waldbaer/node-red-persistent-values/badge.svg?branch=master)](https://coveralls.io/github/waldbaer/node-red-persistent-values?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/waldbaer/node-red-persistent-values/badge.svg)](https://coveralls.io/github/waldbaer/node-red-persistent-values)
 
 
 A user-friendly abstraction of the NodeRED context stores.
