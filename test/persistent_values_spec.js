@@ -83,19 +83,19 @@ describe('persistent value node', function() {
 
 
   // ==== Flow defaults ===============================================================================================
+  const FlowIdTestFlow = 'test_flow';
 
   const NodeIdConfig = 'config';
   const NodeIdPersistentValue = 'pv';
   const NodeIdHelperCurrentValue = 'helper_current_value';
   const NodeIdHelperOnChange = 'helper_onchange';
 
-
   const ConfigValueBoolean = 'boolean';
   const ConfigValueNumber = 'number';
   const ConfigValueString = 'string';
 
-  const NodeHelperCurrentValue = {id: NodeIdHelperCurrentValue, type: NodeTypeHelper};
-  const NodeHelperOnChange = {id: NodeIdHelperOnChange, type: NodeTypeHelper};
+  const NodeHelperCurrentValue = {id: NodeIdHelperCurrentValue, z: FlowIdTestFlow, type: NodeTypeHelper};
+  const NodeHelperOnChange = {id: NodeIdHelperOnChange, z: FlowIdTestFlow, type: NodeTypeHelper};
 
   const ConfigNodeAllVariants = {
     id: NodeIdConfig,
@@ -128,6 +128,7 @@ describe('persistent value node', function() {
 
   const PersistentValueNodeDefault = {
     id: NodeIdPersistentValue,
+    z: FlowIdTestFlow,
     name: 'persistent value node test',
     type: NodeTypePersistentValue,
     valuesConfig: NodeIdConfig,
@@ -141,6 +142,7 @@ describe('persistent value node', function() {
     ConfigNodeAllVariants,
     NodeHelperCurrentValue,
     NodeHelperOnChange,
+    {id: FlowIdTestFlow, type: 'tab', label: 'Test flow'},
   ];
 
   // ==== NodeRED settings ============================================================================================
@@ -306,6 +308,30 @@ describe('persistent value node', function() {
     });
   });
 
+  it('should read the context value from scope flow', function(done) {
+    const flow = structuredClone(FlowNodeAllVariants);
+    flow[0].value = ConfigValueNumber;
+    flow[1].values[1].scope = ScopeFlow;
+
+    helper.load([configNode, valueNode], flow, function() {
+      const v = helper.getNode(NodeIdPersistentValue);
+      const h = helper.getNode(NodeIdHelperCurrentValue);
+
+      const simulatedValue = 3.14159265359;
+      setContextValue(v, simulatedValue);
+
+      h.on(InputFunction, function(msg) {
+        try {
+          msg.should.have.property(PropertyPayload, simulatedValue);
+          done();
+        } catch (err) {
+          done(err);
+        }
+      });
+      v.receive({payload: AnyInputString});
+    });
+  });
+
   it('should read the context value to non-default msg property', function(done) {
     const flow = structuredClone(FlowNodeAllVariants);
     const OutputMsgProperty = 'non_default_output_property';
@@ -332,7 +358,7 @@ describe('persistent value node', function() {
 
   // ==== Write Tests =========================================================
 
-  it('should write to the context storage', function(done) {
+  it('should write to the context storage - default', function(done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].value = ConfigValueString;
     flow[0].command = CommandWrite;
@@ -421,6 +447,33 @@ describe('persistent value node', function() {
     });
   });
 
+  it('should write to the context storage with scope flow', function(done) {
+    const flow = structuredClone(FlowNodeAllVariants);
+    flow[0].value = ConfigValueString;
+    flow[0].command = CommandWrite;
+    flow[1].values[1].scope = ScopeFlow;
+
+    helper.load([configNode, valueNode], flow, function() {
+      const v = helper.getNode(NodeIdPersistentValue);
+      const h = helper.getNode(NodeIdHelperCurrentValue);
+
+      setContextValue(v, '');
+      const simulatedValue = 'write with scope flow';
+
+      h.on(InputFunction, function(msg) {
+        try {
+          msg.should.have.property(PropertyPayload, simulatedValue);
+
+          const contextValue = getContextValue(v);
+          contextValue.should.equal(simulatedValue);
+          done();
+        } catch (err) {
+          done(err);
+        }
+      });
+      v.receive({payload: simulatedValue});
+    });
+  });
 
   it('should write to the context storage from non-default input msg property', function(done) {
     const flow = structuredClone(FlowNodeAllVariants);
