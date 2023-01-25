@@ -18,7 +18,7 @@ configuration and the persistent value to be accessed.
 Persistent values are typically states, configuration options etc. which shall survice a restart of NodeRED.
 
 # Installation
-[![NPM](https://nodei.co/npm/@waldbaer/node-red-persistent-values.png?downloads=true)](https://nodei.co/npm/@waldbaer/node-red-persistent-values.png?downloads=true)
+[![NPM](https://nodei.co/npm/@waldbaer/node-red-persistent-values.png?downloads=true)](https://www.npmjs.com/package/@waldbaer/node-red-persistent-values)
 
 You can install the nodes using the NodeRED 'Manage palette' in the side bar.
 
