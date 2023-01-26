@@ -51,7 +51,7 @@ Changes can be followed [here](/CHANGELOG.md).
 
 1) Add all necessary values to be persisted (states, config options, ...) to one or multiple configuration nodes.
 
-   <img src="doc/images/usage_configuration.png" title="Configuration Node" width="550" />
+   <img src="doc/images/usage_configuration.png" title="Configuration Node" width="600" />
 
 2) Select the desired configuration and value for read / write operations.
 
@@ -59,7 +59,7 @@ Changes can be followed [here](/CHANGELOG.md).
 
 3) Read, write or collect the persistet values in your flows!
 
-   <img src="doc/images/usage_overview.png" title="Overview" width="700" />
+   <img src="doc/images/usage_overview.png" title="Overview" width="800" />
 
 
 ## Examples
