@@ -1,6 +1,8 @@
 # Persistent Values for NodeRED
 
+[![Platform](https://img.shields.io/badge/platform-Node--RED-red)](https://nodered.org)
 [![MIT License](https://img.shields.io/github/license/waldbaer/node-red-persistent-values?style=flat-square)](https://opensource.org/licenses/MIT)
+
 [![GitHub issues open](https://img.shields.io/github/issues/waldbaer/node-red-persistent-values?style=flat-square)](https://github.com/waldbaer/node-red-persistent-values/issues)
 [![GitHub Actions](https://github.com/waldbaer/node-red-persistent-values/actions/workflows/node.js.yml/badge.svg?branch=master)](https://github.com/waldbaer/node-red-persistent-values/actions/workflows/node.js.yml)
 [![Coverage Status](https://coveralls.io/repos/github/waldbaer/node-red-persistent-values/badge.svg?branch=master)](https://coveralls.io/github/waldbaer/node-red-persistent-values?branch=master)
@@ -17,20 +19,48 @@ configuration and the persistent value to be accessed.
 
 Persistent values are typically states, configuration options etc. which shall survice a restart of NodeRED.
 
-# Installation
-[![NPM](https://nodei.co/npm/@waldbaer/node-red-persistent-values.png?downloads=true)](https://www.npmjs.com/package/@waldbaer/node-red-persistent-values)
+# Key Features
 
+- Central configuration of all known persistent values (states, config options, ...).
+  - Dataypes: Bool, Number, String
+  - Default value
+  - Scope and Storage type
+- Node to read and write a concrete persistent value referenced via the config.
+- Configurable `msg` property for input of new persistent value or output of the current value.
+- Append the current persistent value as object attribute to an configurable `msg` property.
+- Block further flow processing (no output) if the current value matches with a configured rule.
+
+# Installation
 You can install the nodes using the NodeRED 'Manage palette' in the side bar.
+
 
 Or run the following command in the root directory of your NodeRED installation
 
 ```
 npm install @waldbaer/node-red-persistent-values
 ```
+[![NPM](https://nodei.co/npm/@waldbaer/node-red-persistent-values.png?downloads=true)](https://www.npmjs.com/package/@waldbaer/node-red-persistent-values)
+
 
 # Changelog
 Changes can be followed [here](/CHANGELOG.md).
 
 # Usage
+
+## Introduction
+
+1) Add all necessary values to be persisted (states, config options, ...) to one or multiple configuration nodes.
+
+   <img src="doc/images/usage_configuration.png" title="Configuration Node" width="550" />
+
+2) Select the desired configuration and value for read / write operations.
+
+   <img src="doc/images/usage_node_configuration.png" title="Value Node" width="450" />
+
+3) Read, write or collect the persistet values in your flows!
+
+   <img src="doc/images/usage_overview.png" title="Overview" width="700" />
+
+
 ## Examples
 See folder [/examples](/examples) or via NodeRED 🠖 Import 🠖 Examples.
