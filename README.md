@@ -1,4 +1,4 @@
-# Nodes for user-friendly use the NodeRED context store.
+# Nodes for user-friendly use of the NodeRED context stores.
 
 [![Platform](https://img.shields.io/badge/platform-Node--RED-red)](https://nodered.org)
 [![MIT License](https://img.shields.io/github/license/waldbaer/node-red-persistent-values?style=flat-square)](https://opensource.org/licenses/MIT)
