@@ -17,7 +17,14 @@ const configNode = require('../nodes/persistent-values-config.js');
 
 describe('persistent value node', function() {
   beforeEach(function() {
-    // Nothing to be done
+    // Update context storage settings
+    helper.settings({
+      contextStorage: {
+        default: 'memory',
+        memory: {module: 'memory'},
+        file: {module: 'localfilesystem'},
+      },
+    });
   });
   afterEach(function() {
     helper.unload();
@@ -146,16 +153,6 @@ describe('persistent value node', function() {
     {id: FlowIdTestFlow, type: 'tab', label: 'Test flow'},
   ];
 
-  // ==== NodeRED settings ============================================================================================
-
-  helper.settings({
-    contextStorage: {
-      default: 'memory',
-      memory: {module: 'memory'},
-      file: {module: 'localfilesystem'},
-    },
-  });
-
   // ==== Tests =======================================================================================================
 
   // ==== Load Tests ==========================================================
@@ -193,6 +190,24 @@ describe('persistent value node', function() {
       pv.should.have.property('_inputCallback', null);
       pv.should.have.property('_inputCallbacks', null);
       pv.error.should.be.calledWithMatch('Incorrect or inconsistent configuration');
+      done();
+    });
+  });
+
+  // ==== Node Status =========================================================
+  it('should show status without default storage if no default context is configured', function(done) {
+    // Remove any context storage setting.
+    helper.settings({
+      contextStorage: {},
+    });
+
+    helper.load([configNode, valueNode], FlowNodeAllVariants, function() {
+      const v = helper.getNode(NodeIdPersistentValue);
+      v.receive({payload: AnyInputString});
+      v.status.should.calledWithMatch({
+        fill: 'green', shape: 'dot',
+        text: `true [bool,global,default]`,
+      });
       done();
     });
   });
