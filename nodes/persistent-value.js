@@ -243,6 +243,11 @@ module.exports = function(RED) {
 
         currentValue = inputValue;
       }
+      // -- Command: unknown / unsupported --
+      else {
+        node.error(`Unknown or unsupported persistent value command '${node.command}' used!`);
+        return null;
+      }
 
       // -- BlockIf --
       const blockFlow = checkBlockIfCondition(node, currentValue);

@@ -244,6 +244,7 @@ describe('persistent value node', function() {
   it('should read the default value - string', function(done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].value = ConfigValueString;
+    flow[0].command = undefined; // Extra test variant: Force usage of default command (read)
 
     helper.load([configNode, valueNode], flow, function() {
       const c = helper.getNode(NodeIdConfig);
@@ -968,6 +969,24 @@ describe('persistent value node', function() {
         }
       });
       v.receive({payload: AnyInputString});
+    });
+  });
+
+  // ==== Other / Error Handling Tests ========================================
+
+  it('should reject unknown / unsupported commands', function(done) {
+    const flow = structuredClone(FlowNodeAllVariants);
+    const unsupportedCommand = 'unsupported command';
+    flow[0].command = unsupportedCommand;
+
+    helper.load([configNode, valueNode], flow, function() {
+      const v = helper.getNode(NodeIdPersistentValue);
+
+      v.receive({payload: AnyInputString});
+
+      v.error.should.be.calledWithMatch(`Unknown or unsupported persistent value command '${unsupportedCommand}' used!`);
+      v.send.should.have.callCount(0);
+      done();
     });
   });
 });
