@@ -43,7 +43,7 @@ module.exports = function(RED) {
     const blocked = blockFlow ? '[blocked]' : '';
 
     node.status({
-      fill: 'green', shape: 'dot',
+      fill: `${blockFlow ? 'red' : 'green'}`, shape: 'dot',
       text: `${msgProperty} [${node.config.datatype},${node.config.scope},${storage}]${blocked}`,
     });
   }

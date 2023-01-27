@@ -204,7 +204,7 @@ describe('persistent value node', function() {
     helper.load([configNode, valueNode], FlowNodeAllVariants, function() {
       const v = helper.getNode(NodeIdPersistentValue);
       v.receive({payload: AnyInputString});
-      v.status.should.calledWithMatch({
+      v.status.should.be.calledWithMatch({
         fill: 'green', shape: 'dot',
         text: `true [bool,global,default]`,
       });
@@ -510,6 +510,10 @@ describe('persistent value node', function() {
         }
       });
       v.receive({payload: simulatedValue});
+      v.status.should.be.calledWithMatch({
+        fill: 'red', shape: 'dot',
+        text: `${simulatedValue} [str,global,file]`,
+      });
     });
   });
 
@@ -736,7 +740,7 @@ describe('persistent value node', function() {
       setContextValue(v, BlockIfCompareValue);
 
       v.receive({payload: AnyInputString});
-      v.send.should.calledWithExactly([null, null]);
+      v.send.should.be.calledWithExactly([null, null]);
       done();
     });
   });
@@ -756,7 +760,7 @@ describe('persistent value node', function() {
       setContextValue(v, BlockIfCompareValue);
 
       v.receive({payload: AnyInputString});
-      v.send.should.calledWithExactly([null, null]);
+      v.send.should.be.calledWithExactly([null, null]);
       done();
     });
   });
@@ -776,7 +780,11 @@ describe('persistent value node', function() {
       setContextValue(v, BlockIfCompareValue);
 
       v.receive({payload: AnyInputString});
-      v.send.should.calledWithExactly([null, null]);
+      v.send.should.be.calledWithExactly([null, null]);
+      v.status.should.be.calledWithMatch({
+        fill: 'red', shape: 'dot',
+        text: `${BlockIfCompareValue} [str,global,default (memory)][blocked]`,
+      });
       done();
     });
   });
@@ -796,7 +804,7 @@ describe('persistent value node', function() {
       setContextValue(v, !BlockIfCompareValue);
 
       v.receive({payload: AnyInputString});
-      v.send.should.calledWithExactly([null, null]);
+      v.send.should.be.calledWithExactly([null, null]);
       done();
     });
   });
