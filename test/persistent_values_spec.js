@@ -1,5 +1,5 @@
 // --------------------------------------------------------------------------------------------------------------------
-// Tests for node-red-persistent-values
+// Tests for node 'persistent value'
 // --------------------------------------------------------------------------------------------------------------------
 // Setup Infrastructure:
 //   npm install --save-dev
@@ -9,6 +9,7 @@
 // More docu:
 //   - https://www.npmjs.com/package/node-red-node-test-helper
 //   - https://sinonjs.org/releases/latest/assertions/
+//   - https://www.npmjs.com/package/supertest
 // --------------------------------------------------------------------------------------------------------------------
 const helper = require('node-red-node-test-helper');
 const valueNode = require('../nodes/persistent-value.js');
@@ -895,7 +896,7 @@ describe('persistent value node', function() {
     flow[0].value = ConfigValueNumber;
     flow[0].blockIfEnable = true;
     flow[0].blockIfRule = BlockIfRuleEqual;
-    const BlockIfCompareValue = "not a number";
+    const BlockIfCompareValue = 'not a number';
     flow[0].blockIfCompareValue = BlockIfCompareValue;
 
 
@@ -928,7 +929,7 @@ describe('persistent value node', function() {
       const v = helper.getNode(NodeIdPersistentValue);
       const h = helper.getNode(NodeIdHelperCurrentValue);
 
-      const simulatedContextValue = "valid string";
+      const simulatedContextValue = 'valid string';
       setContextValue(v, simulatedContextValue);
 
       h.on(InputFunction, function(msg) {

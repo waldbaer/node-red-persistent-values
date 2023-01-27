@@ -22,6 +22,8 @@ module.exports = function(RED) {
       const id = req.query.id;
       if (configs.hasOwnProperty(id)) {
         res.json(configs[id]);
+      } else {
+        res.sendStatus(404); // not found
       }
     } else {
       // Return all available configs if no ID is passed.
@@ -43,7 +45,9 @@ module.exports = function(RED) {
     const id = req.body.id;
     if (configs.hasOwnProperty(id)) {
       delete configs[id];
+      res.sendStatus(200);
+    } else {
+      res.sendStatus(404); // not found
     }
-    res.sendStatus(200);
   });
 };
