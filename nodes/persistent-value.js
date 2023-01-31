@@ -1,16 +1,24 @@
 module.exports = function(RED) {
-  // elements of the reference config
+  // ---- elements of the reference config ----
+
+  // Datatypes defined by TypedInput widget
   const kConfigDatatypeBool = 'bool';
   const kConfigDatatypeNumber = 'num';
   const kConfigDatatypeString = 'str';
-  const kConfigSupportedDatatype = new Map([
-    // java typeof | config typed input
-    ['boolean', kConfigDatatypeBool],
-    ['number', kConfigDatatypeNumber],
-    ['string', kConfigDatatypeString],
-  ]);
 
-  // elements of the node
+  // Lookup table: javascript typeof -> configured type (TypedInput)
+  const kSupportedDatatypesLanguageType = {
+    [typeof true]: kConfigDatatypeBool,
+    [typeof 0]: kConfigDatatypeNumber,
+    [typeof '']: kConfigDatatypeString,
+  };
+  // Lookup table: configured type (TypedInput) -> javascript typeof
+  const kSupportedDatatypesByTypedInput = Object.keys(kSupportedDatatypesLanguageType).reduce((ret, key) => {
+    ret[kSupportedDatatypesLanguageType[key]] = key;
+    return ret;
+  }, {});
+
+  // ---- elements of the node ----
   const kStorageDefault = 'default';
   const kMsgPropertyDefault = 'payload';
 
@@ -19,7 +27,6 @@ module.exports = function(RED) {
   const kCommandDefault = kCommandRead;
   const kCollectValuesDefault = false; // Do not collect values by default
   const kCollectValuesMsgProperty = 'values';
-
 
   const kBlockIfRuleEq = 'eq';
   const kBlockIfRuleNeq = 'neq';
@@ -40,11 +47,11 @@ module.exports = function(RED) {
         storage += ` (${RED.settings.contextStorage.default})`;
       }
     }
-    const blocked = blockFlow ? '[blocked]' : '';
 
     node.status({
-      fill: `${blockFlow ? 'red' : 'green'}`, shape: 'dot',
-      text: `${msgProperty} [${node.config.datatype},${node.config.scope},${storage}]${blocked}`,
+      fill: `${blockFlow ? 'red' : 'green'}`,
+      shape: 'dot',
+      text: `${msgProperty} [${kSupportedDatatypesByTypedInput[node.config.datatype]},${node.config.scope},${storage}]`,
     });
   }
 
@@ -137,7 +144,8 @@ module.exports = function(RED) {
 
   function compareToConfiguredDatatype(node, value) {
     const typeOfValue = typeof value;
-    return kConfigSupportedDatatype.has(typeOfValue) && (kConfigSupportedDatatype.get(typeOfValue) === node.config.datatype);
+    return kSupportedDatatypesLanguageType.hasOwnProperty(typeOfValue) &&
+           (kSupportedDatatypesLanguageType[typeOfValue] === node.config.datatype);
   }
 
   function checkBlockIfCondition(node, currentValue) {

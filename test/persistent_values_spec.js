@@ -205,8 +205,9 @@ describe('persistent value node', function() {
       const v = helper.getNode(NodeIdPersistentValue);
       v.receive({payload: AnyInputString});
       v.status.should.be.calledWithMatch({
-        fill: 'green', shape: 'dot',
-        text: `true [bool,global,default]`,
+        fill: 'green',
+        shape: 'dot',
+        text: `true [boolean,global,default]`,
       });
       done();
     });
@@ -782,8 +783,9 @@ describe('persistent value node', function() {
       v.receive({payload: AnyInputString});
       v.send.should.be.calledWithExactly([null, null]);
       v.status.should.be.calledWithMatch({
-        fill: 'red', shape: 'dot',
-        text: `${BlockIfCompareValue} [str,global,default (memory)][blocked]`,
+        fill: 'red',
+        shape: 'dot',
+        text: `${BlockIfCompareValue} [string,global,default (memory)]`,
       });
       done();
     });
