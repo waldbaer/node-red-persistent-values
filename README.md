@@ -1,6 +1,7 @@
 # Nodes for user-friendly use of the NodeRED context stores.
 
 [![Platform](https://img.shields.io/badge/platform-Node--RED-red)](https://nodered.org)
+[![npm version](https://badge.fury.io/js/@waldbaer%2Fnode-red-persistent-values.svg)](https://badge.fury.io/js/@waldbaer%2Fnode-red-persistent-values)
 [![MIT License](https://img.shields.io/github/license/waldbaer/node-red-persistent-values?style=flat-square)](https://opensource.org/licenses/MIT)
 [![GitHub issues open](https://img.shields.io/github/issues/waldbaer/node-red-persistent-values?style=flat-square)](https://github.com/waldbaer/node-red-persistent-values/issues)
 [![GitHub Actions](https://github.com/waldbaer/node-red-persistent-values/actions/workflows/node.js.yml/badge.svg?branch=master)](https://github.com/waldbaer/node-red-persistent-values/actions/workflows/node.js.yml)

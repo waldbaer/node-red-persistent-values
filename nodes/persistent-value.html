@@ -1,5 +1,5 @@
 <script type="text/javascript">
-
+  // ---- Constants ----
   const kCommandRead = 'read';
   const kCommandWrite = 'write';
   const kCommandDefault = kCommandRead;
@@ -16,9 +16,28 @@
     [kBlockIfRuleNeq, '!='],
   ]);
 
+  // ---- Utilities ----
+  async function getConfigFromBackend(id) {
+    let config = undefined;
+    try {
+      config = await $.getJSON(httpPathConfigGet, {id: id});
+    } catch (error) {
+      console.log(`[Persistent Values][error]: Failed to get configuration with ID ${id} from backend: ${error}`);
+    }
+    return config;
+  }
+
+  // ---- Node registration ----
   RED.nodes.registerType('persistent value', {
     category: 'storage',
     color: '#E9967A',
+    icon: 'font-awesome/fa-database',
+
+    inputs: 1,
+    inputLabels: 'trigger read/write',
+    outputs: 2,
+    outputLabels: ['current value', 'on change'],
+
     defaults: {
       name: {value: ''},
       valuesConfig: {value: '', type: 'persistent values config'},
@@ -39,12 +58,7 @@
         },
       },
     },
-    inputs: 1,
-    inputLabels: 'trigger read/write',
-    outputs: 2,
-    outputLabels: ['current value', 'on change'],
 
-    icon: 'font-awesome/fa-database',
     label: function() {
       let blockIfLabel = this.blockIfEnable ? `, block ${kBlockIfRules.get(this.blockIfRule)}${this.blockIfCompareValue}` : ``;
       const blockIfLabelLimit = 20;
@@ -53,9 +67,9 @@
       }
       return this.name || `Persistent Value - ${this.value} [${this.command}${blockIfLabel}]`;
     },
-    oneditprepare: function() {
+    oneditprepare: async function() {
       // UI properties
-      const valueConfigField = $('#node-input-valuesConfig');
+      const valuesConfigField = $('#node-input-valuesConfig');
       const valueSelectField = $('#node-input-valueSelect');
       const valueField = $('#node-input-value');
 
@@ -77,31 +91,11 @@
 
       // Store current configured value name before drop-down repopulation
       const currentSelectedValue = valueField.val();
-      valueConfigField.change(function() {
-        $.getJSON(httpPathConfigGet, {id: $(this).val()})
-          .done(function(config) {
-            const values = config.values;
 
-            // Re-populate select widget
-            valueSelectField.empty();
-            for (const value of values) {
-              const optionText = `${value.name} [${value.datatype}, ${value.storage}]`;
-              valueSelectField.append(`<option value="${value.name}" data-datatype="${value.datatype}">${optionText}</option>`);
-            }
-
-            // Select the previously selected value or set to invalid if the value is not known anymore
-            if (values.find((value) => value.name === currentSelectedValue)) {
-              valueSelectField.val(currentSelectedValue).change();
-            } else {
-              valueSelectField.val([]);
-              valueField.val(null);
-            }
-          });
-      });
-
-      valueSelectField.change(function() {
+      valueSelectField.on('change', function() {
         const selected = $(this).find('option:selected');
 
+        // Ignore re-population change
         if (selected.val() !== undefined) {
           // Store actual selected value
           valueField.val(selected.val());
@@ -113,12 +107,33 @@
         }
       });
 
+      // Initially change triggered by editor loaded, later with every user interaction.
+      valuesConfigField.on('change', async function() {
+        const selectedConfigId = $(this).val();
+        backendConfig = await getConfigFromBackend(selectedConfigId);
+
+        // Re-populate select widget
+        valueSelectField.empty();
+        for (const value of backendConfig.values) {
+          const optionText = `${value.name} [${value.datatype}, ${value.storage}]`;
+          valueSelectField.append(`<option value="${value.name}" data-datatype="${value.datatype}">${optionText}</option>`);
+        }
+
+        // Select the previously selected value or set to invalid if the value is not known anymore
+        if (backendConfig.values.find((value) => value.name === currentSelectedValue)) {
+          valueSelectField.val(currentSelectedValue).change();
+        } else {
+          valueSelectField.val([]);
+          valueField.val(null);
+        }
+      });
+
       // command
       for (const [value, label] of kCommands) {
         commandField.append(`<option value="${value}">${label}</option>`);
       }
       commandField.val(this.command);
-      commandField.change(function() {
+      commandField.on('change', function() {
         if (commandField.val() === kCommandRead) {
           msgPropertyLabelFieldInput.hide();
           msgPropertyLabelFieldOutput.show();
@@ -132,13 +147,13 @@
       msgPropertyField.typedInput({types: [{label: 'msg.', value: 'str'}]});
 
       // collectValues property
-      collectValuesField.change(function() {
+      collectValuesField.on('change', function() {
         this.checked ? collectValuesRow.show() : collectValuesRow.hide();
       });
       collectValuesMsgPropertyField.typedInput({types: [{label: 'msg.', value: 'str'}]});
 
       // block if property
-      blockIfEnableField.change(function() {
+      blockIfEnableField.on('change', function() {
         this.checked ? blockIfRow.show() : blockIfRow.hide();
       });
 
