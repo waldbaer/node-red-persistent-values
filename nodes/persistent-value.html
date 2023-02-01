@@ -41,6 +41,7 @@
     defaults: {
       name: {value: ''},
       valuesConfig: {value: '', type: 'persistent values config'},
+      valuesConfigName: {required: false},
       valueSelect: {required: true},
       value: {required: true},
       command: {value: kCommandDefault, required: true},
@@ -60,16 +61,23 @@
     },
 
     label: function() {
-      let blockIfLabel = this.blockIfEnable ? `, block ${kBlockIfRules.get(this.blockIfRule)}${this.blockIfCompareValue}` : ``;
-      const blockIfLabelLimit = 20;
-      if (blockIfLabel.length > blockIfLabelLimit) {
-        blockIfLabel = blockIfLabel.substring(0, blockIfLabelLimit) + '...';
+      let label = this.name;
+      if (!label) {
+        let blockIfLabel = this.blockIfEnable ? `, block ${kBlockIfRules.get(this.blockIfRule)}${this.blockIfCompareValue}` : ``;
+        const blockIfLabelLimit = 20;
+        if (blockIfLabel.length > blockIfLabelLimit) {
+          blockIfLabel = blockIfLabel.substring(0, blockIfLabelLimit) + '...';
+        }
+        const configName = this.valuesConfigName || 'Persistent Value';
+        label = `${configName} - ${this.value} [${this.command}${blockIfLabel}]`;
       }
-      return this.name || `Persistent Value - ${this.value} [${this.command}${blockIfLabel}]`;
+      return label;
     },
     oneditprepare: async function() {
       // UI properties
       const valuesConfigField = $('#node-input-valuesConfig');
+      const valuesConfigNameField = $('#node-input-valuesConfigName');
+
       const valueSelectField = $('#node-input-valueSelect');
       const valueField = $('#node-input-value');
 
@@ -111,6 +119,8 @@
       valuesConfigField.on('change', async function() {
         const selectedConfigId = $(this).val();
         backendConfig = await getConfigFromBackend(selectedConfigId);
+        // Store current selected configuration name
+        valuesConfigNameField.val(backendConfig.name);
 
         // Re-populate select widget
         valueSelectField.empty();
@@ -172,9 +182,12 @@
   <div class="form-row">
     <label for="node-input-valuesConfig"><i class="fa fa-gears"></i> Config</label>
     <input type="text" id="node-input-valuesConfig" placeholder="">
+    <!-- Hidden storage of current selected configuration name (required for node label creation)-->
+    <input type="hidden" id="node-input-valuesConfigName">
   </div>
   <div class="form-row">
-    <label for="node-input-value"><i class="fa fa-adjust"></i> Value</label>
+    <label for="node-input-valueSelect"><i class="fa fa-adjust"></i> Value</label>
+    <!-- Classic select widget instead of NodeRED TypedInput used due to missing re-population capabiltiy -->
     <select id="node-input-valueSelect"></select>
     <!-- Store the actually selected value in a hidden field. Required due to dynamic drop-down repopulation -->
     <input type="hidden" id="node-input-value">
