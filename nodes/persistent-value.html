@@ -63,13 +63,18 @@
     label: function() {
       let label = this.name;
       if (!label) {
-        let blockIfLabel = this.blockIfEnable ? `, block ${kBlockIfRules.get(this.blockIfRule)}${this.blockIfCompareValue}` : ``;
-        const blockIfLabelLimit = 20;
-        if (blockIfLabel.length > blockIfLabelLimit) {
-          blockIfLabel = blockIfLabel.substring(0, blockIfLabelLimit) + '...';
-        }
         const configName = this.valuesConfigName || 'Persistent Value';
-        label = `${configName} - ${this.value} [${this.command}${blockIfLabel}]`;
+        label = configName;
+
+        if (this.value) {
+          let blockIfLabel = this.blockIfEnable ? `, block ${kBlockIfRules.get(this.blockIfRule)}${this.blockIfCompareValue}` : ``;
+          const blockIfLabelLimit = 20;
+          if (blockIfLabel.length > blockIfLabelLimit) {
+            blockIfLabel = blockIfLabel.substring(0, blockIfLabelLimit) + '...';
+          }
+
+          label += ` - ${this.value} [${this.command}${blockIfLabel}]`;
+        }
       }
       return label;
     },
