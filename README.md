@@ -63,4 +63,4 @@ Changes can be followed [here](/CHANGELOG.md).
 
 
 ## Examples
-See folder [/examples](/examples) or via NodeRED 🠖 Import 🠖 Examples.
+See folder [/examples](/examples) or via NodeRED -> Import -> Examples.
