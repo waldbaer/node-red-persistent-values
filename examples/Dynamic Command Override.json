@@ -1,0 +1,235 @@
+[
+    {
+        "id": "09f2b3c2682ff81f",
+        "type": "group",
+        "z": "613529d99b084479",
+        "name": "node-red-persistent-values example: Dynamic command override",
+        "style": {
+            "label": true
+        },
+        "nodes": [
+            "24f1221376048410",
+            "e5d43176e3cabf40",
+            "497624662b327ecb",
+            "a7cfc378c66c5ae6",
+            "cf833bb67577bd1b",
+            "0cd8ecd3bc7d4ec6",
+            "9b1708c25844b780",
+            "13f153a8fea5af28",
+            "7f11b06448e03736"
+        ],
+        "x": 54,
+        "y": 119,
+        "w": 1032,
+        "h": 302
+    },
+    {
+        "id": "24f1221376048410",
+        "type": "persistent value",
+        "z": "613529d99b084479",
+        "g": "09f2b3c2682ff81f",
+        "name": "",
+        "valuesConfig": "bbc8971830771b8e",
+        "valuesConfigName": "Room State",
+        "valueSelect": "DoorOpen",
+        "value": "DoorOpen",
+        "command": "write",
+        "msgProperty": "payload",
+        "collectValues": false,
+        "collectValuesMsgProperty": "values",
+        "blockIfEnable": false,
+        "blockIfRule": "eq",
+        "blockIfCompareValue": "true",
+        "x": 750,
+        "y": 300,
+        "wires": [
+            [
+                "7f11b06448e03736"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "e5d43176e3cabf40",
+        "type": "inject",
+        "z": "613529d99b084479",
+        "g": "09f2b3c2682ff81f",
+        "name": "Door: Closed",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "false",
+        "payloadType": "bool",
+        "x": 170,
+        "y": 300,
+        "wires": [
+            [
+                "24f1221376048410"
+            ]
+        ]
+    },
+    {
+        "id": "497624662b327ecb",
+        "type": "change",
+        "z": "613529d99b084479",
+        "g": "09f2b3c2682ff81f",
+        "name": "msg.command=read",
+        "rules": [
+            {
+                "t": "set",
+                "p": "command",
+                "pt": "msg",
+                "to": "read",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 460,
+        "y": 380,
+        "wires": [
+            [
+                "24f1221376048410"
+            ]
+        ]
+    },
+    {
+        "id": "a7cfc378c66c5ae6",
+        "type": "inject",
+        "z": "613529d99b084479",
+        "g": "09f2b3c2682ff81f",
+        "name": "Override configured command",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "x": 220,
+        "y": 380,
+        "wires": [
+            [
+                "497624662b327ecb"
+            ]
+        ]
+    },
+    {
+        "id": "cf833bb67577bd1b",
+        "type": "inject",
+        "z": "613529d99b084479",
+        "g": "09f2b3c2682ff81f",
+        "name": "Door: Open",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "x": 170,
+        "y": 260,
+        "wires": [
+            [
+                "24f1221376048410"
+            ]
+        ]
+    },
+    {
+        "id": "0cd8ecd3bc7d4ec6",
+        "type": "comment",
+        "z": "613529d99b084479",
+        "g": "09f2b3c2682ff81f",
+        "name": "Override command with msg.command",
+        "info": "",
+        "x": 230,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "9b1708c25844b780",
+        "type": "comment",
+        "z": "613529d99b084479",
+        "g": "09f2b3c2682ff81f",
+        "name": "Use configured command (Write)",
+        "info": "",
+        "x": 210,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "13f153a8fea5af28",
+        "type": "comment",
+        "z": "613529d99b084479",
+        "g": "09f2b3c2682ff81f",
+        "name": "*Important*: Make config available",
+        "info": "# Workaround for import of example configuration\n\nPersistent values relies on an interactive relation between the\nconfiguration and the concrete presistent values node.\n\nDue to limitations of NodeRED the configuration is not properly\nregister with the backend when importing an example flow.\n\nTherefore the following workaround shall be applied after the\ninitial example import:\n\n 1. Open the edit dialog of any of the presistent value nodes.\n 2. Open the edit dialog if the referenced configuration \"House Config\".\n 3. Press \"Update\".\n \nAfter these steps the drop-down menu of the \"Value\" should be populated with all\nthree configured persistent values. \nThe first drop-down value \"LightOn\" should be selected for the example.",
+        "x": 220,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "7f11b06448e03736",
+        "type": "debug",
+        "z": "613529d99b084479",
+        "g": "09f2b3c2682ff81f",
+        "name": "DoorOpen",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "payload",
+        "statusType": "auto",
+        "x": 970,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "bbc8971830771b8e",
+        "type": "persistent values config",
+        "name": "Room State",
+        "values": [
+            {
+                "name": "DoorOpen",
+                "datatype": "bool",
+                "default": false,
+                "scope": "global",
+                "storage": "default"
+            }
+        ]
+    }
+]
