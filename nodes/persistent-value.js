@@ -24,6 +24,8 @@ module.exports = function(RED) {
 
   const kCommandRead = 'read';
   const kCommandWrite = 'write';
+  const kSupportedCommands = [kCommandRead, kCommandWrite];
+
   const kCommandDefault = kCommandRead;
   const kCollectValuesDefault = false; // Do not collect values by default
   const kCollectValuesMsgProperty = 'values';
@@ -53,6 +55,28 @@ module.exports = function(RED) {
       shape: 'dot',
       text: `${msgProperty} [${kSupportedDatatypesByTypedInput[node.config.datatype]},${node.config.scope},${storage}]`,
     });
+  }
+
+  function determineCommand(node, msg) {
+    let command = node.command;
+
+    // Command overwrite by msg.command property?
+    const commandProperty = 'command';
+    if (msg.hasOwnProperty(commandProperty)) {
+      let msgCommand = msg[commandProperty];
+      if (typeof msgCommand === 'string') {
+        msgCommand = msgCommand.trim().toLowerCase();
+      }
+      if (kSupportedCommands.includes(msgCommand)) {
+        command = msgCommand;
+      } else {
+        node.warn(`Command '${msgCommand}' set via msg.${commandProperty} is not known / supported!` +
+        ` Falling back to configured command.` +
+        ` Supported commands: ${kSupportedCommands.join(', ')}`
+        , msg);
+      }
+    }
+    return command;
   }
 
   function getUsedContext(node) {
@@ -222,13 +246,16 @@ module.exports = function(RED) {
 
       let onChangeMsg = null;
 
+      // Determine command either from configuration or use dynamic override
+      const command = determineCommand(node, msg);
+
       // -- Command: Read --
-      if (node.command === kCommandRead) {
+      if (command === kCommandRead) {
         msg[node.msgProperty] = currentValue;
         updateCollectedValues(node, msg, currentValue);
       }
       // -- Command: Write --
-      else if (node.command === kCommandWrite) {
+      else if (command === kCommandWrite) {
         if (!msg.hasOwnProperty(node.msgProperty)) {
           node.error(`Passed msg does not have the configured property '${node.msgProperty}'`, msg);
           return;
@@ -253,7 +280,7 @@ module.exports = function(RED) {
       }
       // -- Command: unknown / unsupported --
       else {
-        node.error(`Unknown or unsupported persistent value command '${node.command}' used!`);
+        node.error(`Unknown or unsupported persistent value command '${command}' used!`);
         return null;
       }
 

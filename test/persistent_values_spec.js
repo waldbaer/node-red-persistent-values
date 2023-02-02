@@ -651,6 +651,93 @@ describe('persistent value node', function() {
     });
   });
 
+  // ==== Command override (msg.command) Tests ================================
+  it(`should use 'read' command override`, function(done) {
+    const flow = structuredClone(FlowNodeAllVariants);
+    flow[0].value = ConfigValueString;
+    flow[0].command = CommandWrite;
+
+    helper.load([configNode, valueNode], flow, function() {
+      const v = helper.getNode(NodeIdPersistentValue);
+      const h = helper.getNode(NodeIdHelperCurrentValue);
+
+      const persistedValue = 'Use the read command override';
+      setContextValue(v, persistedValue);
+
+      h.on(InputFunction, function(msg) {
+        try {
+          msg.should.have.property(PropertyPayload, persistedValue);
+
+          const contextValue = getContextValue(v);
+          contextValue.should.equal(persistedValue);
+          done();
+        } catch (err) {
+          done(err);
+        }
+      });
+      v.receive({
+        payload: AnyInputString,
+        command: CommandRead,
+      });
+    });
+  });
+
+  it(`should use 'write' command override`, function(done) {
+    const flow = structuredClone(FlowNodeAllVariants);
+    flow[0].value = ConfigValueString;
+    delete flow[0].command; // extra test: No command configured. -> fallback to default command
+
+    helper.load([configNode, valueNode], flow, function() {
+      const v = helper.getNode(NodeIdPersistentValue);
+      const h = helper.getNode(NodeIdHelperCurrentValue);
+
+      const simulatedValue = 'Use the write command override';
+      setContextValue(v, '');
+
+      h.on(InputFunction, function(msg) {
+        try {
+          msg.should.have.property(PropertyPayload, simulatedValue);
+
+          const contextValue = getContextValue(v);
+          contextValue.should.equal(simulatedValue);
+          done();
+        } catch (err) {
+          done(err);
+        }
+      });
+      v.receive({
+        payload: simulatedValue,
+        command: `   ${CommandWrite.toUpperCase()}    `, // test also trim and lowercase
+      });
+    });
+  });
+
+  it(`should use the configured command if an unknown override is used`, function(done) {
+    const flow = structuredClone(FlowNodeAllVariants);
+    flow[0].command = CommandRead;
+
+    helper.load([configNode, valueNode], flow, function() {
+      const c = helper.getNode(NodeIdConfig);
+      const v = helper.getNode(NodeIdPersistentValue);
+      const h = helper.getNode(NodeIdHelperCurrentValue);
+
+      h.on(InputFunction, function(msg) {
+        try {
+          msg.should.have.property(PropertyPayload, c.values[0].default);
+          v.warn.should.be.calledWithMatch('not known / supported');
+          done();
+        } catch (err) {
+          done(err);
+        }
+      });
+      v.receive({
+        payload: AnyInputString,
+        command: {invalid_command: 'string instead of object type expected'},
+      });
+    });
+  });
+
+
   // ==== Collect Values Tests ================================================
 
   it('should collect the read values', function(done) {

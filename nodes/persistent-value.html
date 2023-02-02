@@ -278,6 +278,10 @@
             New value to be stored in the persistent value. Only necessary if command 'write' is used.
             The default property name <code>msg.payload</code> can be re-configured with the setting 'Input'.
         </dd>
+        <dt class="optional">command <span class="property-type">"read" | "write"</span></dt>
+        <dd>
+            Override the configured command.
+        </dd>
     </dl>
 
   <h3>Outputs</h3>
@@ -317,6 +321,9 @@
       If a persistent value shall be accessed from multiple flow sections just create multiple persistent value nodes
       and select the same configuration and value.
       Every read or write operation will then access the same context data with the correct scope and storage type.
+
+      The configured command can be overridden by setting <code>msg.command</code> to
+      <code>"read"</code> or <code>"write"</code> (whitespace and case insensitive).
     </p>
 
     <h4>Collected Values</h4>
