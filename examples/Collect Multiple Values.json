@@ -1,0 +1,352 @@
+[
+    {
+        "id": "05156e99b1d98425",
+        "type": "group",
+        "z": "613529d99b084479",
+        "name": "node-red-persistent-values example: Collect Multiple Values",
+        "style": {
+            "label": true
+        },
+        "nodes": [
+            "23502e64849ddc1d",
+            "5d68c0af5d524ffd",
+            "24e0c021885c319b",
+            "299e109b7ff74314",
+            "75eed2f0b5733bac",
+            "46596db8a7fe4b87",
+            "f259989848aae716",
+            "fe5afac947cc5fbc",
+            "f6b762497d432bcf",
+            "fc487d7a5e510131",
+            "a3dce96fd926cf46",
+            "6095559003933bc8",
+            "c656f47ce9c41dba"
+        ],
+        "x": 54,
+        "y": 799,
+        "w": 852,
+        "h": 462
+    },
+    {
+        "id": "23502e64849ddc1d",
+        "type": "comment",
+        "z": "613529d99b084479",
+        "g": "05156e99b1d98425",
+        "name": "*Important*: Make config available",
+        "info": "# Workaround for import of example configuration\n\nPersistent values relies on an interactive relation between the\nconfiguration and the concrete presistent values node.\n\nDue to limitations of NodeRED the configuration is not properly\nregister with the backend when importing an example flow.\n\nTherefore the following workaround shall be applied after the\ninitial example import:\n\n 1. Open the edit dialog of any of the presistent value nodes.\n 2. Open the edit dialog if the referenced configuration \"House Config\".\n 3. Press \"Update\".\n \nAfter these steps the drop-down menu of the \"Value\" should be populated with all\nthree configured persistent values. \nThe first drop-down value \"LightOn\" should be selected for the example.",
+        "x": 220,
+        "y": 840,
+        "wires": []
+    },
+    {
+        "id": "5d68c0af5d524ffd",
+        "type": "persistent value",
+        "z": "613529d99b084479",
+        "g": "05156e99b1d98425",
+        "name": "",
+        "valuesConfig": "bdcc10eee2fc3654",
+        "valuesConfigName": "RoomStates",
+        "valueSelect": "DoorOpen",
+        "value": "DoorOpen",
+        "command": "write",
+        "msgProperty": "payload",
+        "collectValues": false,
+        "collectValuesMsgProperty": "values",
+        "blockIfEnable": false,
+        "blockIfRule": "eq",
+        "blockIfCompareValue": "true",
+        "x": 490,
+        "y": 960,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "24e0c021885c319b",
+        "type": "persistent value",
+        "z": "613529d99b084479",
+        "g": "05156e99b1d98425",
+        "name": "",
+        "valuesConfig": "bdcc10eee2fc3654",
+        "valuesConfigName": "Room States",
+        "valueSelect": "OpenWindows",
+        "value": "OpenWindows",
+        "command": "write",
+        "msgProperty": "payload",
+        "collectValues": false,
+        "collectValuesMsgProperty": "values",
+        "blockIfEnable": false,
+        "blockIfRule": "eq",
+        "blockIfCompareValue": "true",
+        "x": 510,
+        "y": 1060,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "299e109b7ff74314",
+        "type": "inject",
+        "z": "613529d99b084479",
+        "g": "05156e99b1d98425",
+        "name": "Door: Open",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "x": 170,
+        "y": 940,
+        "wires": [
+            [
+                "5d68c0af5d524ffd"
+            ]
+        ]
+    },
+    {
+        "id": "75eed2f0b5733bac",
+        "type": "inject",
+        "z": "613529d99b084479",
+        "g": "05156e99b1d98425",
+        "name": "Door: Close",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "false",
+        "payloadType": "bool",
+        "x": 170,
+        "y": 980,
+        "wires": [
+            [
+                "5d68c0af5d524ffd"
+            ]
+        ]
+    },
+    {
+        "id": "46596db8a7fe4b87",
+        "type": "inject",
+        "z": "613529d99b084479",
+        "g": "05156e99b1d98425",
+        "name": "Open Windows: 4",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "4",
+        "payloadType": "num",
+        "x": 190,
+        "y": 1040,
+        "wires": [
+            [
+                "24e0c021885c319b"
+            ]
+        ]
+    },
+    {
+        "id": "f259989848aae716",
+        "type": "inject",
+        "z": "613529d99b084479",
+        "g": "05156e99b1d98425",
+        "name": "Open Windows: 0",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "0",
+        "payloadType": "num",
+        "x": 190,
+        "y": 1080,
+        "wires": [
+            [
+                "24e0c021885c319b"
+            ]
+        ]
+    },
+    {
+        "id": "fe5afac947cc5fbc",
+        "type": "comment",
+        "z": "613529d99b084479",
+        "g": "05156e99b1d98425",
+        "name": "Update the states (Write)",
+        "info": "",
+        "x": 190,
+        "y": 900,
+        "wires": []
+    },
+    {
+        "id": "f6b762497d432bcf",
+        "type": "comment",
+        "z": "613529d99b084479",
+        "g": "05156e99b1d98425",
+        "name": "Collect all states and assess the overall situation",
+        "info": "",
+        "x": 260,
+        "y": 1140,
+        "wires": []
+    },
+    {
+        "id": "fc487d7a5e510131",
+        "type": "persistent value",
+        "z": "613529d99b084479",
+        "g": "05156e99b1d98425",
+        "name": "",
+        "valuesConfig": "bdcc10eee2fc3654",
+        "valuesConfigName": "RoomStates",
+        "valueSelect": "DoorOpen",
+        "value": "DoorOpen",
+        "command": "read",
+        "msgProperty": "payload",
+        "collectValues": true,
+        "collectValuesMsgProperty": "states",
+        "blockIfEnable": false,
+        "blockIfRule": "eq",
+        "blockIfCompareValue": "true",
+        "x": 250,
+        "y": 1220,
+        "wires": [
+            [
+                "6095559003933bc8"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "a3dce96fd926cf46",
+        "type": "inject",
+        "z": "613529d99b084479",
+        "g": "05156e99b1d98425",
+        "name": "Collect and assess overall situation",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 240,
+        "y": 1180,
+        "wires": [
+            [
+                "fc487d7a5e510131"
+            ]
+        ]
+    },
+    {
+        "id": "6095559003933bc8",
+        "type": "persistent value",
+        "z": "613529d99b084479",
+        "g": "05156e99b1d98425",
+        "name": "",
+        "valuesConfig": "bdcc10eee2fc3654",
+        "valuesConfigName": "RoomStates",
+        "valueSelect": "OpenWindows",
+        "value": "OpenWindows",
+        "command": "read",
+        "msgProperty": "payload",
+        "collectValues": true,
+        "collectValuesMsgProperty": "states",
+        "blockIfEnable": false,
+        "blockIfRule": "eq",
+        "blockIfCompareValue": "true",
+        "x": 540,
+        "y": 1220,
+        "wires": [
+            [
+                "c656f47ce9c41dba"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "c656f47ce9c41dba",
+        "type": "function",
+        "z": "613529d99b084479",
+        "g": "05156e99b1d98425",
+        "name": "everything closed?",
+        "func": "// Get states from the collected values msg property\nconst door_open = msg.states[\"RoomStates_DoorOpen\"];\nconst open_windows = msg.states[\"RoomStates_OpenWindows\"];\n\n// Assess to overall situation\nif(door_open === false && open_windows === 0) {\n    node.status({fill: 'green', shape: 'ring', text: 'Everything closed.'});\n    \n    return msg; // Continue flow as overall situation is safe.\n\n} else {\n    node.status({ fill: 'red', shape: 'dot', text: 'Door or any window still open!' });\n    \n    return null; // Do not continue.\n}\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 790,
+        "y": 1220,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "bdcc10eee2fc3654",
+        "type": "persistent values config",
+        "name": "RoomStates",
+        "values": [
+            {
+                "name": "DoorOpen",
+                "datatype": "bool",
+                "default": false,
+                "scope": "global",
+                "storage": "default"
+            },
+            {
+                "name": "OpenWindows",
+                "datatype": "num",
+                "default": 3,
+                "scope": "global",
+                "storage": "default"
+            }
+        ]
+    }
+]

@@ -1,10 +1,37 @@
 [
     {
+        "id": "02ec365d88ac27a1",
+        "type": "group",
+        "z": "613529d99b084479",
+        "name": "node-red-persistent-values example: Read and Write",
+        "style": {
+            "label": true
+        },
+        "nodes": [
+            "6680edf3f52a5ba5",
+            "c3aa2b4d0a32ebdc",
+            "9614baf3d84c053b",
+            "ddb2c95fae17feef",
+            "2c51a7143fe34691",
+            "97876ab00fa2d73a",
+            "41c998f03b6f3c81",
+            "ef2d2459870a5e5d",
+            "b81bbc8a37e050dc",
+            "f152cc1d43d5898b"
+        ],
+        "x": 54,
+        "y": 439,
+        "w": 712,
+        "h": 322
+    },
+    {
         "id": "6680edf3f52a5ba5",
         "type": "persistent value",
         "z": "613529d99b084479",
+        "g": "02ec365d88ac27a1",
         "name": "",
         "valuesConfig": "7b534a78d263796e",
+        "valuesConfigName": "House States",
         "valueSelect": "LightOn",
         "value": "LightOn",
         "command": "write",
@@ -14,8 +41,8 @@
         "blockIfEnable": false,
         "blockIfRule": "eq",
         "blockIfCompareValue": "true",
-        "x": 360,
-        "y": 160,
+        "x": 410,
+        "y": 600,
         "wires": [
             [
                 "41c998f03b6f3c81"
@@ -27,6 +54,7 @@
         "id": "c3aa2b4d0a32ebdc",
         "type": "inject",
         "z": "613529d99b084479",
+        "g": "02ec365d88ac27a1",
         "name": "Light: On",
         "props": [
             {
@@ -44,8 +72,8 @@
         "topic": "",
         "payload": "true",
         "payloadType": "bool",
-        "x": 120,
-        "y": 140,
+        "x": 180,
+        "y": 580,
         "wires": [
             [
                 "6680edf3f52a5ba5"
@@ -56,6 +84,7 @@
         "id": "9614baf3d84c053b",
         "type": "inject",
         "z": "613529d99b084479",
+        "g": "02ec365d88ac27a1",
         "name": "Light: Off",
         "props": [
             {
@@ -73,8 +102,8 @@
         "topic": "",
         "payload": "false",
         "payloadType": "bool",
-        "x": 120,
-        "y": 180,
+        "x": 180,
+        "y": 620,
         "wires": [
             [
                 "6680edf3f52a5ba5"
@@ -85,8 +114,10 @@
         "id": "ddb2c95fae17feef",
         "type": "persistent value",
         "z": "613529d99b084479",
+        "g": "02ec365d88ac27a1",
         "name": "",
         "valuesConfig": "7b534a78d263796e",
+        "valuesConfigName": "House States",
         "valueSelect": "LightOn",
         "value": "LightOn",
         "command": "read",
@@ -96,8 +127,8 @@
         "blockIfEnable": false,
         "blockIfRule": "eq",
         "blockIfCompareValue": "true",
-        "x": 360,
-        "y": 300,
+        "x": 410,
+        "y": 720,
         "wires": [
             [
                 "2c51a7143fe34691"
@@ -109,6 +140,7 @@
         "id": "2c51a7143fe34691",
         "type": "debug",
         "z": "613529d99b084479",
+        "g": "02ec365d88ac27a1",
         "name": "Read Status",
         "active": true,
         "tosidebar": true,
@@ -118,24 +150,26 @@
         "targetType": "full",
         "statusVal": "payload",
         "statusType": "auto",
-        "x": 610,
-        "y": 300,
+        "x": 650,
+        "y": 720,
         "wires": []
     },
     {
         "id": "97876ab00fa2d73a",
         "type": "comment",
         "z": "613529d99b084479",
+        "g": "02ec365d88ac27a1",
         "name": "Write persistent value",
         "info": "# Write persistent data\n\nUpdate the persistent value by writing any value matching the configured data type.\n\n- The value will be persistet in the NodeRED context with the configured name / scope.\n- The node status shows the last persistet value and infos about the datatype / scope.\n- The `msg.payload` will contain the last persistet value.",
-        "x": 120,
-        "y": 100,
+        "x": 180,
+        "y": 540,
         "wires": []
     },
     {
         "id": "41c998f03b6f3c81",
         "type": "debug",
         "z": "613529d99b084479",
+        "g": "02ec365d88ac27a1",
         "name": "Write Status",
         "active": true,
         "tosidebar": true,
@@ -145,24 +179,26 @@
         "targetType": "msg",
         "statusVal": "payload",
         "statusType": "auto",
-        "x": 610,
-        "y": 160,
+        "x": 650,
+        "y": 600,
         "wires": []
     },
     {
         "id": "ef2d2459870a5e5d",
         "type": "comment",
         "z": "613529d99b084479",
+        "g": "02ec365d88ac27a1",
         "name": "Read persistent value",
         "info": "# Read persistent data\n\nRead the current persistet value.\n\n- The node status shows the current value read from the NodeRED context\n  and infos about the datatype / scope.\n- The `msg.payload` will contain current value read from the NodeRED context.\n- In `msg.values` the current value will be added to a object with named attributes equal\n  to the persistent value configuration.",
-        "x": 120,
-        "y": 240,
+        "x": 180,
+        "y": 680,
         "wires": []
     },
     {
         "id": "b81bbc8a37e050dc",
         "type": "inject",
         "z": "613529d99b084479",
+        "g": "02ec365d88ac27a1",
         "name": "Read",
         "props": [
             {
@@ -180,8 +216,8 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 90,
-        "y": 300,
+        "x": 170,
+        "y": 720,
         "wires": [
             [
                 "ddb2c95fae17feef"
@@ -192,10 +228,11 @@
         "id": "f152cc1d43d5898b",
         "type": "comment",
         "z": "613529d99b084479",
+        "g": "02ec365d88ac27a1",
         "name": "*Important*: Make config available",
         "info": "# Workaround for import of example configuration\n\nPersistent values relies on an interactive relation between the\nconfiguration and the concrete presistent values node.\n\nDue to limitations of NodeRED the configuration is not properly\nregister with the backend when importing an example flow.\n\nTherefore the following workaround shall be applied after the\ninitial example import:\n\n 1. Open the edit dialog of any of the presistent value nodes.\n 2. Open the edit dialog if the referenced configuration \"House Config\".\n 3. Press \"Update\".\n \nAfter these steps the drop-down menu of the \"Value\" should be populated with all\nthree configured persistent values. \nThe first drop-down value \"LightOn\" should be selected for the example.",
-        "x": 160,
-        "y": 40,
+        "x": 220,
+        "y": 480,
         "wires": []
     },
     {
