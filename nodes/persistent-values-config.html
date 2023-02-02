@@ -185,8 +185,8 @@
         $.post(httpPathConfigDelete, {id: this.id}, function() { }, 'json');
       },
       oneditsave: function() {
+        this.name = $('#node-config-input-name').val();
         this.values = [];
-
         const values = $('#node-config-input-values-container').editableList('items');
         for (const value of values) {
           const name = value.find('.node-input-value-name').typedInput('value');
