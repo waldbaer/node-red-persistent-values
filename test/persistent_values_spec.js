@@ -37,10 +37,10 @@ describe('persistent value node', function() {
 
   function getContext(node) {
     let context = node.context();
-    if (node.config.scope === 'flow') {
+    if (node.valueConfig.scope === 'flow') {
       context = context.flow;
     }
-    if (node.config.scope === 'global') {
+    if (node.valueConfig.scope === 'global') {
       context = context.global;
     }
     return context;
@@ -98,8 +98,13 @@ describe('persistent value node', function() {
   const NodeIdHelperCurrentValue = 'helper_current_value';
   const NodeIdHelperOnChange = 'helper_onchange';
 
+  const ConfigValueIdBoolean = 'ID-boolean';
   const ConfigValueBoolean = 'boolean';
+
+  const ConfigValueIdNumber = 'ID-number';
   const ConfigValueNumber = 'number';
+
+  const ConfigValueIdString = 'ID-string';
   const ConfigValueString = 'string';
 
   const NodeHelperCurrentValue = {id: NodeIdHelperCurrentValue, z: FlowIdTestFlow, type: NodeTypeHelper};
@@ -111,6 +116,7 @@ describe('persistent value node', function() {
     name: 'TestConfig',
     values: [
       {
+        id: ConfigValueIdBoolean,
         name: ConfigValueBoolean,
         datatype: DataTypeBool,
         default: true,
@@ -118,6 +124,7 @@ describe('persistent value node', function() {
         storage: StorageDefault,
       },
       {
+        id: ConfigValueIdNumber,
         name: ConfigValueNumber,
         datatype: DataTypeNumber,
         default: 23,
@@ -125,6 +132,7 @@ describe('persistent value node', function() {
         storage: StorageDefault,
       },
       {
+        id: ConfigValueIdString,
         name: ConfigValueString,
         datatype: DataTypeString,
         default: 'my string default value',
@@ -140,6 +148,7 @@ describe('persistent value node', function() {
     name: 'persistent value node test',
     type: NodeTypePersistentValue,
     valuesConfig: NodeIdConfig,
+    valueId: ConfigValueIdBoolean,
     value: ConfigValueBoolean,
     command: CommandRead,
     wires: [[NodeIdHelperCurrentValue], [NodeIdHelperOnChange]],
@@ -159,6 +168,35 @@ describe('persistent value node', function() {
 
   it('should be loaded with reference to configuration', function(done) {
     helper.load([configNode, valueNode], FlowNodeAllVariants, function() {
+      const config = helper.getNode(NodeIdConfig);
+      const pv = helper.getNode(NodeIdPersistentValue);
+      config.should.have.property('name', 'TestConfig');
+      pv.should.have.property('name', 'persistent value node test');
+      pv.should.have.property('configName', 'TestConfig');
+      done();
+    });
+  });
+
+  it('should be loaded with deprecated missing reference to configuration', function(done) {
+    const flow = structuredClone(FlowNodeAllVariants);
+    delete flow[0].valueId;
+
+    helper.load([configNode, valueNode], flow, function() {
+      const config = helper.getNode(NodeIdConfig);
+      const pv = helper.getNode(NodeIdPersistentValue);
+      config.should.have.property('name', 'TestConfig');
+      pv.should.have.property('name', 'persistent value node test');
+      pv.should.have.property('configName', 'TestConfig');
+      done();
+    });
+  });
+
+
+  it('should be loaded with deprecated undefined reference to configuration', function(done) {
+    const flow = structuredClone(FlowNodeAllVariants);
+    flow[0].valueId = 'undefined';
+
+    helper.load([configNode, valueNode], flow, function() {
       const config = helper.getNode(NodeIdConfig);
       const pv = helper.getNode(NodeIdPersistentValue);
       config.should.have.property('name', 'TestConfig');
@@ -217,7 +255,7 @@ describe('persistent value node', function() {
 
   it('should read the default value - boolean', function(done) {
     const flow = structuredClone(FlowNodeAllVariants);
-    flow[0].value = ConfigValueBoolean;
+    flow[0].valueId = ConfigValueIdBoolean;
 
     helper.load([configNode, valueNode], flow, function() {
       const c = helper.getNode(NodeIdConfig);
@@ -238,7 +276,7 @@ describe('persistent value node', function() {
 
   it('should read the default value - number', function(done) {
     const flow = structuredClone(FlowNodeAllVariants);
-    flow[0].value = ConfigValueNumber;
+    flow[0].valueId = ConfigValueIdNumber;
 
     helper.load([configNode, valueNode], flow, function() {
       const c = helper.getNode(NodeIdConfig);
@@ -259,7 +297,7 @@ describe('persistent value node', function() {
 
   it('should read the default value - string', function(done) {
     const flow = structuredClone(FlowNodeAllVariants);
-    flow[0].value = ConfigValueString;
+    flow[0].valueId = ConfigValueIdString;
     flow[0].command = undefined; // Extra test variant: Force usage of default command (read)
 
     helper.load([configNode, valueNode], flow, function() {
@@ -282,7 +320,7 @@ describe('persistent value node', function() {
 
   it('should read the context value - boolean', function(done) {
     const flow = structuredClone(FlowNodeAllVariants);
-    flow[0].value = ConfigValueBoolean;
+    flow[0].valueId = ConfigValueIdBoolean;
 
     helper.load([configNode, valueNode], flow, function() {
       const c = helper.getNode(NodeIdConfig);
@@ -306,7 +344,7 @@ describe('persistent value node', function() {
 
   it('should read the context value - number', function(done) {
     const flow = structuredClone(FlowNodeAllVariants);
-    flow[0].value = ConfigValueNumber;
+    flow[0].valueId = ConfigValueIdNumber;
 
     helper.load([configNode, valueNode], flow, function() {
       const v = helper.getNode(NodeIdPersistentValue);
@@ -330,7 +368,7 @@ describe('persistent value node', function() {
 
   it('should read the context value - string', function(done) {
     const flow = structuredClone(FlowNodeAllVariants);
-    flow[0].value = ConfigValueNumber;
+    flow[0].valueId = ConfigValueIdNumber;
 
     helper.load([configNode, valueNode], flow, function() {
       const v = helper.getNode(NodeIdPersistentValue);
@@ -353,7 +391,7 @@ describe('persistent value node', function() {
 
   it('should read the context value from scope flow', function(done) {
     const flow = structuredClone(FlowNodeAllVariants);
-    flow[0].value = ConfigValueNumber;
+    flow[0].valueId = ConfigValueIdNumber;
     flow[1].values[1].scope = ScopeFlow;
 
     helper.load([configNode, valueNode], flow, function() {
@@ -401,7 +439,7 @@ describe('persistent value node', function() {
 
   it('should warn persisted value datatype is not matching to configured datatype', function(done) {
     const flow = structuredClone(FlowNodeAllVariants);
-    flow[0].value = ConfigValueNumber;
+    flow[0].valueId = ConfigValueIdNumber;
 
     helper.load([configNode, valueNode], flow, function() {
       const v = helper.getNode(NodeIdPersistentValue);
@@ -427,7 +465,7 @@ describe('persistent value node', function() {
 
   it('should write to the context storage - default', function(done) {
     const flow = structuredClone(FlowNodeAllVariants);
-    flow[0].value = ConfigValueString;
+    flow[0].valueId = ConfigValueIdString;
     flow[0].command = CommandWrite;
 
     helper.load([configNode, valueNode], flow, function() {
@@ -457,7 +495,7 @@ describe('persistent value node', function() {
 
     const flow = structuredClone(FlowNodeAllVariants);
     flow[1].values[2].storage = testedStorage;
-    flow[0].value = ConfigValueString;
+    flow[0].valueId = ConfigValueIdString;
     flow[0].command = CommandWrite;
 
     helper.load([configNode, valueNode], flow, function() {
@@ -488,7 +526,7 @@ describe('persistent value node', function() {
 
     const flow = structuredClone(FlowNodeAllVariants);
     flow[1].values[2].storage = testedStorage;
-    flow[0].value = ConfigValueString;
+    flow[0].valueId = ConfigValueIdString;
     flow[0].command = CommandWrite;
 
     helper.load([configNode, valueNode], flow, function() {
@@ -520,7 +558,7 @@ describe('persistent value node', function() {
 
   it('should write to the context storage with scope flow', function(done) {
     const flow = structuredClone(FlowNodeAllVariants);
-    flow[0].value = ConfigValueString;
+    flow[0].valueId = ConfigValueIdString;
     flow[0].command = CommandWrite;
     flow[1].values[1].scope = ScopeFlow;
 
@@ -548,7 +586,7 @@ describe('persistent value node', function() {
 
   it('should write to the context storage from non-default input msg property', function(done) {
     const flow = structuredClone(FlowNodeAllVariants);
-    flow[0].value = ConfigValueString;
+    flow[0].valueId = ConfigValueIdString;
     flow[0].command = CommandWrite;
     const InputMsgProperty = 'non_default_input_property';
     flow[0].msgProperty = InputMsgProperty;
@@ -596,7 +634,7 @@ describe('persistent value node', function() {
 
   it('should write to the context storage and notify about changed value', function(done) {
     const flow = structuredClone(FlowNodeAllVariants);
-    flow[0].value = ConfigValueString;
+    flow[0].valueId = ConfigValueIdString;
     flow[0].command = CommandWrite;
 
     helper.load([configNode, valueNode], flow, function() {
@@ -620,7 +658,7 @@ describe('persistent value node', function() {
 
   it('should not write to the context storage and not notify about changed value if value is not modified', function(done) {
     const flow = structuredClone(FlowNodeAllVariants);
-    flow[0].value = ConfigValueString;
+    flow[0].valueId = ConfigValueIdString;
     flow[0].command = CommandWrite;
 
     helper.load([configNode, valueNode], flow, function() {
@@ -638,7 +676,7 @@ describe('persistent value node', function() {
 
   it('should abort if input value datatype is not matching to configured datatype', function(done) {
     const flow = structuredClone(FlowNodeAllVariants);
-    flow[0].value = ConfigValueString;
+    flow[0].valueId = ConfigValueIdString;
     flow[0].command = CommandWrite;
 
     helper.load([configNode, valueNode], flow, function() {
@@ -654,7 +692,7 @@ describe('persistent value node', function() {
   // ==== Command override (msg.command) Tests ================================
   it(`should use 'read' command override`, function(done) {
     const flow = structuredClone(FlowNodeAllVariants);
-    flow[0].value = ConfigValueString;
+    flow[0].valueId = ConfigValueIdString;
     flow[0].command = CommandWrite;
 
     helper.load([configNode, valueNode], flow, function() {
@@ -684,7 +722,7 @@ describe('persistent value node', function() {
 
   it(`should use 'write' command override`, function(done) {
     const flow = structuredClone(FlowNodeAllVariants);
-    flow[0].value = ConfigValueString;
+    flow[0].valueId = ConfigValueIdString;
     delete flow[0].command; // extra test: No command configured. -> fallback to default command
 
     helper.load([configNode, valueNode], flow, function() {
@@ -742,7 +780,7 @@ describe('persistent value node', function() {
 
   it('should collect the read values', function(done) {
     const flow = structuredClone(FlowNodeAllVariants);
-    flow[0].value = ConfigValueNumber;
+    flow[0].valueId = ConfigValueIdNumber;
     const CollectedValuesProperty = 'collected_values';
     flow[0].collectValues = true;
     flow[0].collectValuesMsgProperty = CollectedValuesProperty;
@@ -750,7 +788,7 @@ describe('persistent value node', function() {
     // Insert before the default node another persistent value node
     const FirstPersistentvalueNode = structuredClone(PersistentValueNodeDefault);
     FirstPersistentvalueNode.id= NodeIdPersistentValue + '2';
-    FirstPersistentvalueNode.value = ConfigValueString;
+    FirstPersistentvalueNode.valueId = ConfigValueIdString;
     FirstPersistentvalueNode.collectValues = true;
     FirstPersistentvalueNode.collectValuesMsgProperty = CollectedValuesProperty;
     FirstPersistentvalueNode.wires = [[NodeIdPersistentValue]], // Connect to other persisten value node
@@ -784,7 +822,7 @@ describe('persistent value node', function() {
 
   it('should collect the written values', function(done) {
     const flow = structuredClone(FlowNodeAllVariants);
-    flow[0].value = ConfigValueString;
+    flow[0].valueId = ConfigValueIdString;
     flow[0].command = CommandWrite;
     flow[0].collectValues = true;
     const CollectedValuesProperty = 'collected_values';
@@ -815,7 +853,7 @@ describe('persistent value node', function() {
 
   it('should block further processing if equal rule matches to boolean value', function(done) {
     const flow = structuredClone(FlowNodeAllVariants);
-    flow[0].value = ConfigValueBoolean;
+    flow[0].valueId = ConfigValueIdBoolean;
     flow[0].blockIfEnable = true;
     flow[0].blockIfRule = BlockIfRuleEqual;
     const BlockIfCompareValue = true;
@@ -835,7 +873,7 @@ describe('persistent value node', function() {
 
   it('should block further processing if equal rule matches to number value', function(done) {
     const flow = structuredClone(FlowNodeAllVariants);
-    flow[0].value = ConfigValueNumber;
+    flow[0].valueId = ConfigValueIdNumber;
     flow[0].blockIfEnable = true;
     flow[0].blockIfRule = BlockIfRuleEqual;
     const BlockIfCompareValue = 2305;
@@ -855,7 +893,7 @@ describe('persistent value node', function() {
 
   it('should block further processing if equal rule matches to string value', function(done) {
     const flow = structuredClone(FlowNodeAllVariants);
-    flow[0].value = ConfigValueString;
+    flow[0].valueId = ConfigValueIdString;
     flow[0].blockIfEnable = true;
     flow[0].blockIfRule = BlockIfRuleEqual;
     const BlockIfCompareValue = 'match me';
@@ -880,7 +918,7 @@ describe('persistent value node', function() {
 
   it('should block further processing if not-equal rule matches', function(done) {
     const flow = structuredClone(FlowNodeAllVariants);
-    flow[0].value = ConfigValueBoolean;
+    flow[0].valueId = ConfigValueIdBoolean;
     flow[0].blockIfEnable = true;
     flow[0].blockIfRule = BlockIfRuleNotEqual;
     const BlockIfCompareValue = false;
@@ -900,7 +938,7 @@ describe('persistent value node', function() {
 
   it('should not block further processing if equal rule does not match', function(done) {
     const flow = structuredClone(FlowNodeAllVariants);
-    flow[0].value = ConfigValueString;
+    flow[0].valueId = ConfigValueIdString;
     flow[0].command = CommandWrite;
     flow[0].blockIfEnable = true;
     flow[0].blockIfRule = BlockIfRuleEqual;
@@ -925,7 +963,7 @@ describe('persistent value node', function() {
 
   it('should not block further processing if not-equal rule does not match', function(done) {
     const flow = structuredClone(FlowNodeAllVariants);
-    flow[0].value = ConfigValueString;
+    flow[0].valueId = ConfigValueIdString;
     flow[0].command = CommandWrite;
     flow[0].blockIfEnable = true;
     flow[0].blockIfRule = BlockIfRuleNotEqual;
@@ -950,7 +988,7 @@ describe('persistent value node', function() {
 
   it('should not block further processing if not matching compare value type is configured', function(done) {
     const flow = structuredClone(FlowNodeAllVariants);
-    flow[0].value = ConfigValueBoolean;
+    flow[0].valueId = ConfigValueIdBoolean;
     flow[0].blockIfEnable = true;
     flow[0].blockIfRule = BlockIfRuleEqual;
     const BlockIfCompareValue = 2305; // 'number' instead of expected type 'boolean'
@@ -978,7 +1016,7 @@ describe('persistent value node', function() {
 
   it('should not block further processing if an unknown rule is configured', function(done) {
     const flow = structuredClone(FlowNodeAllVariants);
-    flow[0].value = ConfigValueNumber;
+    flow[0].valueId = ConfigValueIdNumber;
     flow[0].blockIfEnable = true;
     flow[0].blockIfRule = BlockIfRuleEqual + 'NOT_SUPPORTED_RULE';
     const BlockIfCompareValue = 2305;
@@ -1006,7 +1044,7 @@ describe('persistent value node', function() {
 
   it('should not block further processing if compare value type cannot be parsed - number', function(done) {
     const flow = structuredClone(FlowNodeAllVariants);
-    flow[0].value = ConfigValueNumber;
+    flow[0].valueId = ConfigValueIdNumber;
     flow[0].blockIfEnable = true;
     flow[0].blockIfRule = BlockIfRuleEqual;
     const BlockIfCompareValue = 'not a number';
@@ -1033,7 +1071,7 @@ describe('persistent value node', function() {
 
   it('should not block further processing if compare value type cannot be parsed - string', function(done) {
     const flow = structuredClone(FlowNodeAllVariants);
-    flow[0].value = ConfigValueString;
+    flow[0].valueId = ConfigValueIdString;
     flow[0].blockIfEnable = true;
     flow[0].blockIfRule = BlockIfRuleEqual;
     flow[0].blockIfCompareValue = undefined;
@@ -1059,7 +1097,7 @@ describe('persistent value node', function() {
 
   it('should not block further processing if not supported compare value type is used', function(done) {
     const flow = structuredClone(FlowNodeAllVariants);
-    flow[0].value = ConfigValueString;
+    flow[0].valueId = ConfigValueIdString;
     flow[0].blockIfEnable = true;
     flow[0].blockIfRule = BlockIfRuleEqual;
     flow[0].blockIfCompareValue = true;

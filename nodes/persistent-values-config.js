@@ -1,7 +1,10 @@
+
 // Global list of config nodes. Required for immediate drop-down population in values node.
 const configs = {};
 
 module.exports = function(RED) {
+  const {v1: uuidv1} = require('uuid');
+
   // ---- Node main -------------------------------------------------------------------------------
   function PersistentValuesConfigNode(config) {
     RED.nodes.createNode(this, config);
@@ -49,5 +52,10 @@ module.exports = function(RED) {
     } else {
       res.sendStatus(404); // not found
     }
+  });
+
+  // HTTP API to generate a new UUID
+  RED.httpAdmin.get('/persistentvalues/config/generate_uuid', function(req, res) {
+    res.json(uuidv1());
   });
 };

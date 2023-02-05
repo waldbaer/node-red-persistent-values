@@ -46,7 +46,7 @@
         "name": "",
         "valuesConfig": "bdcc10eee2fc3654",
         "valuesConfigName": "RoomStates",
-        "valueSelect": "DoorOpen",
+        "valueId": "c532de90-a577-11ed-b30d-21918a802e2e",
         "value": "DoorOpen",
         "command": "write",
         "msgProperty": "payload",
@@ -334,6 +334,7 @@
         "name": "RoomStates",
         "values": [
             {
+                "id": "c532de90-a577-11ed-b30d-21918a802e2e",
                 "name": "DoorOpen",
                 "datatype": "bool",
                 "default": false,
@@ -341,6 +342,7 @@
                 "storage": "default"
             },
             {
+                "id": "c538aaf0-a577-11ed-b30d-21918a802e2e",
                 "name": "OpenWindows",
                 "datatype": "num",
                 "default": 3,

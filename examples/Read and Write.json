@@ -32,7 +32,7 @@
         "name": "",
         "valuesConfig": "7b534a78d263796e",
         "valuesConfigName": "House States",
-        "valueSelect": "LightOn",
+        "valueId": "6459a040-a577-11ed-b30d-21918a802e2e",
         "value": "LightOn",
         "command": "write",
         "msgProperty": "payload",
@@ -241,6 +241,7 @@
         "name": "House States",
         "values": [
             {
+                "id": "6459a040-a577-11ed-b30d-21918a802e2e",
                 "name": "LightOn",
                 "datatype": "bool",
                 "default": false,
@@ -248,6 +249,7 @@
                 "storage": "default"
             },
             {
+                "id": "645fe1d0-a577-11ed-b30d-21918a802e2e",
                 "name": "OpenWindows",
                 "datatype": "num",
                 "default": 0,
@@ -255,6 +257,7 @@
                 "storage": "default"
             },
             {
+                "id": "6465d540-a577-11ed-b30d-21918a802e2e",
                 "name": "NextGarbageCollection",
                 "datatype": "str",
                 "default": "Monday, 2023-01-08",

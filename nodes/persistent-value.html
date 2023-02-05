@@ -40,10 +40,10 @@
 
     defaults: {
       name: {value: ''},
-      valuesConfig: {value: '', type: 'persistent values config'},
-      valuesConfigName: {required: false},
-      valueSelect: {required: true},
-      value: {required: true},
+      valuesConfig: {value: '', type: 'persistent values config'}, // The selected configuration (ID)
+      valuesConfigName: {required: false}, // Name of the selected configuration
+      valueId: {required: true}, // ID of the selected value
+      value: {required: true}, // Name of the selected value
       command: {value: kCommandDefault, required: true},
       msgProperty: {value: 'payload', required: false},
       collectValues: {value: false, required: false},
@@ -83,8 +83,9 @@
       const valuesConfigField = $('#node-input-valuesConfig');
       const valuesConfigNameField = $('#node-input-valuesConfigName');
 
-      const valueSelectField = $('#node-input-valueSelect');
+      const valueIdField = $('#node-input-valueId');
       const valueField = $('#node-input-value');
+      const valueSelectField = $('#valueSelect'); // Drop-down
 
       const commandField = $('#node-input-command');
       const msgPropertyField = $('#node-input-msgProperty');
@@ -102,16 +103,30 @@
       // Initialize all possible types of compare value field. Concrete type dynamically switched based on config.
       blockIfCompareValueField.typedInput({type: 'str', types: ['str', 'num', 'bool']});
 
-      // Store current configured value name before drop-down repopulation
-      const currentSelectedValue = valueField.val();
+      const node = this; // Store access to node configuration itself
+
+      // Until version 1.1.0 no ID was existing for every value.
+      // Therefore an ID with string value 'undefined' might be stored in the node config. => Fall-back to name-based handling
+      if (node.valueId === 'undefined') {
+        node.valueId = undefined;
+      }
 
       valueSelectField.on('change', function() {
         const selected = $(this).find('option:selected');
 
         // Ignore re-population change
         if (selected.val() !== undefined) {
-          // Store actual selected value
-          valueField.val(selected.val());
+          // Store actual selected value ID and name
+          node.valueId = selected.data('id');
+          // Until version 1.1.0 no ID was existing for every value.
+          // Therefore an ID with string value 'undefined' might be stored in the node config. => Fall-back to name-based handling
+          if (node.valueId === 'undefined') {
+            node.valueId = undefined;
+          }
+          valueIdField.val(node.valueId);
+
+          node.value = selected.val();
+          valueField.val(node.value);
 
           // Switch datatype of blockIf compare value input field
           const selectedDatatype = selected.data('datatype');
@@ -123,23 +138,36 @@
       // Initially change triggered by editor loaded, later with every user interaction.
       valuesConfigField.on('change', async function() {
         const selectedConfigId = $(this).val();
-        backendConfig = await getConfigFromBackend(selectedConfigId);
-        // Store current selected configuration name
-        valuesConfigNameField.val(backendConfig.name);
+        if (selectedConfigId !== '_ADD_') { // Skip if "add new config" is selected
+          backendConfig = await getConfigFromBackend(selectedConfigId);
+          // Store current selected configuration name
+          valuesConfigNameField.val(backendConfig.name);
 
-        // Re-populate select widget
-        valueSelectField.empty();
-        for (const value of backendConfig.values) {
-          const optionText = `${value.name} [${value.datatype}, ${value.storage}]`;
-          valueSelectField.append(`<option value="${value.name}" data-datatype="${value.datatype}">${optionText}</option>`);
-        }
+          // Re-populate value select widget
+          valueSelectField.empty();
+          for (const value of backendConfig.values) {
+            const optionText = `${value.name} [${value.datatype}, ${value.storage}]`;
+            valueSelectField.append(
+              `<option value="${value.name}" data-id="${value.id}" data-datatype="${value.datatype}">${optionText}</option>`);
+          }
 
-        // Select the previously selected value or set to invalid if the value is not known anymore
-        if (backendConfig.values.find((value) => value.name === currentSelectedValue)) {
-          valueSelectField.val(currentSelectedValue).change();
-        } else {
-          valueSelectField.val([]);
-          valueField.val(null);
+          // Select the previously selected value or set to invalid if the value is not known anymore
+          if (node.valueId) {
+            const selectedValue = backendConfig.values.find((value) => value.id === node.valueId);
+            if (selectedValue) {
+              $(`#valueSelect option[data-id="${selectedValue.id}"]`).attr('selected', true).trigger('change');
+            } else {
+              valueSelectField.val([]);
+            }
+          } else {
+            // Until version 1.1.0 no ID was existing for every value. Therefore search via value name.
+            const selectedValue = backendConfig.values.find((value) => value.name === node.value);
+            if (selectedValue) {
+              valueSelectField.val(selectedValue.name).trigger('change');
+            } else {
+              valueSelectField.val([]);
+            }
+          }
         }
       });
 
@@ -191,10 +219,12 @@
     <input type="hidden" id="node-input-valuesConfigName">
   </div>
   <div class="form-row">
-    <label for="node-input-valueSelect"><i class="fa fa-adjust"></i> Value</label>
+    <label for="node-input-value"><i class="fa fa-adjust"></i> Value</label>
     <!-- Classic select widget instead of NodeRED TypedInput used due to missing re-population capabiltiy -->
-    <select id="node-input-valueSelect"></select>
+    <select id="valueSelect"></select>
     <!-- Store the actually selected value in a hidden field. Required due to dynamic drop-down repopulation -->
+    <input type="hidden" id="node-input-valueId">
+    <!-- Store the actually selected value name in a hidden field. Required for node label creation -->
     <input type="hidden" id="node-input-value">
   </div>
   <div class="form-row">

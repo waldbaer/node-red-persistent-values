@@ -12,9 +12,10 @@
 //   - https://www.npmjs.com/package/supertest
 // --------------------------------------------------------------------------------------------------------------------
 const helper = require('node-red-node-test-helper');
+const uuid = require('uuid');
 const configNode = require('../nodes/persistent-values-config.js');
 
-describe('persistent values config backen node', function() {
+describe('persistent values config backend node', function() {
   beforeEach(function() {
     // Nothing to be done
   });
@@ -106,11 +107,11 @@ describe('persistent values config backen node', function() {
   const httpPathConfigGet = '/persistentvalues/config/get';
   const httpPathConfigSave = '/persistentvalues/config/save';
   const httpPathConfigDelete = '/persistentvalues/config/delete';
-
+  const httpPathGenerateUUID = '/persistentvalues/config/generate_uuid';
 
   // ==== Tests =======================================================================================================
 
-  // ==== Get =================================================================
+  // ==== Get Config ==========================================================
 
   it(`should return all configurations if no query ID is passed`, function(done) {
     helper.load([configNode], TestFlow, function() {
@@ -274,4 +275,20 @@ describe('persistent values config backen node', function() {
         .end(done);
     });
   });
+
+  // ==== Generated UUID ======================================================
+
+  it(`should generate a new UUID`, function(done) {
+    helper.load([configNode], TestFlow, function() {
+      helper.request()
+        .get(httpPathGenerateUUID)
+        .expect(function(res) {
+          const resp_uuid = res._body;
+          uuid.validate(resp_uuid).should.be.true;
+        })
+        .expect(200)
+        .end(done);
+    });
+  });
+
 });
