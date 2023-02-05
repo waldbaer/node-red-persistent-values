@@ -118,7 +118,7 @@
         "name": "",
         "valuesConfig": "7b534a78d263796e",
         "valuesConfigName": "House States",
-        "valueSelect": "LightOn",
+        "valueId": "6459a040-a577-11ed-b30d-21918a802e2e",
         "value": "LightOn",
         "command": "read",
         "msgProperty": "payload",
