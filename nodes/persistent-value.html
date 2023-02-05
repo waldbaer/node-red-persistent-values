@@ -111,9 +111,9 @@
         // Ignore re-population change
         if (selected.val() !== undefined) {
           // Store actual selected value ID and name
-          const selected_id = selected.data('id');
-          if(selected_id !== 'undefined') {
-            node.valueId = selected_id;
+          const selectedId = selected.data('id');
+          if(selectedId !== 'undefined') {
+            node.valueId = selectedId;
             valueIdField.val(node.valueId);
           }
 

@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file.
 
+
+## [1.1.1] - 2023-02-05
+
+### Fixes
+- Selected value is lost if the configured value is renamed.
+
+  **Background:**
+
+  Instead of the value name an UUID is now used to identify the selected value.
+
+  **Migration Steps:**
+
+  Old configurations without the UUID can still be loaded,
+  but value renaming is not working without the following migration steps:
+
+  - Open all existing persistent values config nodes and press 'Update'
+  - Open all persistent value nodes and press 'Done'.
+  - For now on the selected value should be automatically updated even if the value got renamed.
+
 ## [1.1.0] - 2023-02-02
 
 ### Features
