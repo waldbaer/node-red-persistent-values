@@ -31,7 +31,7 @@
         "name": "",
         "valuesConfig": "bbc8971830771b8e",
         "valuesConfigName": "Room State",
-        "valueSelect": "DoorOpen",
+        "valueId": "a9e87af0-a577-11ed-b30d-21918a802e2e",
         "value": "DoorOpen",
         "command": "write",
         "msgProperty": "payload",
@@ -224,6 +224,7 @@
         "name": "Room State",
         "values": [
             {
+                "id": "a9e87af0-a577-11ed-b30d-21918a802e2e",
                 "name": "DoorOpen",
                 "datatype": "bool",
                 "default": false,

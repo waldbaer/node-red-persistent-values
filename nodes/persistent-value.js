@@ -1,4 +1,6 @@
 module.exports = function(RED) {
+  const uuid = require('uuid');
+
   // ---- elements of the reference config ----
 
   // Datatypes defined by TypedInput widget
@@ -43,7 +45,7 @@ module.exports = function(RED) {
   }
 
   function buildNodeStatus(node, msgProperty, blockFlow) {
-    let storage = node.config.storage;
+    let storage = node.valueConfig.storage;
     if (storage === kStorageDefault) {
       if (RED.settings.contextStorage !== undefined && RED.settings.contextStorage.default !== undefined) {
         storage += ` (${RED.settings.contextStorage.default})`;
@@ -53,7 +55,7 @@ module.exports = function(RED) {
     node.status({
       fill: `${blockFlow ? 'red' : 'green'}`,
       shape: 'dot',
-      text: `${msgProperty} [${kSupportedDatatypesByTypedInput[node.config.datatype]},${node.config.scope},${storage}]`,
+      text: `${msgProperty} [${kSupportedDatatypesByTypedInput[node.valueConfig.datatype]},${node.valueConfig.scope},${storage}]`,
     });
   }
 
@@ -81,10 +83,10 @@ module.exports = function(RED) {
 
   function getUsedContext(node) {
     let context = node.context();
-    if (node.config.scope === 'flow') {
+    if (node.valueConfig.scope === 'flow') {
       context = context.flow;
     }
-    if (node.config.scope === 'global') {
+    if (node.valueConfig.scope === 'global') {
       context = context.global;
     }
     return context;
@@ -98,24 +100,24 @@ module.exports = function(RED) {
 
   function getContext(node, context, contextKey) {
     let currentValue = undefined;
-    if (node.config.storage === kStorageDefault) {
+    if (node.valueConfig.storage === kStorageDefault) {
       currentValue = context.get(contextKey);
     } else {
-      currentValue = context.get(contextKey, node.config.storage);
+      currentValue = context.get(contextKey, node.valueConfig.storage);
     }
 
     // Apply default value if context contains no value
     if (currentValue === undefined) {
-      currentValue = node.config.default;
+      currentValue = node.valueConfig.default;
     }
     return currentValue;
   }
 
   function setContext(node, context, contextKey, newValue) {
-    if (node.config.storage === kStorageDefault) {
+    if (node.valueConfig.storage === kStorageDefault) {
       context.set(contextKey, newValue);
     } else {
-      context.set(contextKey, newValue, node.config.storage);
+      context.set(contextKey, newValue, node.valueConfig.storage);
     }
   }
 
@@ -134,7 +136,7 @@ module.exports = function(RED) {
 
   function convertToExpectedType(node, value) {
     let convertedValue = undefined;
-    switch (node.config.datatype) {
+    switch (node.valueConfig.datatype) {
     case kConfigDatatypeBool:
       if (value === 'true') {
         convertedValue = true;
@@ -156,11 +158,11 @@ module.exports = function(RED) {
       }
       break;
     default:
-      node.error(`Unsupported compare value type '${node.config.datatype}' configured!`);
+      node.error(`Unsupported compare value type '${node.valueConfig.datatype}' configured!`);
     }
 
     if (convertedValue === undefined) {
-      node.error(`Failed to convert value '${value}' to expected datatype '${node.config.datatype}'!`);
+      node.error(`Failed to convert value '${value}' to expected datatype '${node.valueConfig.datatype}'!`);
     }
 
     return convertedValue;
@@ -169,7 +171,7 @@ module.exports = function(RED) {
   function compareToConfiguredDatatype(node, value) {
     const typeOfValue = typeof value;
     return kSupportedDatatypesLanguageType.hasOwnProperty(typeOfValue) &&
-           (kSupportedDatatypesLanguageType[typeOfValue] === node.config.datatype);
+           (kSupportedDatatypesLanguageType[typeOfValue] === node.valueConfig.datatype);
   }
 
   function checkBlockIfCondition(node, currentValue) {
@@ -213,12 +215,26 @@ module.exports = function(RED) {
       return null;
     }
 
-    node.config = configNode.values.find((value) => value.name === nodeConfig.value);
-    node.configName = configNode.name; // Name of the referenced configuration
-    node.value = nodeConfig.value; // selected value
-    if (node.value === '' || node.value === undefined || node.value === null) {
+    // Selected value by ID or name
+    node.valueId = nodeConfig.valueId;
+    node.value = nodeConfig.value;
+    if (node.valueId !== undefined && !uuid.validate(node.valueId)) {
       reportIncorrectConfiguration(node);
       return null;
+    }
+    // Selectd value must be referenced via ID or name (deprecated)
+    if (node.valueId === undefined && (node.value === undefined)) {
+      reportIncorrectConfiguration(node);
+      return null;
+    }
+
+    node.configName = configNode.name; // Name of the referenced configuration
+    if (node.valueId) {
+      node.valueConfig = configNode.values.find((value) => value.id === node.valueId);
+      node.value = node.valueConfig.name; // Update name again in case of inconsistent value / ID config
+    } else {
+      // Until version 1.1.0 no ID was existing for every value. Therefore search via value name.
+      node.valueConfig = configNode.values.find((value) => value.name === node.value);
     }
 
     node.command = nodeConfig.command || kCommandDefault;
@@ -241,7 +257,7 @@ module.exports = function(RED) {
       let currentValue = getContext(node, context, contextKey);
       if (!compareToConfiguredDatatype(node, currentValue)) {
         node.warn(`Persisted value ${node.configName} / ${node.value} does not have the configured datatype ` +
-                  `'${node.config.datatype}'!`);
+                  `'${node.valueConfig.datatype}'!`);
       }
 
       let onChangeMsg = null;
@@ -265,7 +281,7 @@ module.exports = function(RED) {
 
         if (!compareToConfiguredDatatype(node, inputValue)) {
           node.error(`Passed value in msg.${node.msgProperty} does not have the configured datatype ` +
-                     `'${node.config.datatype}'! Persistent value config: ${node.configName} / ${node.value}`);
+                     `'${node.valueConfig.datatype}'! Persistent value config: ${node.configName} / ${node.value}`);
           return;
         }
 

@@ -8,6 +8,7 @@
   const httpPathConfigGet = 'persistentvalues/config/get';
   const httpPathConfigSave = 'persistentvalues/config/save';
   const httpPathConfigDelete = 'persistentvalues/config/delete';
+  const httpPathGenerateUUID = 'persistentvalues/config/generate_uuid';
 
   const kDefaultValueDefault = false;
 
@@ -36,14 +37,25 @@
     kStorages.push(store);
   }
 
+
   (function() {
+    async function generateUuidFromBackend(id) {
+      let uuid = undefined;
+      try {
+        uuid = await $.getJSON(httpPathGenerateUUID);
+      } catch (error) {
+        console.log(`[Persistent Values][error]: Failed to generate new UUID via backend: ${error}`);
+      }
+      return uuid;
+    }
+
     function validate(values) {
       let result = true;
 
       for (const value of values) {
         // Name
         if (!value.name.trim()) {
-          console.error(`Persistent value name (${value.name}) must not be empty!`);
+          console.error(`Persistent value name must not be empty!`);
           result = false;
         }
 
@@ -86,6 +98,7 @@
         values: {
           value: [
             {
+              id: undefined,
               name: '',
               datatype: kDataTypeDefault,
               default: kDefaultValueDefault,
@@ -112,28 +125,30 @@
 
         // Value config container
         $('#node-config-input-values-container').css('min-width', '450px').editableList({
-          addItem: function(container, index, data) {
-            const value = data;
-
+          addItem: async function(container, index, value) {
             container.css({
               overflow: 'hidden',
               whiteSpace: 'nowrap',
             });
 
             const inputRows = $('<div></div>', {style: 'flex-grow:1;flex:1'}).appendTo(container);
-            const row0 = $('<div></div>', {style: 'display: flex;', class: 'form-row'}).appendTo(inputRows);
+            const row = $('<div></div>', {style: 'display: flex;', class: 'form-row'}).appendTo(inputRows);
 
             // Name
             const nameFieldRowItem = $('<div/>',
-              {style: 'display:flex;flex-grow:1;', class: 'persistent-values-row-item'}).appendTo(row0);
+              {style: 'display:flex;flex-grow:1;', class: 'persistent-values-row-item'}).appendTo(row);
+
             const nameField = $('<input/>', {class: 'node-input-value-name', type: 'text', width: '180px'})
               .appendTo(nameFieldRowItem)
               .typedInput({types: [{label: 'Name', value: 'str'}]});
 
+            // ID (hidden)
+            const idField = $('<input/>', {class: 'node-input-value-id', type: 'hidden'})
+              .appendTo(nameFieldRowItem);
 
             // Datatype + Default value
             const datatypeDefaultFieldRowItem = $('<div/>',
-              {style: 'display:flex;flex-grow:1;', class: 'persistent-values-row-item'}).appendTo(row0);
+              {style: 'display:flex;flex-grow:1;', class: 'persistent-values-row-item'}).appendTo(row);
             const datatypeDefaultField = $('<input/>',
               {class: 'node-input-value-datatypedefault', type: 'text', width: '150px'})
               .appendTo(datatypeDefaultFieldRowItem)
@@ -141,7 +156,7 @@
 
             // Scope
             const scopeFieldRowItem = $('<div/>',
-              {style: 'display:flex;flex-grow:1;', class: 'persistent-values-row-item'}).appendTo(row0);
+              {style: 'display:flex;flex-grow:1;', class: 'persistent-values-row-item'}).appendTo(row);
             const scopeField = $('<input/>',
               {class: 'node-input-value-scope', type: 'text', width: '130px'})
               .appendTo(scopeFieldRowItem)
@@ -151,7 +166,7 @@
 
             // Storage
             const storageFieldRowItem = $('<div/>',
-              {style: 'display:flex;flex-grow:1;', class: 'persistent-values-row-item'}).appendTo(row0);
+              {style: 'display:flex;flex-grow:1;', class: 'persistent-values-row-item'}).appendTo(row);
             const storageField = $('<input/>', {class: 'node-input-value-storage', type: 'text', width: '165px'})
               .appendTo(storageFieldRowItem)
               .typedInput({
@@ -159,6 +174,7 @@
               });
 
             // -- Populate --
+            idField.val(value.id || await generateUuidFromBackend()); // Generate new UUID for new values
             nameField.typedInput('value', value.name || ('Value ' + (index + 1)));
             datatypeDefaultField.typedInput('type', value.datatype || kDataTypeDefault);
             datatypeDefaultField.typedInput('value', (value.default !== undefined) ? value.default : kDefaultValueDefault );
@@ -189,9 +205,10 @@
         this.values = [];
         const values = $('#node-config-input-values-container').editableList('items');
         for (const value of values) {
+          const id = value.find('.node-input-value-id').val();
           const name = value.find('.node-input-value-name').typedInput('value');
-          const datatype = value.find('.node-input-value-datatypedefault').typedInput('type');
 
+          const datatype = value.find('.node-input-value-datatypedefault').typedInput('type');
           let defaultValue = value.find('.node-input-value-datatypedefault').typedInput('value');
           if (datatype === 'num') {
             defaultValue = Number(defaultValue);
@@ -203,7 +220,7 @@
           const scope = value.find('.node-input-value-scope').typedInput('value');
           const storage = value.find('.node-input-value-storage').typedInput('value');
 
-          this.values.push({name: name, datatype: datatype, default: defaultValue, scope: scope, storage: storage});
+          this.values.push({id: id, name: name, datatype: datatype, default: defaultValue, scope: scope, storage: storage});
         }
 
         // Store in server backend. Required for live re-population of state select drop-down

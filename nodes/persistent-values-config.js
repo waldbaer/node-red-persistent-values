@@ -1,7 +1,10 @@
+
 // Global list of config nodes. Required for immediate drop-down population in values node.
 const configs = {};
 
 module.exports = function(RED) {
+  const uuid = require('uuid');
+
   // ---- Node main -------------------------------------------------------------------------------
   function PersistentValuesConfigNode(config) {
     RED.nodes.createNode(this, config);
@@ -34,7 +37,10 @@ module.exports = function(RED) {
   // HTTP API to save or update a config
   RED.httpAdmin.post('/persistentvalues/config/save', function(req, res) {
     const id = req.body.id;
-    const config = {name: req.body.name, values: req.body.values};
+    const config = {
+      name: req.body.name,
+      values: req.body.values || [],
+    };
 
     configs[id] = config;
     res.sendStatus(200);
@@ -49,5 +55,10 @@ module.exports = function(RED) {
     } else {
       res.sendStatus(404); // not found
     }
+  });
+
+  // HTTP API to generate a new UUID
+  RED.httpAdmin.get('/persistentvalues/config/generate_uuid', function(req, res) {
+    res.json(uuid.v1());
   });
 };

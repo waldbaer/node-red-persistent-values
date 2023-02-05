@@ -12,9 +12,10 @@
 //   - https://www.npmjs.com/package/supertest
 // --------------------------------------------------------------------------------------------------------------------
 const helper = require('node-red-node-test-helper');
+const uuid = require('uuid');
 const configNode = require('../nodes/persistent-values-config.js');
 
-describe('persistent values config backen node', function() {
+describe('persistent values config backend node', function() {
   beforeEach(function() {
     // Nothing to be done
   });
@@ -106,11 +107,11 @@ describe('persistent values config backen node', function() {
   const httpPathConfigGet = '/persistentvalues/config/get';
   const httpPathConfigSave = '/persistentvalues/config/save';
   const httpPathConfigDelete = '/persistentvalues/config/delete';
-
+  const httpPathGenerateUUID = '/persistentvalues/config/generate_uuid';
 
   // ==== Tests =======================================================================================================
 
-  // ==== Get =================================================================
+  // ==== Get Config ==========================================================
 
   it(`should return all configurations if no query ID is passed`, function(done) {
     helper.load([configNode], TestFlow, function() {
@@ -207,6 +208,44 @@ describe('persistent values config backen node', function() {
     });
   });
 
+
+  it(`should save a configuration without values`, function(done) {
+    helper.load([configNode], TestFlow, function() {
+      const newConfig = {
+        id: 'new node ID',
+        name: 'new config',
+        values: undefined, // No value configured
+      };
+
+      // Save a new configuration
+      helper.request()
+        .post(httpPathConfigSave)
+        .send(newConfig)
+        .expect(200)
+        .end(function(err, res) {
+          if (err) return done(err);
+        });
+
+      // Query the just saved configuration
+      helper.request()
+        .get(httpPathConfigGet)
+        .query({id: newConfig.id})
+        .expect(function(res) {
+          const backendConfig = res._body;
+
+          backendConfig.id = newConfig.id;
+          backendConfig.name = newConfig.id;
+          backendConfig.values.should.match([]);
+        })
+        .expect(200)
+        .end(function(err, res) {
+          if (err) return done(err);
+        });
+
+      done();
+    });
+  });
+
   it(`should update an existing configuration`, function(done) {
     helper.load([configNode], TestFlow, function() {
       const modifiedConfig = structuredClone(ConfigNode1);
@@ -274,4 +313,20 @@ describe('persistent values config backen node', function() {
         .end(done);
     });
   });
+
+  // ==== Generated UUID ======================================================
+
+  it(`should generate a new UUID`, function(done) {
+    helper.load([configNode], TestFlow, function() {
+      helper.request()
+        .get(httpPathGenerateUUID)
+        .expect(function(res) {
+          const resp_uuid = res._body;
+          uuid.validate(resp_uuid).should.be.true;
+        })
+        .expect(200)
+        .end(done);
+    });
+  });
+
 });
