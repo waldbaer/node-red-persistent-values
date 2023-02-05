@@ -1,4 +1,6 @@
 module.exports = function(RED) {
+  const uuid = require('uuid');
+
   // ---- elements of the reference config ----
 
   // Datatypes defined by TypedInput widget
@@ -213,12 +215,15 @@ module.exports = function(RED) {
       return null;
     }
 
-    node.valueId = nodeConfig.valueId; // selected value ID
-    if (node.valueId === 'undefined') {
-      node.valueId = undefined;
+    // Selected value by ID or name
+    node.valueId = nodeConfig.valueId;
+    node.value = nodeConfig.value;
+    if (node.valueId !== undefined && !uuid.validate(node.valueId)) {
+      reportIncorrectConfiguration(node);
+      return null;
     }
-    node.value = nodeConfig.value; // selected value name
-    if (node.value === '' || node.value === undefined || node.value === null) {
+    // Selectd value must be referenced via ID or name (deprecated)
+    if (node.valueId === undefined && (node.value === undefined)) {
       reportIncorrectConfiguration(node);
       return null;
     }

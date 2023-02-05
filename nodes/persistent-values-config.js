@@ -3,7 +3,7 @@
 const configs = {};
 
 module.exports = function(RED) {
-  const {v1: uuidv1} = require('uuid');
+  const uuid = require('uuid');
 
   // ---- Node main -------------------------------------------------------------------------------
   function PersistentValuesConfigNode(config) {
@@ -37,7 +37,10 @@ module.exports = function(RED) {
   // HTTP API to save or update a config
   RED.httpAdmin.post('/persistentvalues/config/save', function(req, res) {
     const id = req.body.id;
-    const config = {name: req.body.name, values: req.body.values};
+    const config = {
+      name: req.body.name,
+      values: req.body.values || [],
+    };
 
     configs[id] = config;
     res.sendStatus(200);
@@ -56,6 +59,6 @@ module.exports = function(RED) {
 
   // HTTP API to generate a new UUID
   RED.httpAdmin.get('/persistentvalues/config/generate_uuid', function(req, res) {
-    res.json(uuidv1());
+    res.json(uuid.v1());
   });
 };

@@ -98,13 +98,13 @@ describe('persistent value node', function() {
   const NodeIdHelperCurrentValue = 'helper_current_value';
   const NodeIdHelperOnChange = 'helper_onchange';
 
-  const ConfigValueIdBoolean = 'ID-boolean';
+  const ConfigValueIdBoolean = 'c956bfe0-a591-11ed-b2b6-471886667bd8';
   const ConfigValueBoolean = 'boolean';
 
-  const ConfigValueIdNumber = 'ID-number';
+  const ConfigValueIdNumber = 'cb644320-a591-11ed-b2b6-471886667bd8';
   const ConfigValueNumber = 'number';
 
-  const ConfigValueIdString = 'ID-string';
+  const ConfigValueIdString = 'cc9c4df0-a591-11ed-b2b6-471886667bd8';
   const ConfigValueString = 'string';
 
   const NodeHelperCurrentValue = {id: NodeIdHelperCurrentValue, z: FlowIdTestFlow, type: NodeTypeHelper};
@@ -191,21 +191,6 @@ describe('persistent value node', function() {
     });
   });
 
-
-  it('should be loaded with deprecated undefined reference to configuration', function(done) {
-    const flow = structuredClone(FlowNodeAllVariants);
-    flow[0].valueId = 'undefined';
-
-    helper.load([configNode, valueNode], flow, function() {
-      const config = helper.getNode(NodeIdConfig);
-      const pv = helper.getNode(NodeIdPersistentValue);
-      config.should.have.property('name', 'TestConfig');
-      pv.should.have.property('name', 'persistent value node test');
-      pv.should.have.property('configName', 'TestConfig');
-      done();
-    });
-  });
-
   it('should be not loaded without configuration', function(done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].valuesConfig = ''; // No persistent value configuration selected
@@ -219,9 +204,23 @@ describe('persistent value node', function() {
     });
   });
 
-  it('should be not loaded without selected value', function(done) {
+  it('should be not loaded with an invalid selected value UUID', function(done) {
     const flow = structuredClone(FlowNodeAllVariants);
-    flow[0].value = ''; // No persistent value selected
+    flow[0].valueId = 'NOT~AN~UUID'; // No persistent value configuration selected
+
+    helper.load([configNode, valueNode], flow, function() {
+      const pv = helper.getNode(NodeIdPersistentValue);
+      pv.should.have.property('_inputCallback', null);
+      pv.should.have.property('_inputCallbacks', null);
+      pv.error.should.be.calledWithMatch('Incorrect or inconsistent configuration');
+      done();
+    });
+  });
+
+  it('should be not loaded without selected value UUID and without selected value name', function(done) {
+    const flow = structuredClone(FlowNodeAllVariants);
+    delete flow[0].valueId; // No value selected by ID
+    delete flow[0].value; // No value selected by name
 
     helper.load([configNode, valueNode], flow, function() {
       const pv = helper.getNode(NodeIdPersistentValue);
@@ -256,6 +255,7 @@ describe('persistent value node', function() {
   it('should read the default value - boolean', function(done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].valueId = ConfigValueIdBoolean;
+    delete flow[0].value; // extra test: Reference selected value by name must be optional.
 
     helper.load([configNode, valueNode], flow, function() {
       const c = helper.getNode(NodeIdConfig);
@@ -276,7 +276,10 @@ describe('persistent value node', function() {
 
   it('should read the default value - number', function(done) {
     const flow = structuredClone(FlowNodeAllVariants);
-    flow[0].valueId = ConfigValueIdNumber;
+
+    // extra test: backward compatibility <= 1.1.0: selected value not referenced via ID.
+    delete flow[0].valueId;
+    flow[0].value = ConfigValueNumber;
 
     helper.load([configNode, valueNode], flow, function() {
       const c = helper.getNode(NodeIdConfig);

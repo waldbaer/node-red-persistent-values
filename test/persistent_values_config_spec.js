@@ -208,6 +208,44 @@ describe('persistent values config backend node', function() {
     });
   });
 
+
+  it(`should save a configuration without values`, function(done) {
+    helper.load([configNode], TestFlow, function() {
+      const newConfig = {
+        id: 'new node ID',
+        name: 'new config',
+        values: undefined, // No value configured
+      };
+
+      // Save a new configuration
+      helper.request()
+        .post(httpPathConfigSave)
+        .send(newConfig)
+        .expect(200)
+        .end(function(err, res) {
+          if (err) return done(err);
+        });
+
+      // Query the just saved configuration
+      helper.request()
+        .get(httpPathConfigGet)
+        .query({id: newConfig.id})
+        .expect(function(res) {
+          const backendConfig = res._body;
+
+          backendConfig.id = newConfig.id;
+          backendConfig.name = newConfig.id;
+          backendConfig.values.should.match([]);
+        })
+        .expect(200)
+        .end(function(err, res) {
+          if (err) return done(err);
+        });
+
+      done();
+    });
+  });
+
   it(`should update an existing configuration`, function(done) {
     helper.load([configNode], TestFlow, function() {
       const modifiedConfig = structuredClone(ConfigNode1);

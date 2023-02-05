@@ -42,7 +42,7 @@
       name: {value: ''},
       valuesConfig: {value: '', type: 'persistent values config'}, // The selected configuration (ID)
       valuesConfigName: {required: false}, // Name of the selected configuration
-      valueId: {required: true}, // ID of the selected value
+      valueId: {required: false}, // ID of the selected value
       value: {required: true}, // Name of the selected value
       command: {value: kCommandDefault, required: true},
       msgProperty: {value: 'payload', required: false},
@@ -105,25 +105,17 @@
 
       const node = this; // Store access to node configuration itself
 
-      // Until version 1.1.0 no ID was existing for every value.
-      // Therefore an ID with string value 'undefined' might be stored in the node config. => Fall-back to name-based handling
-      if (node.valueId === 'undefined') {
-        node.valueId = undefined;
-      }
-
       valueSelectField.on('change', function() {
         const selected = $(this).find('option:selected');
 
         // Ignore re-population change
         if (selected.val() !== undefined) {
           // Store actual selected value ID and name
-          node.valueId = selected.data('id');
-          // Until version 1.1.0 no ID was existing for every value.
-          // Therefore an ID with string value 'undefined' might be stored in the node config. => Fall-back to name-based handling
-          if (node.valueId === 'undefined') {
-            node.valueId = undefined;
+          const selected_id = selected.data('id');
+          if(selected_id !== 'undefined') {
+            node.valueId = selected_id;
+            valueIdField.val(node.valueId);
           }
-          valueIdField.val(node.valueId);
 
           node.value = selected.val();
           valueField.val(node.value);
@@ -132,6 +124,12 @@
           const selectedDatatype = selected.data('datatype');
           blockIfCompareValueField.typedInput('type', selectedDatatype);
           blockIfCompareValueField.typedInput('types', [selectedDatatype]);
+        } else {
+          node.valueId = undefined;
+          valueIdField.val(node.valueId);
+
+          node.value = selected.val();
+          valueField.val(node.value);
         }
       });
 
@@ -157,7 +155,7 @@
             if (selectedValue) {
               $(`#valueSelect option[data-id="${selectedValue.id}"]`).attr('selected', true).trigger('change');
             } else {
-              valueSelectField.val([]);
+              valueSelectField.val([]).trigger('change');
             }
           } else {
             // Until version 1.1.0 no ID was existing for every value. Therefore search via value name.
@@ -165,7 +163,7 @@
             if (selectedValue) {
               valueSelectField.val(selectedValue.name).trigger('change');
             } else {
-              valueSelectField.val([]);
+              valueSelectField.val([]).trigger('change');
             }
           }
         }
