@@ -105,6 +105,7 @@
 
       const node = this; // Store access to node configuration itself
 
+      console.log(`prepare`);
       valueSelectField.on('change', function() {
         const selected = $(this).find('option:selected');
 
@@ -218,7 +219,7 @@
   </div>
   <div class="form-row">
     <label for="node-input-value"><i class="fa fa-adjust"></i> Value</label>
-    <!-- Classic select widget instead of NodeRED TypedInput used due to missing re-population capabiltiy -->
+    <!-- Classic select widget instead of Node-RED TypedInput used due to missing re-population capabiltiy -->
     <select id="valueSelect"></select>
     <!-- Store the actually selected value in a hidden field. Required due to dynamic drop-down repopulation -->
     <input type="hidden" id="node-input-valueId">
@@ -264,7 +265,7 @@
       <dt>Config</dt>
       <dd>
           Central configuration defining all known persistent values.
-          In complex and large NodeRED setups it's recommended to separate it
+          In complex and large Node-RED setups it's recommended to separate it
           into multiple configuration (e.g. per domain, per building, per device, ...).
       </dd>
 
@@ -335,7 +336,7 @@
   <h3>Details</h3>
     <p>
       The idea behind persistent values is the user-friendly abstraction of
-      the NodeRED core <a href="https://nodered.org/docs/user-guide/context">context functionality</a>.
+      the Node-RED core <a href="https://nodered.org/docs/user-guide/context">context functionality</a>.
     </p>
 
     <p>
@@ -377,6 +378,6 @@
 
   <h3>References</h3>
     <ul>
-      <li>NodeRED doc <a href="https://nodered.org/docs/user-guide/context">Working with context</a></li>
+      <li>Node-RED doc <a href="https://nodered.org/docs/user-guide/context">Working with context</a></li>
     </ul>
 </script>

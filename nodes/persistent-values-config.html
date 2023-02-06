@@ -262,7 +262,7 @@
         <dt>Scope</dt>
         <dd>
             Storage scope, similar to the
-            <a href="https://nodered.org/docs/user-guide/context#context-scopes">NodeRED context scopes</a>:
+            <a href="https://nodered.org/docs/user-guide/context#context-scopes">Node-RED context scopes</a>:
             <ul>
               <li>Global - visible to all nodes</li>
               <li>Flow - visible to all nodes on the same flow (or tab in the editor)</li>
@@ -272,24 +272,24 @@
         <dt>Storage</dt>
         <dd>
             Storage type, similar to the
-            <a href="https://nodered.org/docs/user-guide/context#context-stores">NodeRED context stores</a>.
+            <a href="https://nodered.org/docs/user-guide/context#context-stores">Node-RED context stores</a>.
 
             It is recommended to configure memory and filesystem context stores
-            in the NodeRED <code>settings.js</code> as documented in
+            in the Node-RED <code>settings.js</code> as documented in
             <a href="https://nodered.org/docs/user-guide/context#using-multiple-context-stores">Using multiple context stores</a>.
-            All configured context stores will be available in the drop-down after a NodeRED restart.
+            All configured context stores will be available in the drop-down after a Node-RED restart.
         </dd>
     </dl>
 
   <h3>Details</h3>
     <p>
-      Persistent values are typically states or configuration options which shall survive a restart of NodeRED.
+      Persistent values are typically states or configuration options which shall survive a restart of Node-RED.
     </p>
 
     <p>
-      In a simple and small NodeRED setup all necessary persistent values might be
+      In a simple and small Node-RED setup all necessary persistent values might be
       added to a single configuration.
-      But in case of a very complex and large NodeRED setup it is recommended
+      But in case of a very complex and large Node-RED setup it is recommended
       to separate the persistent values into multiple configurations
       (e.g. one configuration per technical domain, per building, per device, ...).
     </p>
@@ -300,12 +300,12 @@
     </p>
 
     <p>
-      <strong>Attention:</strong> The NodeRED context data entries are not automatically deleted by deletion of the persistent value configuration entry.
-      Instead the context data entries must be manually deleted via the NodeRED 'Context Data' editor.
+      <strong>Attention:</strong> The Node-RED context data entries are not automatically deleted by deletion of the persistent value configuration entry.
+      Instead the context data entries must be manually deleted via the Node-RED 'Context Data' editor.
     </p>
 
   <h3>References</h3>
     <ul>
-      <li>NodeRED doc <a href="https://nodered.org/docs/user-guide/context">Working with context</a></li>
+      <li>Node-RED doc <a href="https://nodered.org/docs/user-guide/context">Working with context</a></li>
     </ul>
 </script>

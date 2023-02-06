@@ -19,7 +19,7 @@
             "7f11b06448e03736"
         ],
         "x": 54,
-        "y": 119,
+        "y": 99,
         "w": 1032,
         "h": 302
     },
@@ -41,7 +41,7 @@
         "blockIfRule": "eq",
         "blockIfCompareValue": "true",
         "x": 750,
-        "y": 300,
+        "y": 280,
         "wires": [
             [
                 "7f11b06448e03736"
@@ -72,7 +72,7 @@
         "payload": "false",
         "payloadType": "bool",
         "x": 170,
-        "y": 300,
+        "y": 280,
         "wires": [
             [
                 "24f1221376048410"
@@ -100,7 +100,7 @@
         "to": "",
         "reg": false,
         "x": 460,
-        "y": 380,
+        "y": 360,
         "wires": [
             [
                 "24f1221376048410"
@@ -130,7 +130,7 @@
         "payload": "true",
         "payloadType": "bool",
         "x": 220,
-        "y": 380,
+        "y": 360,
         "wires": [
             [
                 "497624662b327ecb"
@@ -160,7 +160,7 @@
         "payload": "true",
         "payloadType": "bool",
         "x": 170,
-        "y": 260,
+        "y": 240,
         "wires": [
             [
                 "24f1221376048410"
@@ -175,7 +175,7 @@
         "name": "Override command with msg.command",
         "info": "",
         "x": 230,
-        "y": 340,
+        "y": 320,
         "wires": []
     },
     {
@@ -186,7 +186,7 @@
         "name": "Use configured command (Write)",
         "info": "",
         "x": 210,
-        "y": 220,
+        "y": 200,
         "wires": []
     },
     {
@@ -195,9 +195,9 @@
         "z": "613529d99b084479",
         "g": "09f2b3c2682ff81f",
         "name": "*Important*: Make config available",
-        "info": "# Workaround for import of example configuration\n\nPersistent values relies on an interactive relation between the\nconfiguration and the concrete presistent values node.\n\nDue to limitations of NodeRED the configuration is not properly\nregister with the backend when importing an example flow.\n\nTherefore the following workaround shall be applied after the\ninitial example import:\n\n 1. Open the edit dialog of any of the presistent value nodes.\n 2. Open the edit dialog if the referenced configuration \"House Config\".\n 3. Press \"Update\".\n \nAfter these steps the drop-down menu of the \"Value\" should be populated with all\nthree configured persistent values. \nThe first drop-down value \"LightOn\" should be selected for the example.",
+        "info": "# Workaround for import of example configuration\n\nPersistent values relies on an interactive relation between the\nconfiguration and the concrete presistent values node.\n\nDue to limitations of Node-RED the configuration is not properly\nregister with the backend when importing an example flow.\n\nTherefore the following workaround shall be applied after the\ninitial example import:\n\n 1. Open the edit dialog of any of the presistent value nodes.\n 2. Open the edit dialog if the referenced configuration \"House Config\".\n 3. Press \"Update\".\n \nAfter these steps the drop-down menu of the \"Value\" should be populated with all\nthree configured persistent values. \nThe first drop-down value \"LightOn\" should be selected for the example.",
         "x": 220,
-        "y": 160,
+        "y": 140,
         "wires": []
     },
     {
@@ -215,7 +215,7 @@
         "statusVal": "payload",
         "statusType": "auto",
         "x": 970,
-        "y": 300,
+        "y": 280,
         "wires": []
     },
     {

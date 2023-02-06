@@ -377,7 +377,7 @@ describe('persistent value node', function() {
       const v = helper.getNode(NodeIdPersistentValue);
       const h = helper.getNode(NodeIdHelperCurrentValue);
 
-      const simulatedValue = '❤ NodeRED';
+      const simulatedValue = '❤ Node-RED';
       setContextValue(v, simulatedValue);
 
       h.on(InputFunction, function(msg) {
@@ -425,7 +425,7 @@ describe('persistent value node', function() {
       const v = helper.getNode(NodeIdPersistentValue);
       const h = helper.getNode(NodeIdHelperCurrentValue);
 
-      const simulatedValue = '❤ NodeRED';
+      const simulatedValue = '❤ Node-RED';
       setContextValue(v, simulatedValue);
 
       h.on(InputFunction, function(msg) {
@@ -476,7 +476,7 @@ describe('persistent value node', function() {
       const h = helper.getNode(NodeIdHelperCurrentValue);
 
       setContextValue(v, '');
-      const simulatedValue = 'NodeRED';
+      const simulatedValue = 'Node-RED';
 
       h.on(InputFunction, function(msg) {
         try {
@@ -599,7 +599,7 @@ describe('persistent value node', function() {
       const h = helper.getNode(NodeIdHelperCurrentValue);
 
       setContextValue(v, '');
-      const simulatedValue = 'NodeRED';
+      const simulatedValue = 'Node-RED';
 
       h.on(InputFunction, function(msg) {
         try {
@@ -645,7 +645,7 @@ describe('persistent value node', function() {
       const h = helper.getNode(NodeIdHelperOnChange);
 
       setContextValue(v, '');
-      const simulatedValue = 'OnChange NodeRED';
+      const simulatedValue = 'OnChange Node-RED';
 
       h.on(InputFunction, function(msg) {
         try {

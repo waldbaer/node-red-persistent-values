@@ -160,7 +160,7 @@
         "z": "613529d99b084479",
         "g": "02ec365d88ac27a1",
         "name": "Write persistent value",
-        "info": "# Write persistent data\n\nUpdate the persistent value by writing any value matching the configured data type.\n\n- The value will be persistet in the NodeRED context with the configured name / scope.\n- The node status shows the last persistet value and infos about the datatype / scope.\n- The `msg.payload` will contain the last persistet value.",
+        "info": "# Write persistent data\n\nUpdate the persistent value by writing any value matching the configured data type.\n\n- The value will be persistet in the Node-RED context with the configured name / scope.\n- The node status shows the last persistet value and infos about the datatype / scope.\n- The `msg.payload` will contain the last persistet value.",
         "x": 180,
         "y": 540,
         "wires": []
@@ -189,7 +189,7 @@
         "z": "613529d99b084479",
         "g": "02ec365d88ac27a1",
         "name": "Read persistent value",
-        "info": "# Read persistent data\n\nRead the current persistet value.\n\n- The node status shows the current value read from the NodeRED context\n  and infos about the datatype / scope.\n- The `msg.payload` will contain current value read from the NodeRED context.\n- In `msg.values` the current value will be added to a object with named attributes equal\n  to the persistent value configuration.",
+        "info": "# Read persistent data\n\nRead the current persistet value.\n\n- The node status shows the current value read from the Node-RED context\n  and infos about the datatype / scope.\n- The `msg.payload` will contain current value read from the Node-RED context.\n- In `msg.values` the current value will be added to a object with named attributes equal\n  to the persistent value configuration.",
         "x": 180,
         "y": 680,
         "wires": []
@@ -230,7 +230,7 @@
         "z": "613529d99b084479",
         "g": "02ec365d88ac27a1",
         "name": "*Important*: Make config available",
-        "info": "# Workaround for import of example configuration\n\nPersistent values relies on an interactive relation between the\nconfiguration and the concrete presistent values node.\n\nDue to limitations of NodeRED the configuration is not properly\nregister with the backend when importing an example flow.\n\nTherefore the following workaround shall be applied after the\ninitial example import:\n\n 1. Open the edit dialog of any of the presistent value nodes.\n 2. Open the edit dialog if the referenced configuration \"House Config\".\n 3. Press \"Update\".\n \nAfter these steps the drop-down menu of the \"Value\" should be populated with all\nthree configured persistent values. \nThe first drop-down value \"LightOn\" should be selected for the example.",
+        "info": "# Workaround for import of example configuration\n\nPersistent values relies on an interactive relation between the\nconfiguration and the concrete presistent values node.\n\nDue to limitations of Node-RED the configuration is not properly\nregister with the backend when importing an example flow.\n\nTherefore the following workaround shall be applied after the\ninitial example import:\n\n 1. Open the edit dialog of any of the presistent value nodes.\n 2. Open the edit dialog if the referenced configuration \"House Config\".\n 3. Press \"Update\".\n \nAfter these steps the drop-down menu of the \"Value\" should be populated with all\nthree configured persistent values. \nThe first drop-down value \"LightOn\" should be selected for the example.",
         "x": 220,
         "y": 480,
         "wires": []

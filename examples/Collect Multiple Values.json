@@ -33,7 +33,7 @@
         "z": "613529d99b084479",
         "g": "05156e99b1d98425",
         "name": "*Important*: Make config available",
-        "info": "# Workaround for import of example configuration\n\nPersistent values relies on an interactive relation between the\nconfiguration and the concrete presistent values node.\n\nDue to limitations of NodeRED the configuration is not properly\nregister with the backend when importing an example flow.\n\nTherefore the following workaround shall be applied after the\ninitial example import:\n\n 1. Open the edit dialog of any of the presistent value nodes.\n 2. Open the edit dialog if the referenced configuration \"House Config\".\n 3. Press \"Update\".\n \nAfter these steps the drop-down menu of the \"Value\" should be populated with all\nthree configured persistent values. \nThe first drop-down value \"LightOn\" should be selected for the example.",
+        "info": "# Workaround for import of example configuration\n\nPersistent values relies on an interactive relation between the\nconfiguration and the concrete presistent values node.\n\nDue to limitations of Node-RED the configuration is not properly\nregister with the backend when importing an example flow.\n\nTherefore the following workaround shall be applied after the\ninitial example import:\n\n 1. Open the edit dialog of any of the presistent value nodes.\n 2. Open the edit dialog if the referenced configuration \"House Config\".\n 3. Press \"Update\".\n \nAfter these steps the drop-down menu of the \"Value\" should be populated with all\nthree configured persistent values. \nThe first drop-down value \"LightOn\" should be selected for the example.",
         "x": 220,
         "y": 840,
         "wires": []
