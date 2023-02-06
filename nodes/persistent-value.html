@@ -97,7 +97,7 @@
 
       const blockIfEnableField = $('#node-input-blockIfEnable');
       const blockIfRow = $('#node-input-blockIfRule-row');
-      const blockIfRule = $('#node-input-blockIfRule');
+      const blockIfRuleField = $('#node-input-blockIfRule');
       const blockIfCompareValueField = $('#node-input-blockIfCompareValue');
 
       // Initialize all possible types of compare value field. Concrete type dynamically switched based on config.
@@ -200,8 +200,9 @@
       });
 
       for (const [value, label] of kBlockIfRules) {
-        blockIfRule.append(`<option value="${value}">${label}</option>`);
+        blockIfRuleField.append(`<option value="${value}">${label}</option>`);
       }
+      blockIfRuleField.val(node.blockIfRule);
     },
 });
 </script>
