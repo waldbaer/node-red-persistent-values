@@ -92,8 +92,12 @@ module.exports = function(RED) {
     return context;
   }
 
-  function buildContextKeyName(node) {
-    let contextKey = node.configName + '_' + node.value;
+  function getContextKey(node) {
+    return getContextKeyFromNames(node.configName, node.value);
+  }
+
+  function getContextKeyFromNames(configName, valueName) {
+    let contextKey = configName + '_' + valueName;
     contextKey = contextKey.replace(/ /g, '_'); // No spaces in context key allowed
     return contextKey;
   }
@@ -129,7 +133,7 @@ module.exports = function(RED) {
       }
       const collectedValues = msg[node.collectValuesMsgProperty];
 
-      const contextKey = buildContextKeyName(node);
+      const contextKey = getContextKey(node);
       collectedValues[contextKey] = currentValue;
     }
   }
@@ -202,7 +206,7 @@ module.exports = function(RED) {
   }
 
   // ---- Node main -------------------------------------------------------------------------------
-  const persistentValueNode = function(nodeConfig) {
+  RED.nodes.registerType('persistent value', function(nodeConfig) {
     RED.nodes.createNode(this, nodeConfig);
     const node = this;
 
@@ -252,7 +256,7 @@ module.exports = function(RED) {
     node.on('input', function(msg) {
       // ---- Execute ----
       const context = getUsedContext(node);
-      const contextKey = buildContextKeyName(node);
+      const contextKey = getContextKey(node);
 
       let currentValue = getContext(node, context, contextKey);
       if (!compareToConfiguredDatatype(node, currentValue)) {
@@ -311,6 +315,15 @@ module.exports = function(RED) {
       buildNodeStatus(node, currentValue, blockFlow);
       node.send([msg, onChangeMsg]);
     });
-  };
-  RED.nodes.registerType('persistent value', persistentValueNode);
-};
+  });
+
+  // ---- Backend HTTP API ----
+
+  // HTTP API to get the context variable / key name of a persisted value
+  RED.httpAdmin.get('/persistentvalues/util/getcontextkey', function(req, res) {
+    const configName = req.query.configName;
+    const valueName = req.query.valueName;
+    const name = getContextKeyFromNames(configName, valueName);
+    res.json(name);
+  });
+}; // module.exports

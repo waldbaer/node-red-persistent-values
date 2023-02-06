@@ -1,5 +1,7 @@
 <script type="text/javascript">
   // ---- Constants ----
+  const httpPathGetContextKey = 'persistentvalues/util/getcontextkey';
+
   const kCommandRead = 'read';
   const kCommandWrite = 'write';
   const kCommandDefault = kCommandRead;
@@ -25,6 +27,16 @@
       console.log(`[Persistent Values][error]: Failed to get configuration with ID ${id} from backend: ${error}`);
     }
     return config;
+  }
+
+  async function getContextKeyNameFromBackend(configName, valueName) {
+    let name = undefined;
+    try {
+      name = $.getJSON(httpPathGetContextKey, {configName: configName, valueName: valueName});
+    } catch (error) {
+      console.log(`[Persistent Values][warn]: Failed to get context key name with ID ${id} from backend: ${error}`);
+    }
+    return name;
   }
 
   // ---- Node registration ----
@@ -87,6 +99,9 @@
       const valueField = $('#node-input-value');
       const valueSelectField = $('#valueSelect'); // Drop-down
 
+      const tipContextVariableRow = $('#tip-context-variable-row');
+      const tipContextVariable = $('#tip-context-variable');
+
       const commandField = $('#node-input-command');
       const msgPropertyField = $('#node-input-msgProperty');
       const msgPropertyLabelFieldInput = $('#node-input-msgProperty-label-input');
@@ -105,15 +120,14 @@
 
       const node = this; // Store access to node configuration itself
 
-      console.log(`prepare`);
-      valueSelectField.on('change', function() {
+      valueSelectField.on('change', async function() {
         const selected = $(this).find('option:selected');
 
         // Ignore re-population change
         if (selected.val() !== undefined) {
           // Store actual selected value ID and name
           const selectedId = selected.data('id');
-          if(selectedId !== 'undefined') {
+          if (selectedId !== 'undefined') {
             node.valueId = selectedId;
             valueIdField.val(node.valueId);
           }
@@ -125,12 +139,23 @@
           const selectedDatatype = selected.data('datatype');
           blockIfCompareValueField.typedInput('type', selectedDatatype);
           blockIfCompareValueField.typedInput('types', [selectedDatatype]);
+
+          const contextKeyName = await getContextKeyNameFromBackend(node.valuesConfigName, node.value);
+          if (contextKeyName !== undefined) {
+            tipContextVariable.html(`Value will be persisted in context variable <code>${contextKeyName}</code>.`);
+            tipContextVariableRow.show();
+          } else {
+            tipContextVariableRow.hide();
+          }
         } else {
           node.valueId = undefined;
           valueIdField.val(node.valueId);
 
           node.value = selected.val();
           valueField.val(node.value);
+
+          tipContextVariable.html(``);
+          tipContextVariableRow.hide();
         }
       });
 
@@ -140,7 +165,8 @@
         if (selectedConfigId !== '_ADD_') { // Skip if "add new config" is selected
           backendConfig = await getConfigFromBackend(selectedConfigId);
           // Store current selected configuration name
-          valuesConfigNameField.val(backendConfig.name);
+          node.valuesConfigName = backendConfig.name;
+          valuesConfigNameField.val(node.valuesConfigName);
 
           // Re-populate value select widget
           valueSelectField.empty();
@@ -167,6 +193,9 @@
               valueSelectField.val([]).trigger('change');
             }
           }
+          valueSelectField.removeAttr('disabled');
+        } else {
+          valueSelectField.attr('disabled', 'disabled');
         }
       });
 
@@ -227,6 +256,7 @@
     <!-- Store the actually selected value name in a hidden field. Required for node label creation -->
     <input type="hidden" id="node-input-value">
   </div>
+
   <div class="form-row">
     <label for="node-input-command"><i class="fa fa-comment"></i> Command</label>
     <select id="node-input-command"></select>
@@ -252,6 +282,9 @@
       <select id="node-input-blockIfRule" style="width: 80px; text-align: center;"></select>
       <input type="text" id="node-input-blockIfCompareValue" placeholder="" style="margin-left: 5px;">
     </div>
+  </div>
+  <div class="form-tips" id="tip-context-variable-row" hidden>
+    <i class="fa fa-info" aria-hidden="true"></i> <span id="tip-context-variable"></span>
   </div>
 </script>
 

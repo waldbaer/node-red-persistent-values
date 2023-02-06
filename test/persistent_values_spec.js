@@ -513,7 +513,7 @@ describe('persistent value node', function() {
           msg.should.have.property(PropertyPayload, simulatedValue);
 
           const contextValue = getContextValue(v, testedStorage);
-          contextValue.should.equal(simulatedValue);
+          contextValue.should.be.equal(simulatedValue);
 
           done();
         } catch (err) {
@@ -1122,6 +1122,29 @@ describe('persistent value node', function() {
         }
       });
       v.receive({payload: AnyInputString});
+    });
+  });
+
+  // ==== Backend HTTP API ====================================================
+  const httpPathGetContextKey = '/persistentvalues/util/getcontextkey';
+
+  it(`backend API should return the context key`, function(done) {
+    helper.load([valueNode], FlowNodeAllVariants, function() {
+      const testConfigName = 'test/ Configuration';
+      const testPersistedValueName = 'Persisted~Value';
+
+      let expectedContexKey = testConfigName + '_' + testPersistedValueName;
+      expectedContexKey = expectedContexKey.replace(/ /g, '_');
+
+      helper.request()
+        .get(httpPathGetContextKey)
+        .query({configName: testConfigName, valueName: testPersistedValueName})
+        .expect(function(res) {
+          const contextKeyName = res._body;
+          contextKeyName.should.be.equal(expectedContexKey);
+        })
+        .expect(200)
+        .end(done);
     });
   });
 
