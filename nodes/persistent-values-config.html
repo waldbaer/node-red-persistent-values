@@ -1,4 +1,12 @@
 <style>
+  ol#node-config-input-values-container .red-ui-typedInput-container {
+        flex: 1;
+  }
+
+  .persistent-values-row {
+        flex-wrap: wrap;
+  }
+
   .persistent-values-row-item {
     margin: 0px 2px 0px 2px;
   }
@@ -124,70 +132,74 @@
         }
 
         // Value config container
-        $('#node-config-input-values-container').css('min-width', '450px').editableList({
-          addItem: async function(container, index, value) {
-            container.css({
-              overflow: 'hidden',
-              whiteSpace: 'nowrap',
-            });
-
-            const inputRows = $('<div></div>', {style: 'flex-grow:1;flex:1'}).appendTo(container);
-            const row = $('<div></div>', {style: 'display: flex;', class: 'form-row'}).appendTo(inputRows);
-
-            // Name
-            const nameFieldRowItem = $('<div/>',
-              {style: 'display:flex;flex-grow:1;', class: 'persistent-values-row-item'}).appendTo(row);
-
-            const nameField = $('<input/>', {class: 'node-input-value-name', type: 'text', width: '180px'})
-              .appendTo(nameFieldRowItem)
-              .typedInput({types: [{label: 'Name', value: 'str'}]});
-
-            // ID (hidden)
-            const idField = $('<input/>', {class: 'node-input-value-id', type: 'hidden'})
-              .appendTo(nameFieldRowItem);
-
-            // Datatype + Default value
-            const datatypeDefaultFieldRowItem = $('<div/>',
-              {style: 'display:flex;flex-grow:1;', class: 'persistent-values-row-item'}).appendTo(row);
-            const datatypeDefaultField = $('<input/>',
-              {class: 'node-input-value-datatypedefault', type: 'text', width: '150px'})
-              .appendTo(datatypeDefaultFieldRowItem)
-              .typedInput({default: 'bool', types: ['str', 'num', 'bool']});
-
-            // Scope
-            const scopeFieldRowItem = $('<div/>',
-              {style: 'display:flex;flex-grow:1;', class: 'persistent-values-row-item'}).appendTo(row);
-            const scopeField = $('<input/>',
-              {class: 'node-input-value-scope', type: 'text', width: '130px'})
-              .appendTo(scopeFieldRowItem)
-              .typedInput({
-                types: [{value: 'scope', label: 'Scope', showLabel: true, options: kScopes}],
+        $('#node-config-input-values-container')
+          .css('min-height', '400px')
+          .css('min-width', '700px')
+          .css('padding', '0px')
+          .editableList({
+            addItem: async function(container, index, value) {
+              container.css({
+                overflow: 'hidden',
+                whiteSpace: 'nowrap',
               });
 
-            // Storage
-            const storageFieldRowItem = $('<div/>',
-              {style: 'display:flex;flex-grow:1;', class: 'persistent-values-row-item'}).appendTo(row);
-            const storageField = $('<input/>', {class: 'node-input-value-storage', type: 'text', width: '165px'})
-              .appendTo(storageFieldRowItem)
-              .typedInput({
-                types: [{value: 'storage', label: 'Storage', showLabel: true, options: kStorages}],
-              });
+              const inputRows = $('<div></div>', {}).appendTo(container);
+              const row = $('<div></div>', {style: 'display: flex;', class: 'persistent-values-row'}).appendTo(inputRows);
 
-            // -- Populate --
-            idField.val(value.id || await generateUuidFromBackend()); // Generate new UUID for new values
-            nameField.typedInput('value', value.name || ('Value ' + (index + 1)));
-            datatypeDefaultField.typedInput('type', value.datatype || kDataTypeDefault);
-            datatypeDefaultField.typedInput('value', (value.default !== undefined) ? value.default : kDefaultValueDefault );
-            scopeField.typedInput('value', value.scope || kScopeDefault);
+              // Name
+              const nameFieldRowItem = $('<div/>',
+                {style: 'display:flex;flex-grow:1;', class: 'persistent-values-row-item'}).appendTo(row);
 
-            if (!kStorages.includes(value.storage)) {
-              value.storage = null;
-            }
-            storageField.typedInput('value', value.storage || kStorageDefault);
-          },
-          removable: true,
-          sortable: true,
-        });
+              const nameField = $('<input/>', {class: 'node-input-value-name', type: 'text', width: '180px'})
+                .appendTo(nameFieldRowItem)
+                .typedInput({types: [{label: 'Name', value: 'str'}]});
+
+              // ID (hidden)
+              const idField = $('<input/>', {class: 'node-input-value-id', type: 'hidden'})
+                .appendTo(nameFieldRowItem);
+
+              // Datatype + Default value
+              const datatypeDefaultFieldRowItem = $('<div/>',
+                {style: 'display:flex;flex-grow:1;', class: 'persistent-values-row-item'}).appendTo(row);
+              const datatypeDefaultField = $('<input/>',
+                {class: 'node-input-value-datatypedefault', type: 'text', width: '120px'})
+                .appendTo(datatypeDefaultFieldRowItem)
+                .typedInput({default: 'bool', types: ['str', 'num', 'bool']});
+
+              // Scope
+              const scopeFieldRowItem = $('<div/>',
+                {style: 'display:flex;flex-grow:0;', class: 'persistent-values-row-item'}).appendTo(row);
+              const scopeField = $('<input/>',
+                {class: 'node-input-value-scope', type: 'text', width: '130px'})
+                .appendTo(scopeFieldRowItem)
+                .typedInput({
+                  types: [{value: 'scope', label: 'Scope', showLabel: true, options: kScopes}],
+                });
+
+              // Storage
+              const storageFieldRowItem = $('<div/>',
+                {style: 'display:flex;flex-grow:0;', class: 'persistent-values-row-item'}).appendTo(row);
+              const storageField = $('<input/>', {class: 'node-input-value-storage', type: 'text', width: '150px'})
+                .appendTo(storageFieldRowItem)
+                .typedInput({
+                  types: [{value: 'storage', label: 'Storage', showLabel: true, options: kStorages}],
+                });
+
+              // -- Populate --
+              idField.val(value.id || await generateUuidFromBackend()); // Generate new UUID for new values
+              nameField.typedInput('value', value.name || ('Value ' + (index + 1)));
+              datatypeDefaultField.typedInput('type', value.datatype || kDataTypeDefault);
+              datatypeDefaultField.typedInput('value', (value.default !== undefined) ? value.default : kDefaultValueDefault );
+              scopeField.typedInput('value', value.scope || kScopeDefault);
+
+              if (!kStorages.includes(value.storage)) {
+                value.storage = null;
+              }
+              storageField.typedInput('value', value.storage || kStorageDefault);
+            },
+            removable: true,
+            sortable: true,
+          });
 
         if (!this.values) {
           this.values = [{name: '', datatype: 'boolean', default: false, scope: 'global', storage: 'file'}];
@@ -227,7 +239,19 @@
         $.post(httpPathConfigSave, {id: this.id, name: this.name, values: this.values}, function() { }, 'json');
       },
       oneditcancel: function() { },
-    });
+      oneditresize: function(size) {
+        console.log(`Resize`);
+        const rows = $('#node-config-dialog-edit-form>div:not(.node-config-input-values-container-row');
+        let height = size.height;
+        for (let i=0; i < rows.length; i++) {
+          height -= $(rows[i]).outerHeight(true);
+        }
+        const editorRow = $('#node-config-dialog-edit-form>div.node-config-input-values-container-row');
+        height -= (parseInt(editorRow.css('marginTop')) + parseInt(editorRow.css('marginBottom')));
+        height -= 20;
+        $('#node-config-input-values-container').editableList('height', height);
+      },
+  });
 })();
 
 </script>

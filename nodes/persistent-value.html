@@ -162,6 +162,7 @@
       // Initially change triggered by editor loaded, later with every user interaction.
       valuesConfigField.on('change', async function() {
         const selectedConfigId = $(this).val();
+
         if (selectedConfigId !== '_ADD_') { // Skip if "add new config" is selected
           backendConfig = await getConfigFromBackend(selectedConfigId);
           // Store current selected configuration name
@@ -196,6 +197,7 @@
           valueSelectField.removeAttr('disabled');
         } else {
           valueSelectField.attr('disabled', 'disabled');
+          tipContextVariableRow.hide();
         }
       });
 
@@ -239,11 +241,11 @@
 <script type="text/html" data-template-name="persistent value">
   <div class="form-row">
       <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
-      <input type="text" id="node-input-name" placeholder="Name">
+      <input type="text" id="node-input-name" placeholder="Name" style="width: calc(100% - 105px)">
   </div>
   <div class="form-row">
     <label for="node-input-valuesConfig"><i class="fa fa-gears"></i> Config</label>
-    <input type="text" id="node-input-valuesConfig" placeholder="">
+    <input type="text" id="node-input-valuesConfig" placeholder="" style="width: calc(100% - 105px)">
     <!-- Hidden storage of current selected configuration name (required for node label creation)-->
     <input type="hidden" id="node-input-valuesConfigName">
   </div>
@@ -256,31 +258,30 @@
     <!-- Store the actually selected value name in a hidden field. Required for node label creation -->
     <input type="hidden" id="node-input-value">
   </div>
-
   <div class="form-row">
     <label for="node-input-command"><i class="fa fa-comment"></i> Command</label>
-    <select id="node-input-command"></select>
+    <select id="node-input-command" style="width: 70px"></select>
   </div>
   <div class="form-row">
     <label id="node-input-msgProperty-label-input" for="node-input-msgProperty"><i class="fa fa-ellipsis-h"></i> Input</label>
     <label id="node-input-msgProperty-label-output" for="node-input-msgProperty"><i class="fa fa-ellipsis-h"></i> Output</label>
     <input type="hidden" id="node-input-msgPropertyType">
-    <input type="text" id="node-input-msgProperty" placeholder="payload">
+    <input type="text" id="node-input-msgProperty" placeholder="payload" style="width: calc(100% - 105px)">
   </div>
   <div class="form-row">
     <input type="checkbox" id="node-input-collectValues" style="display: inline-block; width: auto; vertical-align: top;">
     <label for="node-input-collectValues" style="width: auto;"> Collect Values</label>
-    <div id="node-input-collectValues-row" class="hide" style="margin-left: 20px; display: block">
+    <div id="node-input-collectValues-row" class="hide" style="margin-left: 50px; display: block">
       <label for="node-input-collectValuesMsgProperty" style="width: auto;"> Store to</label>
-      <input type="text" id="node-input-collectValuesMsgProperty" placeholder="values">
+      <input type="text" id="node-input-collectValuesMsgProperty" placeholder="values" style="width: calc(100% - 55px)">
     </div>
   </div>
   <div class="form-row">
     <input type="checkbox" id="node-input-blockIfEnable" style="display:inline-block; width: auto; vertical-align:top;">
     <label for="node-input-blockIfEnable" style="width: auto;"> Block further flow processing</label>
-    <div id="node-input-blockIfRule-row" class="hide" style="margin-left: 20px; display: block">
-      <select id="node-input-blockIfRule" style="width: 80px; text-align: center;"></select>
-      <input type="text" id="node-input-blockIfCompareValue" placeholder="" style="margin-left: 5px;">
+    <div id="node-input-blockIfRule-row" class="hide" style="margin-left: 35px; display: block">
+      <select id="node-input-blockIfRule" style="width: 60px; text-align: center;"></select>
+      <input type="text" id="node-input-blockIfCompareValue" placeholder="" style="margin-left: 5px; width: calc(100% - 70px)">
     </div>
   </div>
   <div class="form-tips" id="tip-context-variable-row" hidden>
