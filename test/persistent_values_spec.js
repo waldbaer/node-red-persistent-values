@@ -693,6 +693,7 @@ describe('persistent value node', function() {
   });
 
   // ==== Command override (msg.command) Tests ================================
+
   it(`should use 'read' command override`, function(done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].valueId = ConfigValueIdString;
@@ -778,6 +779,52 @@ describe('persistent value node', function() {
     });
   });
 
+  // ==== Output Previous Value Test ==========================================
+
+  it('should store the previous persisted value', function(done) {
+    const flow = structuredClone(FlowNodeAllVariants);
+    flow[0].valueId = ConfigValueIdString;
+    flow[0].command = CommandWrite;
+    flow[0].outputPreviousValue = true;
+    const previousValueMsgProperty = 'store_previous_value';
+    flow[0].outputPreviousValueMsgProperty = previousValueMsgProperty;
+
+    const CollectedValuesProperty = 'collected_values';
+    flow[0].collectValues = true;
+    flow[0].collectValuesMsgProperty = CollectedValuesProperty;
+
+
+    helper.load([configNode, valueNode], flow, function() {
+      const v = helper.getNode(NodeIdPersistentValue);
+      const h = helper.getNode(NodeIdHelperOnChange);
+
+      const expectedPreviousValue = 'my previousvalue';
+      setContextValue(v, expectedPreviousValue);
+      const newValue = 'my new value';
+
+      h.on(InputFunction, function(msg) {
+        try {
+          msg.should.have.property(PropertyPayload, newValue);
+          msg.should.have.property(previousValueMsgProperty, expectedPreviousValue);
+
+          const contextValue = getContextValue(v);
+          contextValue.should.equal(newValue);
+
+          const ExpectedCollectedValues = {};
+          ExpectedCollectedValues[buildContextKeyName(v)] = {
+            current: newValue,
+            previous: expectedPreviousValue,
+          };
+          msg.should.have.property(CollectedValuesProperty, ExpectedCollectedValues);
+
+          done();
+        } catch (err) {
+          done(err);
+        }
+      });
+      v.receive({payload: newValue});
+    });
+  });
 
   // ==== Collect Values Tests ================================================
 

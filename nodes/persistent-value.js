@@ -29,6 +29,10 @@ module.exports = function(RED) {
   const kSupportedCommands = [kCommandRead, kCommandWrite];
 
   const kCommandDefault = kCommandRead;
+
+  const kOutputPreviousValueDefault = false; // Do not output the previous value by default
+  const kOutputPreviousValueMsgProperty = 'previous_value';
+
   const kCollectValuesDefault = false; // Do not collect values by default
   const kCollectValuesMsgProperty = 'values';
 
@@ -125,7 +129,13 @@ module.exports = function(RED) {
     }
   }
 
-  function updateCollectedValues(node, msg, currentValue) {
+  function addPreviousValue(node, msg, previousValue) {
+    if (node.outputPreviousValue) {
+      msg[node.outputPreviousValueMsgProperty] = previousValue;
+    }
+  }
+
+  function updateCollectedValues(node, msg, currentValue, previousValue) {
     if (node.collectValues) {
       if (!msg.hasOwnProperty(node.collectValuesMsgProperty) ||
           (typeof msg[node.collectValuesMsgProperty] !== 'object')) {
@@ -134,7 +144,14 @@ module.exports = function(RED) {
       const collectedValues = msg[node.collectValuesMsgProperty];
 
       const contextKey = getContextKey(node);
-      collectedValues[contextKey] = currentValue;
+      if (node.outputPreviousValue) {
+        collectedValues[contextKey] = {
+          current: currentValue,
+          previous: previousValue,
+        };
+      } else {
+        collectedValues[contextKey] = currentValue;
+      }
     }
   }
 
@@ -244,6 +261,9 @@ module.exports = function(RED) {
     node.command = nodeConfig.command || kCommandDefault;
     node.msgProperty = nodeConfig.msgProperty || kMsgPropertyDefault;
 
+    node.outputPreviousValue = nodeConfig.outputPreviousValue || kOutputPreviousValueDefault;
+    node.outputPreviousValueMsgProperty = nodeConfig.outputPreviousValueMsgProperty || kOutputPreviousValueMsgProperty;
+
     node.collectValues = nodeConfig.collectValues || kCollectValuesDefault;
     node.collectValuesMsgProperty = nodeConfig.collectValuesMsgProperty || kCollectValuesMsgProperty;
 
@@ -289,7 +309,8 @@ module.exports = function(RED) {
           return;
         }
 
-        updateCollectedValues(node, msg, inputValue);
+        addPreviousValue(node, msg, currentValue);
+        updateCollectedValues(node, msg, inputValue, currentValue);
 
         if (inputValue !== currentValue) {
           setContext(node, context, contextKey, inputValue);

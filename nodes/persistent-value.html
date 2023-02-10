@@ -57,15 +57,38 @@
       valueId: {required: false}, // ID of the selected value
       value: {required: true}, // Name of the selected value
       command: {value: kCommandDefault, required: true},
-      msgProperty: {value: 'payload', required: false},
+      msgProperty: {
+        value: 'payload',
+        required: false,
+        validate: function(msgProperty) {
+          const msgProperties = new Set([msgProperty]);
+          let numOfProperties = 1;
+          if ($('#node-input-outputPreviousValue').prop('checked')) {
+            msgProperties.add($('#node-input-outputPreviousValueMsgProperty').val());
+            numOfProperties++;
+          }
+          if ($('#node-input-collectValues').prop('checked')) {
+            msgProperties.add($('#node-input-collectValuesMsgProperty').val());
+            numOfProperties++;
+          }
+          const valid = msgProperties.size === numOfProperties;
+          return valid;
+        },
+      },
+      outputPreviousValue: {value: false, required: false},
+      outputPreviousValueMsgProperty: {value: 'previous_value', required: false},
       collectValues: {value: false, required: false},
-      collectValuesMsgProperty: {value: 'values', required: false},
+      collectValuesMsgProperty: {
+        value: 'values',
+        required: false,
+
+      },
       blockIfEnable: {value: false, required: false},
       blockIfRule: {value: kBlockIfRuleDefault, required: false},
       blockIfCompareValue: {
         value: '',
         required: false,
-        validate: function(values) {
+        validate: function() {
           return $('#node-input-blockIfEnable').prop('checked') ?
             $('#node-input-blockIfCompareValue').typedInput('validate') : true;
         },
@@ -106,6 +129,11 @@
       const msgPropertyField = $('#node-input-msgProperty');
       const msgPropertyLabelFieldInput = $('#node-input-msgProperty-label-input');
       const msgPropertyLabelFieldOutput = $('#node-input-msgProperty-label-output');
+
+      const outputPreviousValueField = $('#node-input-outputPreviousValue');
+      const outputPreviousValueRow = $('#node-input-outputPreviousValue-row');
+      const outputPreviousValueMsgPropertyField = $('#node-input-outputPreviousValueMsgProperty');
+
       const collectValuesField = $('#node-input-collectValues');
       const collectValuesRow = $('#node-input-collectValues-row');
       const collectValuesMsgPropertyField = $('#node-input-collectValuesMsgProperty');
@@ -220,6 +248,12 @@
       msgPropertyField.typedInput({types: [{label: 'msg.', value: 'str'}]});
 
       // collectValues property
+      outputPreviousValueField.on('change', function() {
+        this.checked ? outputPreviousValueRow.show() : outputPreviousValueRow.hide();
+      });
+      outputPreviousValueMsgPropertyField.typedInput({types: [{label: 'msg.', value: 'str'}]});
+
+      // collectValues property
       collectValuesField.on('change', function() {
         this.checked ? collectValuesRow.show() : collectValuesRow.hide();
       });
@@ -269,6 +303,14 @@
     <input type="text" id="node-input-msgProperty" placeholder="payload" style="width: calc(100% - 105px)">
   </div>
   <div class="form-row">
+    <input type="checkbox" id="node-input-outputPreviousValue" style="display: inline-block; width: auto; vertical-align: top;">
+    <label for="node-input-outputPreviousValue" style="width: auto;"> Output the Previous Value</label>
+    <div id="node-input-outputPreviousValue-row" class="hide" style="margin-left: 50px; display: block">
+      <label for="node-input-outputPreviousValueMsgProperty" style="width: auto;"> Store to</label>
+      <input type="text" id="node-input-outputPreviousValueMsgProperty" placeholder="previous_value" style="width: calc(100% - 55px)">
+    </div>
+  </div>
+  <div class="form-row">
     <input type="checkbox" id="node-input-collectValues" style="display: inline-block; width: auto; vertical-align: top;">
     <label for="node-input-collectValues" style="width: auto;"> Collect Values</label>
     <div id="node-input-collectValues-row" class="hide" style="margin-left: 50px; display: block">
@@ -278,7 +320,7 @@
   </div>
   <div class="form-row">
     <input type="checkbox" id="node-input-blockIfEnable" style="display:inline-block; width: auto; vertical-align:top;">
-    <label for="node-input-blockIfEnable" style="width: auto;"> Block further flow processing</label>
+    <label for="node-input-blockIfEnable" style="width: auto;"> Block Further Flow Processing</label>
     <div id="node-input-blockIfRule-row" class="hide" style="margin-left: 35px; display: block">
       <select id="node-input-blockIfRule" style="width: 60px; text-align: center;"></select>
       <input type="text" id="node-input-blockIfCompareValue" placeholder="" style="margin-left: 5px; width: calc(100% - 70px)">
@@ -320,17 +362,23 @@
       <dt>Input / Output</dt>
       <dd>Overwrite the message property used for reading or writing the new persistent value.</dd>
 
+      <dt>Output the Previous Value</dt>
+      <dd>
+          Store the previous persisted value to the configured <code>msg</code> property.
+          Only relevant for command 'write'.
+      </dd>
+
       <dt>Collect Values</dt>
       <dd>
           Append the current persistent value as an object attribute of the configurable <code>msg</code> property.
           Format of the attributes appended to the message property: <code>[config name with underscores]_[persistent value name with underscores]</code>.
       </dd>
 
-      <dt>Block further flow processing</dt>
+      <dt>Block Further Flow Processing</dt>
       <dd>
           Block the flow processing (no output of the node) in case the persistent value matches the configured rule.
           Example:
-          No output is send if current value of the persistent value is <code>23</code> and the 'block further flow processing'
+          No output is send if current value of the persistent value is <code>23</code> and the 'Block Further Flow Processing'
           rule is configured to <code>== 23</code>.
       </dd>
     </dl>
@@ -390,6 +438,12 @@
       <code>"read"</code> or <code>"write"</code> (whitespace and case insensitive).
     </p>
 
+    <h4>Output the Previous Value</h4>
+      <p>
+        In case the current and previous value of the persisted state shall be evaluated or processed in a single node
+        (e.g. custom function), the 'Output the Previous Value' option can be used.
+        The previous value will be stored to the configured <code>msg</code> property.
+      </p>
     <h4>Collected Values</h4>
       <p>
         In case multiple persistent values shall be evaluated or processed in a single node (e.g. custom function), the
@@ -409,7 +463,21 @@
   ...
 }
 </code></pre>
-    </p>
+      </p>
+      <p>
+        If the 'Output the Previous Value' is enabled the current and previous value is stored in an Object as follows:
+<pre><code>{
+  ...
+  "values": {
+    "House_States_LightOn": {current: true, previous: false},
+    "House_States_OpenWindows": {current: 5, previous: 3},
+    "House_States_NextGarbageCollection": {current: "2023-01-09", previous: "2023-01-02" }
+  },
+  ...
+}
+</code></pre>
+
+      </p>
 
   <h3>References</h3>
     <ul>
