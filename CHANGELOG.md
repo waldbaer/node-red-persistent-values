@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 
 
+## [1.2.0] - 2023-02-11
+
+### Features
+- Support output of previous persisted value into a configurable `msg` property.
+
+### Improvements
+- Editor: Tip showing the actual context variable name.
+- Editor: CSS
+
+### Fixes
+- The configured 'Block Further Flow Processing' rule is not loaded into the editor.
+  On second edit of the node the default rule '==' is stored again.
+  Only relevant if rule `!=` is used.
+  Workaround: Select the rule `!=` always before saving modified nodes.
+
+
 ## [1.1.1] - 2023-02-05
 
 ### Fixes
