@@ -1,5 +1,6 @@
 module.exports = function(RED) {
   const uuid = require('uuid');
+  const assert = require('assert'); // nodejs assert module
 
   // ---- elements of the reference config ----
 
@@ -7,12 +8,14 @@ module.exports = function(RED) {
   const kConfigDatatypeBool = 'bool';
   const kConfigDatatypeNumber = 'num';
   const kConfigDatatypeString = 'str';
+  const kConfigDatatypeJson = 'json';
 
   // Lookup table: javascript typeof -> configured type (TypedInput)
   const kSupportedDatatypesLanguageType = {
     [typeof true]: kConfigDatatypeBool,
     [typeof 0]: kConfigDatatypeNumber,
     [typeof '']: kConfigDatatypeString,
+    [kConfigDatatypeJson]: kConfigDatatypeJson,
   };
   // Lookup table: configured type (TypedInput) -> javascript typeof
   const kSupportedDatatypesByTypedInput = Object.keys(kSupportedDatatypesLanguageType).reduce((ret, key) => {
@@ -29,6 +32,8 @@ module.exports = function(RED) {
   const kSupportedCommands = [kCommandRead, kCommandWrite];
 
   const kCommandDefault = kCommandRead;
+
+  const kDeepCloneValueDefault = false;
 
   const kOutputPreviousValueDefault = false; // Do not output the previous value by default
   const kOutputPreviousValueMsgProperty = 'previous_value';
@@ -48,7 +53,12 @@ module.exports = function(RED) {
                `'${node.name}' with ID ${node.id}. Skipping further processing.`, node);
   }
 
-  function buildNodeStatus(node, msgProperty, blockFlow) {
+  function buildNodeStatus(node, currentValue, blockFlow) {
+    let value = currentValue;
+    if (node.valueConfig.datatype === kConfigDatatypeJson) {
+      value = `{JSON}`;
+    }
+
     let storage = node.valueConfig.storage;
     if (storage === kStorageDefault) {
       if (RED.settings.contextStorage !== undefined && RED.settings.contextStorage.default !== undefined) {
@@ -59,7 +69,7 @@ module.exports = function(RED) {
     node.status({
       fill: `${blockFlow ? 'red' : 'green'}`,
       shape: 'dot',
-      text: `${msgProperty} [${kSupportedDatatypesByTypedInput[node.valueConfig.datatype]},${node.valueConfig.scope},${storage}]`,
+      text: `${value} [${kSupportedDatatypesByTypedInput[node.valueConfig.datatype]},${node.valueConfig.scope},${storage}]`,
     });
   }
 
@@ -117,6 +127,10 @@ module.exports = function(RED) {
     // Apply default value if context contains no value
     if (currentValue === undefined) {
       currentValue = node.valueConfig.default;
+
+      if (node.valueConfig.datatype === kConfigDatatypeJson) {
+        currentValue = JSON.parse(currentValue);
+      }
     }
     return currentValue;
   }
@@ -178,8 +192,13 @@ module.exports = function(RED) {
         convertedValue = value.toString();
       }
       break;
+    case kConfigDatatypeJson:
+      try {
+        convertedValue = JSON.parse(value);
+      } catch (e) { }
+      break;
     default:
-      node.error(`Unsupported compare value type '${node.valueConfig.datatype}' configured!`);
+      node.error(`Unsupported or invalid compare value type '${node.valueConfig.datatype}' configured!`);
     }
 
     if (convertedValue === undefined) {
@@ -190,9 +209,42 @@ module.exports = function(RED) {
   }
 
   function compareToConfiguredDatatype(node, value) {
-    const typeOfValue = typeof value;
-    return kSupportedDatatypesLanguageType.hasOwnProperty(typeOfValue) &&
+    let result = true;
+
+    if (node.valueConfig.datatype == kConfigDatatypeJson) {
+      result = isPureJsonObject(value);
+    } else {
+      const typeOfValue = typeof value;
+      result = kSupportedDatatypesLanguageType.hasOwnProperty(typeOfValue) &&
            (kSupportedDatatypesLanguageType[typeOfValue] === node.valueConfig.datatype);
+    }
+    return result;
+  }
+
+  function isPureJsonObject(value) {
+    let result = true;
+    try {
+      // Try to serialize the object. The used replaced will throw
+      // an error if the object contains any datatype not supported
+      // by pure JSON.
+      // Supported JSON datatypes: null, bool, string, number, pure object, array
+      JSON.stringify(value, function(key, value) {
+        const typeOfValue = typeof value;
+        if (value === null ||
+            typeOfValue === 'boolean' ||
+            typeOfValue === 'string' ||
+            typeOfValue === 'number' ||
+            Array.isArray(value) ||
+            (typeOfValue === 'object' && value.constructor.name === `Object`)) {
+          return value; // Continue stringification
+        } else {
+          throw new Error('Invalid JSON datatype!');
+        }
+      });
+    } catch (e) {
+      result = false;
+    }
+    return result;
   }
 
   function checkBlockIfCondition(node, currentValue) {
@@ -205,10 +257,10 @@ module.exports = function(RED) {
       if (typeofCurrentValue === typeofBlockIfCompareValue) {
         switch (node.blockIfRule) {
         case kBlockIfRuleEq:
-          blockFlow = (currentValue === node.blockIfCompareValue);
+          blockFlow = isDeepStrictEqual(currentValue, node.blockIfCompareValue);
           break;
         case kBlockIfRuleNeq:
-          blockFlow = (currentValue !== node.blockIfCompareValue);
+          blockFlow = !isDeepStrictEqual(currentValue, node.blockIfCompareValue);
           break;
         default:
           node.warn(`Unknown block-if rule '${node.blockIfRule}'. Skipping blocking value check.`);
@@ -220,6 +272,24 @@ module.exports = function(RED) {
     }
 
     return blockFlow;
+  }
+
+  function isDeepStrictEqual(left, right) {
+    let result = true;
+    try {
+      assert.deepStrictEqual(left, right, '');
+    } catch (e) {
+      // AssertionError thrown if objects are not equal
+      result = false;
+    }
+    return result;
+  }
+
+  function deepCloneIfEnabled(node, value) {
+    if (node.deepCloneValue) {
+      return RED.util.cloneMessage(value);
+    }
+    return value;
   }
 
   // ---- Node main -------------------------------------------------------------------------------
@@ -261,6 +331,8 @@ module.exports = function(RED) {
     node.command = nodeConfig.command || kCommandDefault;
     node.msgProperty = nodeConfig.msgProperty || kMsgPropertyDefault;
 
+    node.deepCloneValue = nodeConfig.deepCloneValue || kDeepCloneValueDefault;
+
     node.outputPreviousValue = nodeConfig.outputPreviousValue || kOutputPreviousValueDefault;
     node.outputPreviousValueMsgProperty = nodeConfig.outputPreviousValueMsgProperty || kOutputPreviousValueMsgProperty;
 
@@ -272,13 +344,14 @@ module.exports = function(RED) {
     node.blockIfCompareValue = node.blockIfEnable ?
       convertToExpectedType(node, nodeConfig.blockIfCompareValue) : undefined;
 
-
     node.on('input', function(msg) {
       // ---- Execute ----
       const context = getUsedContext(node);
       const contextKey = getContextKey(node);
 
       let currentValue = getContext(node, context, contextKey);
+      currentValue = deepCloneIfEnabled(node, currentValue);
+
       if (!compareToConfiguredDatatype(node, currentValue)) {
         node.warn(`Persisted value ${node.configName} / ${node.value} does not have the configured datatype ` +
                   `'${node.valueConfig.datatype}'!`);
@@ -288,20 +361,19 @@ module.exports = function(RED) {
 
       // Determine command either from configuration or use dynamic override
       const command = determineCommand(node, msg);
-
-      // -- Command: Read --
       if (command === kCommandRead) {
+        // ---- Command: Read ----
         msg[node.msgProperty] = currentValue;
         updateCollectedValues(node, msg, currentValue);
-      }
-      // -- Command: Write --
-      else if (command === kCommandWrite) {
+      } else if (command === kCommandWrite) {
+        // ---- Command: Write ----
         if (!msg.hasOwnProperty(node.msgProperty)) {
           node.error(`Passed msg does not have the configured property '${node.msgProperty}'`, msg);
           return;
         }
 
-        const inputValue = msg[node.msgProperty];
+        let inputValue = msg[node.msgProperty];
+        inputValue = deepCloneIfEnabled(node, inputValue);
 
         if (!compareToConfiguredDatatype(node, inputValue)) {
           node.error(`Passed value in msg.${node.msgProperty} does not have the configured datatype ` +
@@ -312,15 +384,14 @@ module.exports = function(RED) {
         addPreviousValue(node, msg, currentValue);
         updateCollectedValues(node, msg, inputValue, currentValue);
 
-        if (inputValue !== currentValue) {
+        if (!isDeepStrictEqual(inputValue, currentValue)) {
           setContext(node, context, contextKey, inputValue);
           onChangeMsg = msg;
         }
 
         currentValue = inputValue;
-      }
-      // -- Command: unknown / unsupported --
-      else {
+      } else {
+        // ---- Command: unknown / unsupported ----
         node.error(`Unknown or unsupported persistent value command '${command}' used!`);
         return null;
       }

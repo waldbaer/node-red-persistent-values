@@ -75,6 +75,7 @@
           return valid;
         },
       },
+      deepCloneValue: {value: false, required: false},
       outputPreviousValue: {value: false, required: false},
       outputPreviousValueMsgProperty: {value: 'previous_value', required: false},
       collectValues: {value: false, required: false},
@@ -130,6 +131,9 @@
       const msgPropertyLabelFieldInput = $('#node-input-msgProperty-label-input');
       const msgPropertyLabelFieldOutput = $('#node-input-msgProperty-label-output');
 
+      const deepCloneField =$('#node-input-node-input-deepCloneValue');
+      const deepCloneFieldRow =$('#node-input-deepCloneValue-row');
+
       const outputPreviousValueField = $('#node-input-outputPreviousValue');
       const outputPreviousValueRow = $('#node-input-outputPreviousValue-row');
       const outputPreviousValueMsgPropertyField = $('#node-input-outputPreviousValueMsgProperty');
@@ -144,7 +148,7 @@
       const blockIfCompareValueField = $('#node-input-blockIfCompareValue');
 
       // Initialize all possible types of compare value field. Concrete type dynamically switched based on config.
-      blockIfCompareValueField.typedInput({type: 'str', types: ['str', 'num', 'bool']});
+      blockIfCompareValueField.typedInput({type: 'str', types: ['str', 'num', 'bool', 'json']});
 
       const node = this; // Store access to node configuration itself
 
@@ -168,6 +172,8 @@
           blockIfCompareValueField.typedInput('type', selectedDatatype);
           blockIfCompareValueField.typedInput('types', [selectedDatatype]);
 
+          (selectedDatatype === 'json') ? deepCloneFieldRow.show() : deepCloneFieldRow.hide();
+
           const contextKeyName = await getContextKeyNameFromBackend(node.valuesConfigName, node.value);
           if (contextKeyName !== undefined) {
             tipContextVariable.html(`Value will be persisted in context variable <code>${contextKeyName}</code>.`);
@@ -181,6 +187,8 @@
 
           node.value = selected.val();
           valueField.val(node.value);
+
+          deepCloneFieldRow.hide();
 
           tipContextVariable.html(``);
           tipContextVariableRow.hide();
@@ -225,6 +233,7 @@
           valueSelectField.removeAttr('disabled');
         } else {
           valueSelectField.attr('disabled', 'disabled');
+          deepCloneFieldRow.hide();
           tipContextVariableRow.hide();
         }
       });
@@ -302,6 +311,10 @@
     <input type="hidden" id="node-input-msgPropertyType">
     <input type="text" id="node-input-msgProperty" placeholder="payload" style="width: calc(100% - 105px)">
   </div>
+  <div class="form-row" id="node-input-deepCloneValue-row">
+    <input type="checkbox" id="node-input-deepCloneValue" style="display: inline-block; width: auto; vertical-align: top;">
+    <label for="node-input-deepCloneValue" style="width: auto;"> Deep Clone Value</label>
+  </div>
   <div class="form-row">
     <input type="checkbox" id="node-input-outputPreviousValue" style="display: inline-block; width: auto; vertical-align: top;">
     <label for="node-input-outputPreviousValue" style="width: auto;"> Output the Previous Value</label>
@@ -361,6 +374,12 @@
 
       <dt>Input / Output</dt>
       <dd>Overwrite the message property used for reading or writing the new persistent value.</dd>
+
+      <dt>Deep Clone Value</dt>
+      <dd>
+          Create a deep clone of the current context store or input value before further processing.
+          Only available for the 'JSON' datatype.
+      </dd>
 
       <dt>Output the Previous Value</dt>
       <dd>
@@ -438,12 +457,26 @@
       <code>"read"</code> or <code>"write"</code> (whitespace and case insensitive).
     </p>
 
+    <h4>Deep Clone Value</h4>
+
+      <p>
+        <i>(Only relevant for 'JSON' datatype)</i>
+        In Javascript Objects are always passed by reference.
+        Therefore any modification of a read persistent value will also modify the context store value for 'JSON' datatypes.
+        The same applies to the persisted <code>msg</code> input property which might be modified via another read access
+        to the context store.
+
+        With the <i>Deep Clone Value</i> option enabled a deep clone of the current context value or
+        <code>msg</code> input property is created before further processing (read or write commands).
+      </p>
+
     <h4>Output the Previous Value</h4>
       <p>
         In case the current and previous value of the persisted state shall be evaluated or processed in a single node
         (e.g. custom function), the 'Output the Previous Value' option can be used.
         The previous value will be stored to the configured <code>msg</code> property.
       </p>
+
     <h4>Collected Values</h4>
       <p>
         In case multiple persistent values shall be evaluated or processed in a single node (e.g. custom function), the

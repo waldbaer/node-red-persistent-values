@@ -20,9 +20,10 @@
 
   const kDefaultValueDefault = false;
 
-  const kDataTypeBoolean = 'boolean';
+  const kDataTypeBoolean = 'bool';
   const kDataTypeNumber = 'num';
-  const kDataTypeString = 'string';
+  const kDataTypeString = 'str';
+  const kDataTypeJson = 'json';
   const kDataTypeDefault = kDataTypeBoolean;
 
   const kScopeFlow = 'flow';
@@ -63,36 +64,32 @@
       for (const value of values) {
         // Name
         if (!value.name.trim()) {
-          console.error(`Persistent value name must not be empty!`);
+          console.error(`[Persistent Values][error]: Value name must not be empty!`);
           result = false;
         }
 
         const valuesWithIdenticalName = values.filter((item) => item.name === value.name);
         if (valuesWithIdenticalName.length > 1) {
-          console.error(`Persistent value name '${value.name}' is not unique! The name is used ${valuesWithIdenticalName.length} times.`);
+          console.error(`[Persistent Values][error]: `+
+                        `Value name '${value.name}' is not unique! The name is used ${valuesWithIdenticalName.length} times.`);
           result = false;
         }
 
         // Datatype & Default value
-        if ((value.datatype === kDataTypeBoolean) && ((typeof value.default) !== kDataTypeBoolean)) {
-          console.error(`Incorrect default value '${value.default}' of type 'boolean' for value ${value.name}`);
-          result = false;
-        }
-        if (value.datatype === kDataTypeNumber && ((typeof value.default) !== kDataTypeNumber)) {
-          const isANumber = !Number.isNaN(value.default);
-          if (!isANumber) {
-            console.error(`Incorrect default value '${value.default}' of type 'number' for value ${value.name}`);
+        const valuesEditablelist = $('#node-config-input-values-container').editableList('items');
+        for (const value of valuesEditablelist) {
+          const datatypeAndDefault = value.find('.node-input-value-datatypedefault');
+          if (!datatypeAndDefault.typedInput('validate')) {
+            const name = value.find('.node-input-value-name').typedInput('value');
+            const datatype = datatypeAndDefault.typedInput('type');
+            console.log(`[Persistent Values][error]: Default value of persistent value '${name}' is no valid '${datatype}' datatype.`);
+            result = false;
           }
-          return !Number.isNaN(value.default);
-        }
-        if ((value.datatype === 'str') && ((typeof value.default) !== kDataTypeString)) {
-          console.error(`Incorrect default value '${value.default}' of type 'string' for value ${value.name}`);
-          result = false;
         }
 
         // Storage
         if (!kStorages.includes(value.storage)) {
-          console.error(`Storage '${value.storage}' is not available or configured`);
+          console.error(`[Persistent Values][error]: Storage '${value.storage}' is not available or configured`);
           result = false;
         }
       }
@@ -152,7 +149,7 @@
 
               const nameField = $('<input/>', {class: 'node-input-value-name', type: 'text', width: '180px'})
                 .appendTo(nameFieldRowItem)
-                .typedInput({types: [{label: 'Name', value: 'str'}]});
+                .typedInput({types: [{label: 'Name', value: kDataTypeString}]});
 
               // ID (hidden)
               const idField = $('<input/>', {class: 'node-input-value-id', type: 'hidden'})
@@ -164,7 +161,7 @@
               const datatypeDefaultField = $('<input/>',
                 {class: 'node-input-value-datatypedefault', type: 'text', width: '120px'})
                 .appendTo(datatypeDefaultFieldRowItem)
-                .typedInput({default: 'bool', types: ['str', 'num', 'bool']});
+                .typedInput({default: kDataTypeDefault, types: [kDataTypeString, kDataTypeNumber, kDataTypeBoolean, kDataTypeJson]});
 
               // Scope
               const scopeFieldRowItem = $('<div/>',
@@ -222,10 +219,10 @@
 
           const datatype = value.find('.node-input-value-datatypedefault').typedInput('type');
           let defaultValue = value.find('.node-input-value-datatypedefault').typedInput('value');
-          if (datatype === 'num') {
+          if (datatype === kDataTypeNumber) {
             defaultValue = Number(defaultValue);
           }
-          if (datatype === 'bool') {
+          if (datatype === kDataTypeBoolean) {
             defaultValue = (defaultValue === 'true');
           }
 

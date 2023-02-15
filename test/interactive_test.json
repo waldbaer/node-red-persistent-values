@@ -66,12 +66,15 @@
             "91edf2710eb88666",
             "c5369de6872b9903",
             "598f4140ee1ca6d8",
-            "524ad5132a898913"
+            "524ad5132a898913",
+            "5f7dba1cee1ab892",
+            "3c2d1a8dace01a9d",
+            "3d71347961c1e38d"
         ],
         "x": 194,
         "y": 79,
         "w": 1012,
-        "h": 262
+        "h": 302
     },
     {
         "id": "3ad358a1fbaf7a89",
@@ -95,12 +98,15 @@
             "4b976d0d3f1eedc9",
             "5e923847b981f85b",
             "d9fa83a788b15e31",
-            "9129bbc721cb31e0"
+            "9129bbc721cb31e0",
+            "99bbf232c22ad9d1",
+            "a8e9962203a08189",
+            "113f17e3b7b4c4f3"
         ],
         "x": 194,
-        "y": 919,
+        "y": 1019,
         "w": 1072,
-        "h": 342
+        "h": 422
     },
     {
         "id": "57a2dd8e543a4f75",
@@ -135,7 +141,6 @@
             "995f74635da8ecfd",
             "5dc65e5c054e2ed6",
             "2dd5a45767f176b0",
-            "757f93e162e74863",
             "ba6f719b57672e57",
             "fe776a0ab8a4a4fc",
             "c6a3aba22b1f57c7",
@@ -145,12 +150,18 @@
             "2c9a6432c9ed5bfc",
             "93393abd25b7cffc",
             "dadab75ce6703193",
-            "0c9045dac6fa8597"
+            "0c9045dac6fa8597",
+            "d31a91c3cdd26c17",
+            "933c69ae0d073c36",
+            "0cf8b06be2dc0f04",
+            "eda1c5fdf5aef3d3",
+            "1faed8a4fafb248d",
+            "a6295230e77ae586"
         ],
         "x": 194,
-        "y": 1279,
-        "w": 1452,
-        "h": 662
+        "y": 1459,
+        "w": 1472,
+        "h": 802
     },
     {
         "id": "90a0b1d58cff333a",
@@ -180,12 +191,18 @@
             "e641303033319e5a",
             "e972b1c3f2060f51",
             "5cfb29ccf5731ac4",
-            "83a169ad32f21a09"
+            "83a169ad32f21a09",
+            "7f0333462b28775e",
+            "da17791a421e999f",
+            "3c2deab9b995ddad",
+            "1839749f6ed43931",
+            "eed0e8665fcf494f",
+            "0e40727f70319d01"
         ],
         "x": 194,
-        "y": 359,
+        "y": 399,
         "w": 952,
-        "h": 402
+        "h": 462
     },
     {
         "id": "8a630876a2f47162",
@@ -203,7 +220,7 @@
             "db985c252b00103f"
         ],
         "x": 194,
-        "y": 779,
+        "y": 879,
         "w": 992,
         "h": 122
     },
@@ -213,7 +230,7 @@
         "z": "e0d46eaa915ffcba",
         "g": "3ad358a1fbaf7a89",
         "x": 340,
-        "y": 1000,
+        "y": 1100,
         "wires": [
             [
                 "4b01ccc1241ecabe"
@@ -226,7 +243,7 @@
         "z": "e0d46eaa915ffcba",
         "g": "57a2dd8e543a4f75",
         "x": 280,
-        "y": 1360,
+        "y": 1540,
         "wires": [
             [
                 "dadab75ce6703193",
@@ -240,12 +257,13 @@
         "z": "e0d46eaa915ffcba",
         "g": "57a2dd8e543a4f75",
         "x": 360,
-        "y": 1840,
+        "y": 2100,
         "wires": [
             [
                 "995f74635da8ecfd",
                 "56bfbd28b2992d86",
-                "43794b6474594c95"
+                "43794b6474594c95",
+                "eda1c5fdf5aef3d3"
             ]
         ]
     },
@@ -255,12 +273,13 @@
         "z": "e0d46eaa915ffcba",
         "g": "57a2dd8e543a4f75",
         "x": 360,
-        "y": 1500,
+        "y": 1680,
         "wires": [
             [
                 "5bdbace7f4567684",
                 "02dc7441310f03ac",
-                "a6b7559f2c8ea9ca"
+                "a6b7559f2c8ea9ca",
+                "2c18f62071d28805"
             ]
         ]
     },
@@ -289,7 +308,8 @@
                 "524ad5132a898913",
                 "93393abd25b7cffc",
                 "9129bbc721cb31e0",
-                "db985c252b00103f"
+                "db985c252b00103f",
+                "83a169ad32f21a09"
             ]
         ]
     },
@@ -299,12 +319,13 @@
         "z": "e0d46eaa915ffcba",
         "g": "90a0b1d58cff333a",
         "x": 340,
-        "y": 440,
+        "y": 480,
         "wires": [
             [
                 "887ac2d17a91f006",
                 "6e3c093eed3a7d99",
-                "c9db5d907bf24ef2"
+                "c9db5d907bf24ef2",
+                "7f0333462b28775e"
             ]
         ]
     },
@@ -314,7 +335,7 @@
         "z": "e0d46eaa915ffcba",
         "g": "8a630876a2f47162",
         "x": 300,
-        "y": 860,
+        "y": 960,
         "wires": [
             [
                 "5797648024a75fc2"
@@ -373,7 +394,7 @@
         "payload": "",
         "payloadType": "date",
         "x": 320,
-        "y": 960,
+        "y": 1060,
         "wires": [
             [
                 "9129bbc721cb31e0"
@@ -388,7 +409,6 @@
         "name": "",
         "valuesConfig": "4b0803dadcdbb5b0",
         "valuesConfigName": "TestValueWrite",
-        "valueSelect": "booleanMemory",
         "value": "booleanMemory",
         "command": "write",
         "msgProperty": "input",
@@ -398,7 +418,7 @@
         "blockIfRule": "eq",
         "blockIfCompareValue": "true",
         "x": 860,
-        "y": 1000,
+        "y": 1100,
         "wires": [
             [
                 "6e41a297a9cf168d"
@@ -427,7 +447,7 @@
         "to": "",
         "reg": false,
         "x": 510,
-        "y": 1000,
+        "y": 1100,
         "wires": [
             [
                 "564d520ca6f96238"
@@ -455,7 +475,7 @@
         "to": "",
         "reg": false,
         "x": 520,
-        "y": 1040,
+        "y": 1140,
         "wires": [
             [
                 "7f51d37ea764368f"
@@ -470,7 +490,6 @@
         "name": "",
         "valuesConfig": "4b0803dadcdbb5b0",
         "valuesConfigName": "TestValueWrite",
-        "valueSelect": "numberMemory",
         "value": "numberMemory",
         "command": "write",
         "msgProperty": "input",
@@ -480,7 +499,7 @@
         "blockIfRule": "eq",
         "blockIfCompareValue": "",
         "x": 860,
-        "y": 1040,
+        "y": 1140,
         "wires": [
             [
                 "e6f2ec578bade396"
@@ -509,7 +528,7 @@
         "to": "",
         "reg": false,
         "x": 570,
-        "y": 1080,
+        "y": 1180,
         "wires": [
             [
                 "c21a545236b56a95"
@@ -524,7 +543,7 @@
         "name": "",
         "valuesConfig": "4b0803dadcdbb5b0",
         "valuesConfigName": "TestValueWrite",
-        "valueSelect": "stringMemory",
+        "valueId": "1e083b90-b2ee-11ed-9433-132d1ad884b5",
         "value": "stringMemory",
         "command": "write",
         "msgProperty": "input",
@@ -533,11 +552,11 @@
         "blockIfEnable": false,
         "blockIfRule": "eq",
         "blockIfCompareValue": "",
-        "x": 860,
-        "y": 1080,
+        "x": 850,
+        "y": 1180,
         "wires": [
             [
-                "4e7346d6743b3f67"
+                "99bbf232c22ad9d1"
             ],
             []
         ]
@@ -548,14 +567,14 @@
         "z": "e0d46eaa915ffcba",
         "g": "3ad358a1fbaf7a89",
         "name": "assert collected values",
-        "func": "if(msg.states1.TestValueWrite_booleanMemory != true) {\n    node.error(`Mismatch TestValueWrite_booleanMemory!`);\n}\nif (msg.states1.TestValueWrite_numberMemory != 400) {\n    node.error(`Mismatch TestValueWrite_numberMemory!`);\n}\nif (msg.states2.TestValueWrite_stringMemory != 'testCollectValues') {\n    node.error(`Mismatch TestValueWrite_stringMemory!`);\n}\n\nreturn msg;",
+        "func": "if(msg.states1.TestValueWrite_booleanMemory != true) {\n    node.error(`Mismatch TestValueWrite_booleanMemory!`);\n}\nif (msg.states1.TestValueWrite_numberMemory != 400) {\n    node.error(`Mismatch TestValueWrite_numberMemory!`);\n}\nif (msg.states2.TestValueWrite_stringMemory != 'testCollectValues') {\n    node.error(`Mismatch TestValueWrite_stringMemory!`);\n}\nif (msg.states2.TestValueWrite_jsonMemory.collect != 'JSON') {\n    node.error(`Mismatch TestValueWrite_jsonMemory!`);\n}\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
         "x": 1140,
-        "y": 1080,
+        "y": 1220,
         "wires": [
             [
                 "5e923847b981f85b"
@@ -570,7 +589,6 @@
         "name": "",
         "valuesConfig": "4b0803dadcdbb5b0",
         "valuesConfigName": "TestValueWrite",
-        "valueSelect": "booleanMemory",
         "value": "booleanMemory",
         "command": "read",
         "msgProperty": "input",
@@ -580,7 +598,7 @@
         "blockIfRule": "eq",
         "blockIfCompareValue": "true",
         "x": 860,
-        "y": 1140,
+        "y": 1280,
         "wires": [
             [
                 "dbf9d79f1b0eb6ba"
@@ -596,7 +614,6 @@
         "name": "",
         "valuesConfig": "4b0803dadcdbb5b0",
         "valuesConfigName": "TestValueWrite",
-        "valueSelect": "numberMemory",
         "value": "numberMemory",
         "command": "read",
         "msgProperty": "input",
@@ -606,7 +623,7 @@
         "blockIfRule": "eq",
         "blockIfCompareValue": "",
         "x": 850,
-        "y": 1180,
+        "y": 1320,
         "wires": [
             [
                 "4b976d0d3f1eedc9"
@@ -622,7 +639,6 @@
         "name": "",
         "valuesConfig": "4b0803dadcdbb5b0",
         "valuesConfigName": "TestValueWrite",
-        "valueSelect": "stringMemory",
         "value": "stringMemory",
         "command": "read",
         "msgProperty": "input",
@@ -631,11 +647,11 @@
         "blockIfEnable": false,
         "blockIfRule": "eq",
         "blockIfCompareValue": "",
-        "x": 860,
-        "y": 1220,
+        "x": 850,
+        "y": 1360,
         "wires": [
             [
-                "d9fa83a788b15e31"
+                "113f17e3b7b4c4f3"
             ],
             []
         ]
@@ -653,7 +669,7 @@
         "finalize": "",
         "libs": [],
         "x": 520,
-        "y": 1140,
+        "y": 1280,
         "wires": [
             [
                 "b201604b0b355349"
@@ -666,14 +682,14 @@
         "z": "e0d46eaa915ffcba",
         "g": "3ad358a1fbaf7a89",
         "name": "assert collected values",
-        "func": "if(msg.states1.TestValueWrite_booleanMemory != true) {\n    node.error(`Mismatch TestValueWrite_booleanMemory!`);\n}\nif (msg.states1.TestValueWrite_numberMemory != 400) {\n    node.error(`Mismatch TestValueWrite_numberMemory!`);\n}\nif (msg.states2.TestValueWrite_stringMemory != 'testCollectValues') {\n    node.error(`Mismatch TestValueWrite_stringMemory!`);\n}\n\nreturn msg;",
+        "func": "if(msg.states1.TestValueWrite_booleanMemory != true) {\n    node.error(`Mismatch TestValueWrite_booleanMemory!`);\n}\nif (msg.states1.TestValueWrite_numberMemory != 400) {\n    node.error(`Mismatch TestValueWrite_numberMemory!`);\n}\nif (msg.states2.TestValueWrite_stringMemory != 'testCollectValues') {\n    node.error(`Mismatch TestValueWrite_stringMemory!`);\n}\nif (msg.states2.TestValueWrite_jsonMemory.collect != 'JSON') {\n    node.error(`Mismatch TestValueWrite_jsonMemory!`);\n}\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
         "x": 1140,
-        "y": 1220,
+        "y": 1400,
         "wires": [
             []
         ]
@@ -701,7 +717,7 @@
         "payload": "",
         "payloadType": "date",
         "x": 300,
-        "y": 1320,
+        "y": 1500,
         "wires": [
             [
                 "93393abd25b7cffc"
@@ -715,8 +731,7 @@
         "g": "57a2dd8e543a4f75",
         "name": "",
         "valuesConfig": "ca21619490edc467",
-        "valuesConfigName": "TestBlockProcessing",
-        "valueSelect": "numberMemory",
+        "valuesConfigName": "TestBlockProcessingX",
         "value": "numberMemory",
         "command": "write",
         "msgProperty": "",
@@ -726,7 +741,7 @@
         "blockIfRule": "eq",
         "blockIfCompareValue": "15",
         "x": 800,
-        "y": 1360,
+        "y": 1540,
         "wires": [
             [
                 "7757acc1dec2b72e",
@@ -748,8 +763,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1530,
-        "y": 1360,
+        "x": 1550,
+        "y": 1540,
         "wires": [
             []
         ]
@@ -775,7 +790,7 @@
         "to": "",
         "reg": false,
         "x": 470,
-        "y": 1360,
+        "y": 1540,
         "wires": [
             [
                 "d843f22d863b6f98"
@@ -790,7 +805,6 @@
         "name": "",
         "valuesConfig": "ca21619490edc467",
         "valuesConfigName": "TestBlockProcessing",
-        "valueSelect": "numberMemory",
         "value": "numberMemory",
         "command": "read",
         "msgProperty": "",
@@ -800,7 +814,7 @@
         "blockIfRule": "eq",
         "blockIfCompareValue": "15",
         "x": 1190,
-        "y": 1360,
+        "y": 1540,
         "wires": [
             [
                 "07c9bb0cacca6a57"
@@ -816,7 +830,6 @@
         "name": "",
         "valuesConfig": "ca21619490edc467",
         "valuesConfigName": "TestBlockProcessing",
-        "valueSelect": "numberMemory",
         "value": "numberMemory",
         "command": "read",
         "msgProperty": "",
@@ -826,7 +839,7 @@
         "blockIfRule": "eq",
         "blockIfCompareValue": "15",
         "x": 1190,
-        "y": 1440,
+        "y": 1620,
         "wires": [
             [
                 "feee5b159b485be7"
@@ -846,8 +859,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1520,
-        "y": 1440,
+        "x": 1540,
+        "y": 1620,
         "wires": [
             []
         ]
@@ -873,7 +886,7 @@
         "to": "",
         "reg": false,
         "x": 470,
-        "y": 1500,
+        "y": 1680,
         "wires": [
             [
                 "8e7291499fc5bc20"
@@ -888,7 +901,6 @@
         "name": "",
         "valuesConfig": "ca21619490edc467",
         "valuesConfigName": "TestBlockProcessing",
-        "valueSelect": "booleanFile",
         "value": "booleanFile",
         "command": "write",
         "msgProperty": "",
@@ -898,7 +910,7 @@
         "blockIfRule": "eq",
         "blockIfCompareValue": "true",
         "x": 780,
-        "y": 1500,
+        "y": 1680,
         "wires": [
             [
                 "009ba0ce8b733aec",
@@ -915,7 +927,6 @@
         "name": "",
         "valuesConfig": "ca21619490edc467",
         "valuesConfigName": "TestBlockProcessing",
-        "valueSelect": "booleanFile",
         "value": "booleanFile",
         "command": "read",
         "msgProperty": "",
@@ -925,7 +936,7 @@
         "blockIfRule": "eq",
         "blockIfCompareValue": "true",
         "x": 1180,
-        "y": 1500,
+        "y": 1680,
         "wires": [
             [
                 "fadde5e310edfd68"
@@ -945,8 +956,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1530,
-        "y": 1500,
+        "x": 1550,
+        "y": 1680,
         "wires": [
             []
         ]
@@ -959,7 +970,6 @@
         "name": "",
         "valuesConfig": "ca21619490edc467",
         "valuesConfigName": "TestBlockProcessing",
-        "valueSelect": "booleanFile",
         "value": "booleanFile",
         "command": "read",
         "msgProperty": "",
@@ -969,7 +979,7 @@
         "blockIfRule": "eq",
         "blockIfCompareValue": "true",
         "x": 1180,
-        "y": 1560,
+        "y": 1740,
         "wires": [
             [
                 "621b3bb7927ada1b"
@@ -989,8 +999,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1520,
-        "y": 1560,
+        "x": 1540,
+        "y": 1740,
         "wires": [
             []
         ]
@@ -1016,7 +1026,7 @@
         "to": "",
         "reg": false,
         "x": 500,
-        "y": 1620,
+        "y": 1800,
         "wires": [
             [
                 "23998fd8fc8e1b17"
@@ -1031,7 +1041,6 @@
         "name": "",
         "valuesConfig": "ca21619490edc467",
         "valuesConfigName": "TestBlockProcessing",
-        "valueSelect": "stringMemory",
         "value": "stringMemory",
         "command": "write",
         "msgProperty": "",
@@ -1041,7 +1050,7 @@
         "blockIfRule": "eq",
         "blockIfCompareValue": "true",
         "x": 800,
-        "y": 1620,
+        "y": 1800,
         "wires": [
             [
                 "004e2202f7eaf13f",
@@ -1058,7 +1067,6 @@
         "name": "",
         "valuesConfig": "ca21619490edc467",
         "valuesConfigName": "TestBlockProcessing",
-        "valueSelect": "stringMemory",
         "value": "stringMemory",
         "command": "read",
         "msgProperty": "",
@@ -1068,7 +1076,7 @@
         "blockIfRule": "eq",
         "blockIfCompareValue": "BlockIfTest",
         "x": 1210,
-        "y": 1620,
+        "y": 1800,
         "wires": [
             [
                 "5cbe389cef8bbbd4"
@@ -1088,8 +1096,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1530,
-        "y": 1620,
+        "x": 1550,
+        "y": 1800,
         "wires": [
             []
         ]
@@ -1102,7 +1110,6 @@
         "name": "",
         "valuesConfig": "ca21619490edc467",
         "valuesConfigName": "TestBlockProcessing",
-        "valueSelect": "stringMemory",
         "value": "stringMemory",
         "command": "read",
         "msgProperty": "",
@@ -1112,7 +1119,7 @@
         "blockIfRule": "eq",
         "blockIfCompareValue": "BlockIfTest",
         "x": 1210,
-        "y": 1680,
+        "y": 1860,
         "wires": [
             [
                 "fc874f835cee5c23"
@@ -1132,8 +1139,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1520,
-        "y": 1680,
+        "x": 1540,
+        "y": 1860,
         "wires": [
             []
         ]
@@ -1146,7 +1153,6 @@
         "name": "",
         "valuesConfig": "ca21619490edc467",
         "valuesConfigName": "TestBlockProcessing",
-        "valueSelect": "numberMemory",
         "value": "numberMemory",
         "command": "read",
         "msgProperty": "",
@@ -1156,7 +1162,7 @@
         "blockIfRule": "eq",
         "blockIfCompareValue": "14",
         "x": 1190,
-        "y": 1400,
+        "y": 1580,
         "wires": [
             [
                 "7bb873e89aad48c4"
@@ -1176,8 +1182,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1520,
-        "y": 1400,
+        "x": 1540,
+        "y": 1580,
         "wires": [
             []
         ]
@@ -1203,7 +1209,7 @@
         "to": "",
         "reg": false,
         "x": 470,
-        "y": 1780,
+        "y": 2040,
         "wires": [
             [
                 "5dc65e5c054e2ed6"
@@ -1218,7 +1224,6 @@
         "name": "",
         "valuesConfig": "ca21619490edc467",
         "valuesConfigName": "TestBlockProcessing",
-        "valueSelect": "numberFile",
         "value": "numberFile",
         "command": "write",
         "msgProperty": "",
@@ -1228,7 +1233,7 @@
         "blockIfRule": "eq",
         "blockIfCompareValue": "15",
         "x": 820,
-        "y": 1780,
+        "y": 2040,
         "wires": [
             [
                 "2dd5a45767f176b0"
@@ -1248,35 +1253,9 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1530,
-        "y": 1780,
+        "x": 1550,
+        "y": 2040,
         "wires": [
-            []
-        ]
-    },
-    {
-        "id": "757f93e162e74863",
-        "type": "persistent value",
-        "z": "e0d46eaa915ffcba",
-        "g": "57a2dd8e543a4f75",
-        "name": "",
-        "valuesConfig": "ca21619490edc467",
-        "valuesConfigName": "TestBlockProcessing",
-        "valueSelect": "booleanMemory",
-        "value": "booleanMemory",
-        "command": "write",
-        "msgProperty": "",
-        "collectValues": false,
-        "collectValuesMsgProperty": "states1",
-        "blockIfEnable": true,
-        "blockIfRule": "eq",
-        "blockIfCompareValue": "false",
-        "x": 840,
-        "y": 1840,
-        "wires": [
-            [
-                "32eda0b9c429f97c"
-            ],
             []
         ]
     },
@@ -1288,7 +1267,6 @@
         "name": "",
         "valuesConfig": "ca21619490edc467",
         "valuesConfigName": "TestBlockProcessing",
-        "valueSelect": "stringFile",
         "value": "stringFile",
         "command": "write",
         "msgProperty": "",
@@ -1298,7 +1276,7 @@
         "blockIfRule": "eq",
         "blockIfCompareValue": "block me",
         "x": 830,
-        "y": 1900,
+        "y": 2160,
         "wires": [
             [
                 "2c9a6432c9ed5bfc"
@@ -1314,7 +1292,7 @@
         "name": "read",
         "info": "",
         "x": 450,
-        "y": 1320,
+        "y": 1500,
         "wires": []
     },
     {
@@ -1325,7 +1303,7 @@
         "name": "write",
         "info": "",
         "x": 450,
-        "y": 1740,
+        "y": 2000,
         "wires": []
     },
     {
@@ -1349,10 +1327,10 @@
         "to": "",
         "reg": false,
         "x": 480,
-        "y": 1840,
+        "y": 2100,
         "wires": [
             [
-                "757f93e162e74863"
+                "d31a91c3cdd26c17"
             ]
         ]
     },
@@ -1377,7 +1355,7 @@
         "to": "",
         "reg": false,
         "x": 490,
-        "y": 1900,
+        "y": 2160,
         "wires": [
             [
                 "ba6f719b57672e57"
@@ -1396,8 +1374,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1530,
-        "y": 1840,
+        "x": 1550,
+        "y": 2100,
         "wires": [
             []
         ]
@@ -1414,8 +1392,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1530,
-        "y": 1900,
+        "x": 1550,
+        "y": 2160,
         "wires": [
             []
         ]
@@ -1428,10 +1406,13 @@
         "name": "",
         "valuesConfig": "267663fd4c41bebe",
         "valuesConfigName": "TestValuesRead",
-        "valueSelect": "boolean_default_true",
+        "valueId": "a38d0ef0-b2ec-11ed-9433-132d1ad884b5",
         "value": "boolean_default_true",
         "command": "read",
         "msgProperty": "payload",
+        "deepCloneValue": false,
+        "outputPreviousValue": false,
+        "outputPreviousValueMsgProperty": "",
         "collectValues": true,
         "collectValuesMsgProperty": "",
         "blockIfEnable": false,
@@ -1472,7 +1453,8 @@
         "y": 160,
         "wires": [
             [
-                "aa502213a8786fa8"
+                "aa502213a8786fa8",
+                "5f7dba1cee1ab892"
             ]
         ]
     },
@@ -1512,7 +1494,6 @@
         "name": "",
         "valuesConfig": "267663fd4c41bebe",
         "valuesConfigName": "TestValuesRead",
-        "valueSelect": "boolean",
         "value": "boolean",
         "command": "read",
         "msgProperty": "output",
@@ -1522,7 +1503,7 @@
         "blockIfRule": "eq",
         "blockIfCompareValue": "true",
         "x": 730,
-        "y": 280,
+        "y": 320,
         "wires": [
             [
                 "c5369de6872b9903"
@@ -1540,7 +1521,6 @@
         "name": "",
         "valuesConfig": "267663fd4c41bebe",
         "valuesConfigName": "TestValuesRead",
-        "valueSelect": "boolean",
         "value": "boolean",
         "command": "write",
         "msgProperty": "payload",
@@ -1550,7 +1530,7 @@
         "blockIfRule": "eq",
         "blockIfCompareValue": "true",
         "x": 740,
-        "y": 240,
+        "y": 280,
         "wires": [
             [
                 "7fdbbbd5f1764a63"
@@ -1579,7 +1559,7 @@
         "to": "",
         "reg": false,
         "x": 480,
-        "y": 240,
+        "y": 280,
         "wires": [
             [
                 "cb3da7ef521de69c"
@@ -1607,7 +1587,7 @@
         "to": "",
         "reg": false,
         "x": 500,
-        "y": 280,
+        "y": 320,
         "wires": [
             [
                 "0327d3857218199a"
@@ -1621,7 +1601,7 @@
         "g": "637bb8c366c5d8cb",
         "name": "",
         "x": 1080,
-        "y": 300,
+        "y": 340,
         "wires": []
     },
     {
@@ -1637,7 +1617,7 @@
         "finalize": "",
         "libs": [],
         "x": 1050,
-        "y": 260,
+        "y": 300,
         "wires": [
             []
         ]
@@ -1680,7 +1660,6 @@
         "name": "",
         "valuesConfig": "4b0803dadcdbb5b0",
         "valuesConfigName": "TestValueWrite",
-        "valueSelect": "booleanFile",
         "value": "booleanFile",
         "command": "write",
         "msgProperty": "payload",
@@ -1690,7 +1669,7 @@
         "blockIfRule": "eq",
         "blockIfCompareValue": "true",
         "x": 740,
-        "y": 440,
+        "y": 480,
         "wires": [
             [
                 "cc232d80a6188c9b"
@@ -1721,7 +1700,7 @@
         "payload": "",
         "payloadType": "date",
         "x": 300,
-        "y": 400,
+        "y": 440,
         "wires": [
             [
                 "83a169ad32f21a09"
@@ -1749,7 +1728,7 @@
         "to": "",
         "reg": false,
         "x": 470,
-        "y": 440,
+        "y": 480,
         "wires": [
             [
                 "820af4bb463b9585"
@@ -1769,7 +1748,7 @@
         "finalize": "",
         "libs": [],
         "x": 1030,
-        "y": 440,
+        "y": 480,
         "wires": [
             [
                 "1631c31e03474f53"
@@ -1784,7 +1763,6 @@
         "name": "",
         "valuesConfig": "4b0803dadcdbb5b0",
         "valuesConfigName": "TestValueWrite",
-        "valueSelect": "numberFile",
         "value": "numberFile",
         "command": "write",
         "msgProperty": "input",
@@ -1794,7 +1772,7 @@
         "blockIfRule": "eq",
         "blockIfCompareValue": "",
         "x": 740,
-        "y": 560,
+        "y": 580,
         "wires": [
             [
                 "6e78ff546ba924dc"
@@ -1823,7 +1801,7 @@
         "to": "",
         "reg": false,
         "x": 480,
-        "y": 560,
+        "y": 580,
         "wires": [
             [
                 "87cba3af6c2b402e"
@@ -1838,7 +1816,6 @@
         "name": "",
         "valuesConfig": "4b0803dadcdbb5b0",
         "valuesConfigName": "TestValueWrite",
-        "valueSelect": "booleanFile",
         "value": "booleanFile",
         "command": "write",
         "msgProperty": "payload",
@@ -1848,7 +1825,7 @@
         "blockIfRule": "eq",
         "blockIfCompareValue": "true",
         "x": 740,
-        "y": 480,
+        "y": 520,
         "wires": [
             [
                 "fe59621161764342"
@@ -1879,7 +1856,7 @@
         "to": "",
         "reg": false,
         "x": 470,
-        "y": 480,
+        "y": 520,
         "wires": [
             [
                 "43de9906ce527c4f"
@@ -1899,7 +1876,7 @@
         "finalize": "",
         "libs": [],
         "x": 1030,
-        "y": 480,
+        "y": 520,
         "wires": [
             []
         ]
@@ -1917,7 +1894,7 @@
         "finalize": "",
         "libs": [],
         "x": 1010,
-        "y": 560,
+        "y": 580,
         "wires": [
             [
                 "88171329e15c990f"
@@ -1932,7 +1909,6 @@
         "name": "",
         "valuesConfig": "4b0803dadcdbb5b0",
         "valuesConfigName": "TestValueWrite",
-        "valueSelect": "numberFile",
         "value": "numberFile",
         "command": "write",
         "msgProperty": "input",
@@ -1942,7 +1918,7 @@
         "blockIfRule": "eq",
         "blockIfCompareValue": "",
         "x": 740,
-        "y": 600,
+        "y": 620,
         "wires": [
             [
                 "8eb021050d46c4f0"
@@ -1971,7 +1947,7 @@
         "to": "",
         "reg": false,
         "x": 480,
-        "y": 600,
+        "y": 620,
         "wires": [
             [
                 "e6226e81d1d4cd10"
@@ -1991,7 +1967,7 @@
         "finalize": "",
         "libs": [],
         "x": 1010,
-        "y": 600,
+        "y": 620,
         "wires": [
             []
         ]
@@ -2004,7 +1980,6 @@
         "name": "",
         "valuesConfig": "4b0803dadcdbb5b0",
         "valuesConfigName": "TestValueWrite",
-        "valueSelect": "stringFile",
         "value": "stringFile",
         "command": "write",
         "msgProperty": "input",
@@ -2078,7 +2053,6 @@
         "name": "",
         "valuesConfig": "4b0803dadcdbb5b0",
         "valuesConfigName": "TestValueWrite",
-        "valueSelect": "stringFile",
         "value": "stringFile",
         "command": "write",
         "msgProperty": "input",
@@ -2165,7 +2139,7 @@
         "payload": "",
         "payloadType": "date",
         "x": 340,
-        "y": 820,
+        "y": 920,
         "wires": [
             [
                 "db985c252b00103f"
@@ -2200,7 +2174,7 @@
         "to": "",
         "reg": false,
         "x": 500,
-        "y": 860,
+        "y": 960,
         "wires": [
             [
                 "e2ae43da83a9a1e7"
@@ -2215,7 +2189,6 @@
         "name": "",
         "valuesConfig": "267663fd4c41bebe",
         "valuesConfigName": "TestValuesRead",
-        "valueSelect": "boolean_default_true",
         "value": "boolean_default_true",
         "command": "write",
         "msgProperty": "payload",
@@ -2225,7 +2198,7 @@
         "blockIfRule": "eq",
         "blockIfCompareValue": "true",
         "x": 780,
-        "y": 860,
+        "y": 960,
         "wires": [
             [
                 "d358e791e70764f9"
@@ -2246,10 +2219,558 @@
         "finalize": "",
         "libs": [],
         "x": 1070,
-        "y": 860,
+        "y": 960,
         "wires": [
             []
         ]
+    },
+    {
+        "id": "d31a91c3cdd26c17",
+        "type": "persistent value",
+        "z": "e0d46eaa915ffcba",
+        "g": "57a2dd8e543a4f75",
+        "name": "",
+        "valuesConfig": "ca21619490edc467",
+        "valuesConfigName": "TestBlockProcessing",
+        "valueId": "9a793030-a998-11ed-b343-f7fa7c431190",
+        "value": "booleanMemory",
+        "command": "write",
+        "msgProperty": "payload",
+        "outputPreviousValue": false,
+        "outputPreviousValueMsgProperty": "previous_value",
+        "collectValues": false,
+        "collectValuesMsgProperty": "values",
+        "blockIfEnable": true,
+        "blockIfRule": "neq",
+        "blockIfCompareValue": "true",
+        "x": 840,
+        "y": 2100,
+        "wires": [
+            [
+                "32eda0b9c429f97c"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "2c18f62071d28805",
+        "type": "change",
+        "z": "e0d46eaa915ffcba",
+        "name": "payload=BlockIfTest",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "{\"block\": \"yes\"}",
+                "tot": "json"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 500,
+        "y": 1800,
+        "wires": [
+            [
+                "1ee55d23154d7e85"
+            ]
+        ]
+    },
+    {
+        "id": "1ee55d23154d7e85",
+        "type": "persistent value",
+        "z": "e0d46eaa915ffcba",
+        "name": "",
+        "valuesConfig": "ca21619490edc467",
+        "valuesConfigName": "TestBlockProcessing",
+        "valueId": "20845490-b2ed-11ed-9433-132d1ad884b5",
+        "value": "jsonMemory",
+        "command": "write",
+        "msgProperty": "",
+        "deepCloneValue": false,
+        "outputPreviousValue": false,
+        "outputPreviousValueMsgProperty": "",
+        "collectValues": false,
+        "collectValuesMsgProperty": "states1",
+        "blockIfEnable": false,
+        "blockIfRule": "eq",
+        "blockIfCompareValue": "true",
+        "x": 790,
+        "y": 1800,
+        "wires": [
+            [
+                "e0d8eab6316ace1e",
+                "933c69ae0d073c36"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "e0d8eab6316ace1e",
+        "type": "persistent value",
+        "z": "e0d46eaa915ffcba",
+        "name": "",
+        "valuesConfig": "ca21619490edc467",
+        "valuesConfigName": "TestBlockProcessing",
+        "valueId": "20845490-b2ed-11ed-9433-132d1ad884b5",
+        "value": "jsonMemory",
+        "command": "read",
+        "msgProperty": "",
+        "deepCloneValue": false,
+        "outputPreviousValue": false,
+        "outputPreviousValueMsgProperty": "",
+        "collectValues": false,
+        "collectValuesMsgProperty": "states1",
+        "blockIfEnable": true,
+        "blockIfRule": "eq",
+        "blockIfCompareValue": "{\"block\":\"yes\"}",
+        "x": 1210,
+        "y": 1800,
+        "wires": [
+            [
+                "7abed0449e1360ae"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "7abed0449e1360ae",
+        "type": "function",
+        "z": "e0d46eaa915ffcba",
+        "name": "assert(is blocked)",
+        "func": "node.error(`block-if did not block`);\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1550,
+        "y": 1800,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "933c69ae0d073c36",
+        "type": "persistent value",
+        "z": "e0d46eaa915ffcba",
+        "g": "57a2dd8e543a4f75",
+        "name": "",
+        "valuesConfig": "ca21619490edc467",
+        "valuesConfigName": "TestBlockProcessing",
+        "valueId": "20845490-b2ed-11ed-9433-132d1ad884b5",
+        "value": "jsonMemory",
+        "command": "read",
+        "msgProperty": "",
+        "deepCloneValue": false,
+        "outputPreviousValue": false,
+        "outputPreviousValueMsgProperty": "",
+        "collectValues": false,
+        "collectValuesMsgProperty": "states1",
+        "blockIfEnable": true,
+        "blockIfRule": "neq",
+        "blockIfCompareValue": "{\"block\": \"yes\"}",
+        "x": 1200,
+        "y": 1960,
+        "wires": [
+            [
+                "0cf8b06be2dc0f04"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "0cf8b06be2dc0f04",
+        "type": "function",
+        "z": "e0d46eaa915ffcba",
+        "g": "57a2dd8e543a4f75",
+        "name": "assert(passed)",
+        "func": "const expected_payload = {block: \"yes\"};\nif(msg.payload.block != expected_payload.block) {\n    node.error(`Received value (${msg.payload}) does not match with expected payload (${expected_payload})`);\n} else {\n    node.status({ fill: \"green\", shape: \"ring\", text: msg.payload });\n}\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1540,
+        "y": 1960,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "1faed8a4fafb248d",
+        "type": "persistent value",
+        "z": "e0d46eaa915ffcba",
+        "g": "57a2dd8e543a4f75",
+        "name": "",
+        "valuesConfig": "ca21619490edc467",
+        "valuesConfigName": "TestBlockProcessing",
+        "valueId": "20845490-b2ed-11ed-9433-132d1ad884b5",
+        "value": "jsonMemory",
+        "command": "write",
+        "msgProperty": "",
+        "deepCloneValue": false,
+        "outputPreviousValue": false,
+        "outputPreviousValueMsgProperty": "",
+        "collectValues": false,
+        "collectValuesMsgProperty": "states1",
+        "blockIfEnable": true,
+        "blockIfRule": "eq",
+        "blockIfCompareValue": "{\"block\": true}",
+        "x": 850,
+        "y": 2220,
+        "wires": [
+            [
+                "a6295230e77ae586"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "eda1c5fdf5aef3d3",
+        "type": "change",
+        "z": "e0d46eaa915ffcba",
+        "g": "57a2dd8e543a4f75",
+        "name": "payload=block me",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "{\"block\": true}",
+                "tot": "json"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 490,
+        "y": 2220,
+        "wires": [
+            [
+                "1faed8a4fafb248d"
+            ]
+        ]
+    },
+    {
+        "id": "a6295230e77ae586",
+        "type": "function",
+        "z": "e0d46eaa915ffcba",
+        "g": "57a2dd8e543a4f75",
+        "name": "assert(is blocked)",
+        "func": "node.error(`block-if did not block`);\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1550,
+        "y": 2220,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "99bbf232c22ad9d1",
+        "type": "change",
+        "z": "e0d46eaa915ffcba",
+        "g": "3ad358a1fbaf7a89",
+        "name": "input={\"collect\": \"JSON\"}",
+        "rules": [
+            {
+                "t": "set",
+                "p": "input",
+                "pt": "msg",
+                "to": "{\"collect\": \"JSON\"}",
+                "tot": "json"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 570,
+        "y": 1220,
+        "wires": [
+            [
+                "a8e9962203a08189"
+            ]
+        ]
+    },
+    {
+        "id": "a8e9962203a08189",
+        "type": "persistent value",
+        "z": "e0d46eaa915ffcba",
+        "g": "3ad358a1fbaf7a89",
+        "name": "",
+        "valuesConfig": "4b0803dadcdbb5b0",
+        "valuesConfigName": "TestValueWrite",
+        "valueId": "1f5ccf10-b2ee-11ed-9433-132d1ad884b5",
+        "value": "jsonMemory",
+        "command": "write",
+        "msgProperty": "input",
+        "deepCloneValue": false,
+        "outputPreviousValue": false,
+        "outputPreviousValueMsgProperty": "",
+        "collectValues": true,
+        "collectValuesMsgProperty": "states2",
+        "blockIfEnable": false,
+        "blockIfRule": "eq",
+        "blockIfCompareValue": "",
+        "x": 840,
+        "y": 1220,
+        "wires": [
+            [
+                "4e7346d6743b3f67"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "113f17e3b7b4c4f3",
+        "type": "persistent value",
+        "z": "e0d46eaa915ffcba",
+        "g": "3ad358a1fbaf7a89",
+        "name": "",
+        "valuesConfig": "4b0803dadcdbb5b0",
+        "valuesConfigName": "TestValueWrite",
+        "valueId": "1f5ccf10-b2ee-11ed-9433-132d1ad884b5",
+        "value": "jsonMemory",
+        "command": "read",
+        "msgProperty": "input",
+        "deepCloneValue": false,
+        "outputPreviousValue": false,
+        "outputPreviousValueMsgProperty": "",
+        "collectValues": true,
+        "collectValuesMsgProperty": "states2",
+        "blockIfEnable": false,
+        "blockIfRule": "eq",
+        "blockIfCompareValue": "",
+        "x": 840,
+        "y": 1400,
+        "wires": [
+            [
+                "d9fa83a788b15e31"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "da17791a421e999f",
+        "type": "persistent value",
+        "z": "e0d46eaa915ffcba",
+        "g": "90a0b1d58cff333a",
+        "name": "",
+        "valuesConfig": "4b0803dadcdbb5b0",
+        "valuesConfigName": "TestValueWrite",
+        "valueId": "1f5ccf10-b2ee-11ed-9433-132d1ad884b5",
+        "value": "jsonMemory",
+        "command": "write",
+        "msgProperty": "input",
+        "deepCloneValue": false,
+        "outputPreviousValue": false,
+        "outputPreviousValueMsgProperty": "",
+        "collectValues": false,
+        "collectValuesMsgProperty": "",
+        "blockIfEnable": false,
+        "blockIfRule": "eq",
+        "blockIfCompareValue": "",
+        "x": 740,
+        "y": 780,
+        "wires": [
+            [
+                "3c2deab9b995ddad"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "7f0333462b28775e",
+        "type": "change",
+        "z": "e0d46eaa915ffcba",
+        "g": "90a0b1d58cff333a",
+        "name": "input={\"run\": 1}",
+        "rules": [
+            {
+                "t": "set",
+                "p": "input",
+                "pt": "msg",
+                "to": "{\"run\": 1}",
+                "tot": "json"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 500,
+        "y": 780,
+        "wires": [
+            [
+                "da17791a421e999f"
+            ]
+        ]
+    },
+    {
+        "id": "3c2deab9b995ddad",
+        "type": "function",
+        "z": "e0d46eaa915ffcba",
+        "g": "90a0b1d58cff333a",
+        "name": "assert current value",
+        "func": "const currentValue = global.get(\"TestValueWrite_jsonMemory\", \"memory\");\nconst expectedValue = 1;\n\nif(currentValue.run !== expectedValue) {\n    node.error(`Current value (${currentValue}) != expected value (${expectedValue})`);\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1010,
+        "y": 780,
+        "wires": [
+            [
+                "1839749f6ed43931"
+            ]
+        ]
+    },
+    {
+        "id": "eed0e8665fcf494f",
+        "type": "persistent value",
+        "z": "e0d46eaa915ffcba",
+        "g": "90a0b1d58cff333a",
+        "name": "",
+        "valuesConfig": "4b0803dadcdbb5b0",
+        "valuesConfigName": "TestValueWrite",
+        "valueId": "1f5ccf10-b2ee-11ed-9433-132d1ad884b5",
+        "value": "jsonMemory",
+        "command": "write",
+        "msgProperty": "input",
+        "deepCloneValue": false,
+        "outputPreviousValue": false,
+        "outputPreviousValueMsgProperty": "",
+        "collectValues": false,
+        "collectValuesMsgProperty": "",
+        "blockIfEnable": false,
+        "blockIfRule": "eq",
+        "blockIfCompareValue": "",
+        "x": 740,
+        "y": 820,
+        "wires": [
+            [
+                "0e40727f70319d01"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "1839749f6ed43931",
+        "type": "change",
+        "z": "e0d46eaa915ffcba",
+        "g": "90a0b1d58cff333a",
+        "name": "input={\"run\": 2}",
+        "rules": [
+            {
+                "t": "set",
+                "p": "input",
+                "pt": "msg",
+                "to": "{\"run\": 2}",
+                "tot": "json"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 500,
+        "y": 820,
+        "wires": [
+            [
+                "eed0e8665fcf494f"
+            ]
+        ]
+    },
+    {
+        "id": "0e40727f70319d01",
+        "type": "function",
+        "z": "e0d46eaa915ffcba",
+        "g": "90a0b1d58cff333a",
+        "name": "assert current value",
+        "func": "const currentValue = global.get(\"TestValueWrite_jsonMemory\", \"memory\");\nconst expectedValue = 2;\n\nif(currentValue.run !== expectedValue) {\n    node.error(`Current value (${currentValue}) != expected value (${expectedValue})`);\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1010,
+        "y": 820,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "5f7dba1cee1ab892",
+        "type": "persistent value",
+        "z": "e0d46eaa915ffcba",
+        "g": "637bb8c366c5d8cb",
+        "name": "",
+        "valuesConfig": "267663fd4c41bebe",
+        "valuesConfigName": "TestValuesRead",
+        "valueId": "a4ff1580-b2ec-11ed-9433-132d1ad884b5",
+        "value": "json",
+        "command": "read",
+        "msgProperty": "payload",
+        "deepCloneValue": false,
+        "outputPreviousValue": false,
+        "outputPreviousValueMsgProperty": "",
+        "collectValues": true,
+        "collectValuesMsgProperty": "",
+        "blockIfEnable": false,
+        "blockIfRule": "eq",
+        "blockIfCompareValue": "true",
+        "x": 720,
+        "y": 220,
+        "wires": [
+            [
+                "3c2d1a8dace01a9d"
+            ],
+            [
+                "3d71347961c1e38d"
+            ]
+        ]
+    },
+    {
+        "id": "3c2d1a8dace01a9d",
+        "type": "function",
+        "z": "e0d46eaa915ffcba",
+        "g": "637bb8c366c5d8cb",
+        "name": "assert default value",
+        "func": "const expectedDefault = { b: false, n: 15}\n\nif((msg.payload.b !== expectedDefault.b) || (msg.payload.n !== expectedDefault.n))\n{\n    node.error(`Value does not match expected value ${JSON.stringify(expectedDefault, null, 2)}`);\n}\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1070,
+        "y": 220,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "3d71347961c1e38d",
+        "type": "subflow:d364064415987fac",
+        "z": "e0d46eaa915ffcba",
+        "g": "637bb8c366c5d8cb",
+        "name": "",
+        "x": 1080,
+        "y": 260,
+        "wires": []
     },
     {
         "id": "4b0803dadcdbb5b0",
@@ -2257,6 +2778,7 @@
         "name": "TestValueWrite",
         "values": [
             {
+                "id": "1dea5350-b2ee-11ed-9433-132d1ad884b5",
                 "name": "booleanFile",
                 "datatype": "bool",
                 "default": false,
@@ -2264,6 +2786,7 @@
                 "storage": "file"
             },
             {
+                "id": "1deff8a0-b2ee-11ed-9433-132d1ad884b5",
                 "name": "numberFile",
                 "datatype": "num",
                 "default": 5,
@@ -2271,6 +2794,7 @@
                 "storage": "file"
             },
             {
+                "id": "1df61320-b2ee-11ed-9433-132d1ad884b5",
                 "name": "stringFile",
                 "datatype": "str",
                 "default": "empty",
@@ -2278,6 +2802,7 @@
                 "storage": "file"
             },
             {
+                "id": "1dfc2da0-b2ee-11ed-9433-132d1ad884b5",
                 "name": "booleanMemory",
                 "datatype": "bool",
                 "default": true,
@@ -2285,6 +2810,7 @@
                 "storage": "memory"
             },
             {
+                "id": "1e022110-b2ee-11ed-9433-132d1ad884b5",
                 "name": "numberMemory",
                 "datatype": "num",
                 "default": 5,
@@ -2292,9 +2818,18 @@
                 "storage": "memory"
             },
             {
+                "id": "1e083b90-b2ee-11ed-9433-132d1ad884b5",
                 "name": "stringMemory",
                 "datatype": "str",
                 "default": "default",
+                "scope": "global",
+                "storage": "memory"
+            },
+            {
+                "id": "1f5ccf10-b2ee-11ed-9433-132d1ad884b5",
+                "name": "jsonMemory",
+                "datatype": "json",
+                "default": "null",
                 "scope": "global",
                 "storage": "memory"
             }
@@ -2306,6 +2841,7 @@
         "name": "TestBlockProcessing",
         "values": [
             {
+                "id": "9a66e0b0-a998-11ed-b343-f7fa7c431190",
                 "name": "booleanFile",
                 "datatype": "bool",
                 "default": false,
@@ -2313,6 +2849,7 @@
                 "storage": "file"
             },
             {
+                "id": "9a6cd420-a998-11ed-b343-f7fa7c431190",
                 "name": "numberFile",
                 "datatype": "num",
                 "default": 5,
@@ -2320,6 +2857,7 @@
                 "storage": "file"
             },
             {
+                "id": "9a733cc0-a998-11ed-b343-f7fa7c431190",
                 "name": "stringFile",
                 "datatype": "str",
                 "default": "empty",
@@ -2327,6 +2865,7 @@
                 "storage": "file"
             },
             {
+                "id": "9a793030-a998-11ed-b343-f7fa7c431190",
                 "name": "booleanMemory",
                 "datatype": "bool",
                 "default": true,
@@ -2334,6 +2873,7 @@
                 "storage": "memory"
             },
             {
+                "id": "9a7f4ab0-a998-11ed-b343-f7fa7c431190",
                 "name": "numberMemory",
                 "datatype": "num",
                 "default": 5,
@@ -2341,9 +2881,18 @@
                 "storage": "memory"
             },
             {
+                "id": "9a85b350-a998-11ed-b343-f7fa7c431190",
                 "name": "stringMemory",
                 "datatype": "str",
                 "default": "default",
+                "scope": "global",
+                "storage": "memory"
+            },
+            {
+                "id": "20845490-b2ed-11ed-9433-132d1ad884b5",
+                "name": "jsonMemory",
+                "datatype": "json",
+                "default": "{\"block\":\"me\"}",
                 "scope": "global",
                 "storage": "memory"
             }
@@ -2355,6 +2904,7 @@
         "name": "TestValuesRead",
         "values": [
             {
+                "id": "a3871b80-b2ec-11ed-9433-132d1ad884b5",
                 "name": "boolean",
                 "datatype": "bool",
                 "default": false,
@@ -2362,6 +2912,7 @@
                 "storage": "default"
             },
             {
+                "id": "a38d0ef0-b2ec-11ed-9433-132d1ad884b5",
                 "name": "boolean_default_true",
                 "datatype": "bool",
                 "default": true,
@@ -2369,9 +2920,18 @@
                 "storage": "default"
             },
             {
+                "id": "a392db50-b2ec-11ed-9433-132d1ad884b5",
                 "name": "number",
                 "datatype": "num",
                 "default": 3,
+                "scope": "global",
+                "storage": "default"
+            },
+            {
+                "id": "a4ff1580-b2ec-11ed-9433-132d1ad884b5",
+                "name": "json",
+                "datatype": "json",
+                "default": "{\"b\":false,\"n\":15}",
                 "scope": "global",
                 "storage": "default"
             }

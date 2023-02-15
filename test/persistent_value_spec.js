@@ -12,6 +12,8 @@
 //   - https://www.npmjs.com/package/supertest
 // --------------------------------------------------------------------------------------------------------------------
 const helper = require('node-red-node-test-helper');
+const nodejsAssert = require('assert');
+
 const valueNode = require('../nodes/persistent-value.js');
 const configNode = require('../nodes/persistent-values-config.js');
 
@@ -71,6 +73,7 @@ describe('persistent value node', function() {
   const DataTypeBool = 'bool';
   const DataTypeNumber = 'num';
   const DataTypeString = 'str';
+  const DataTypeJson = 'json';
 
   const ScopeGlobal = 'global';
   const ScopeFlow = 'flow';
@@ -107,6 +110,9 @@ describe('persistent value node', function() {
   const ConfigValueIdString = 'cc9c4df0-a591-11ed-b2b6-471886667bd8';
   const ConfigValueString = 'string';
 
+  const ConfigValueIdJson = 'ae9c4df0-a591-11ed-b2b6-471886667bd8';
+  const ConfigValueJson = 'json';
+
   const NodeHelperCurrentValue = {id: NodeIdHelperCurrentValue, z: FlowIdTestFlow, type: NodeTypeHelper};
   const NodeHelperOnChange = {id: NodeIdHelperOnChange, z: FlowIdTestFlow, type: NodeTypeHelper};
 
@@ -136,6 +142,14 @@ describe('persistent value node', function() {
         name: ConfigValueString,
         datatype: DataTypeString,
         default: 'my string default value',
+        scope: ScopeGlobal,
+        storage: StorageDefault,
+      },
+      {
+        id: ConfigValueIdJson,
+        name: ConfigValueJson,
+        datatype: DataTypeJson,
+        default: `{"boolean":false, "number":0, "string":"empty"}`,
         scope: ScopeGlobal,
         storage: StorageDefault,
       },
@@ -320,6 +334,28 @@ describe('persistent value node', function() {
     });
   });
 
+  it('should read the default value - JSON', function(done) {
+    const flow = structuredClone(FlowNodeAllVariants);
+
+    flow[0].valueId = ConfigValueIdJson;
+
+    helper.load([configNode, valueNode], flow, function() {
+      const c = helper.getNode(NodeIdConfig);
+      const v = helper.getNode(NodeIdPersistentValue);
+      const h = helper.getNode(NodeIdHelperCurrentValue);
+
+      const expectedDefault = JSON.parse(c.values[3].default);
+      h.on(InputFunction, function(msg) {
+        try {
+          nodejsAssert.deepStrictEqual(msg[PropertyPayload], expectedDefault);
+          done();
+        } catch (err) {
+          done(err);
+        }
+      });
+      v.receive({payload: AnyInputString});
+    });
+  });
 
   it('should read the context value - boolean', function(done) {
     const flow = structuredClone(FlowNodeAllVariants);
@@ -378,6 +414,29 @@ describe('persistent value node', function() {
       const h = helper.getNode(NodeIdHelperCurrentValue);
 
       const simulatedValue = '❤ Node-RED';
+      setContextValue(v, simulatedValue);
+
+      h.on(InputFunction, function(msg) {
+        try {
+          msg.should.have.property(PropertyPayload, simulatedValue);
+          done();
+        } catch (err) {
+          done(err);
+        }
+      });
+      v.receive({payload: AnyInputString});
+    });
+  });
+
+  it('should read the context value - JSON', function(done) {
+    const flow = structuredClone(FlowNodeAllVariants);
+    flow[0].valueId = ConfigValueIdJson;
+
+    helper.load([configNode, valueNode], flow, function() {
+      const v = helper.getNode(NodeIdPersistentValue);
+      const h = helper.getNode(NodeIdHelperCurrentValue);
+
+      const simulatedValue = {'array': [1, 2, 3], 'obj': {'bool': false}};
       setContextValue(v, simulatedValue);
 
       h.on(InputFunction, function(msg) {
@@ -559,6 +618,64 @@ describe('persistent value node', function() {
     });
   });
 
+  it('should write pure JSON object', function(done) {
+    const testedStorage = StorageFile;
+
+    const flow = structuredClone(FlowNodeAllVariants);
+    flow[0].valueId = ConfigValueIdJson;
+    flow[0].command = CommandWrite;
+
+    helper.load([configNode, valueNode], flow, function() {
+      const v = helper.getNode(NodeIdPersistentValue);
+      const h = helper.getNode(NodeIdHelperCurrentValue);
+
+      setContextValue(v, '', testedStorage);
+      const pureJsonObject = {
+        null: null,
+        boolean: true,
+        string: 'persistentValues❤JSON',
+        number: 2.34567,
+        array: [
+          'test1',
+          'test2',
+        ],
+        object: {
+          nested1: null,
+          nested2: [22, 7, 2016],
+        },
+      };
+
+      h.on(InputFunction, function(msg) {
+        try {
+          nodejsAssert.deepStrictEqual(msg[PropertyPayload], pureJsonObject);
+
+          const contextValue = getContextValue(v, testedStorage);
+          nodejsAssert.deepStrictEqual(contextValue, pureJsonObject);
+          done();
+        } catch (err) {
+          done(err);
+        }
+      });
+      v.receive({payload: pureJsonObject});
+      v.error.callCount.should.be(0);
+    });
+  });
+
+  it('should abort if an invalid JSON object is passed', function(done) {
+    const flow = structuredClone(FlowNodeAllVariants);
+    flow[0].valueId = ConfigValueIdJson;
+    flow[0].command = CommandWrite;
+
+    helper.load([configNode, valueNode], flow, function() {
+      const v = helper.getNode(NodeIdPersistentValue);
+
+      v.receive({payload: {invalidBigInt: BigInt(123)}});
+      v.error.should.be.calledWithMatch(`does not have the configured datatype 'json'`);
+      v.send.should.have.callCount(0);
+      done();
+    });
+  });
+
   it('should write to the context storage with scope flow', function(done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].valueId = ConfigValueIdString;
@@ -661,16 +778,18 @@ describe('persistent value node', function() {
 
   it('should not write to the context storage and not notify about changed value if value is not modified', function(done) {
     const flow = structuredClone(FlowNodeAllVariants);
-    flow[0].valueId = ConfigValueIdString;
+    flow[0].valueId = ConfigValueIdJson;
     flow[0].command = CommandWrite;
 
     helper.load([configNode, valueNode], flow, function() {
       const v = helper.getNode(NodeIdPersistentValue);
 
-      const simulatedValue = 'Not changed context value';
+      const simulatedValue = {text: 'Not changed context value', extra: 123};
       setContextValue(v, simulatedValue);
 
-      const msg = {payload: simulatedValue};
+      // Enforce write operation with cloned input to test deep strict equal comparison
+      const simulatedValueClone = {text: simulatedValue.text, extra: simulatedValue.extra};
+      const msg = {payload: simulatedValueClone};
       v.receive(msg);
       v.send.should.be.calledWithExactly([msg, null]); // no onChange message expected
       done();
@@ -779,6 +898,73 @@ describe('persistent value node', function() {
     });
   });
 
+  // ==== Deep Clone Tests ====================================================
+
+  it('should deep clone read JSON value', function(done) {
+    const flow = structuredClone(FlowNodeAllVariants);
+    flow[0].valueId = ConfigValueIdJson;
+    flow[0].deepCloneValue = true;
+
+    helper.load([configNode, valueNode], flow, function() {
+      const v = helper.getNode(NodeIdPersistentValue);
+      const h = helper.getNode(NodeIdHelperCurrentValue);
+
+      const contextValue = {boolean: true};
+      const contextValueClone = {boolean: contextValue.boolean};
+      setContextValue(v, contextValue);
+
+      h.on(InputFunction, function(msg) {
+        try {
+          const msgValue = msg[PropertyPayload];
+          nodejsAssert.deepStrictEqual(msgValue, contextValue);
+
+          // without deep clone option the following msg propery modification
+          // would also modify the context store.
+          msgValue.boolean = !contextValue.boolean;
+
+          // Due to deep clone option the context value must remain unchanged.
+          const contextValueAfterMsgModify = getContextValue(v);
+          nodejsAssert.deepStrictEqual(contextValueAfterMsgModify, contextValueClone);
+
+          done();
+        } catch (err) {
+          done(err);
+        }
+      });
+      v.receive({payload: AnyInputString});
+    });
+  });
+
+  it('should deep clone written JSON value', function(done) {
+    const flow = structuredClone(FlowNodeAllVariants);
+    flow[0].valueId = ConfigValueIdJson;
+    flow[0].command = CommandWrite;
+    flow[0].deepCloneValue = true;
+
+    helper.load([configNode, valueNode], flow, function() {
+      const v = helper.getNode(NodeIdPersistentValue);
+      const h = helper.getNode(NodeIdHelperCurrentValue);
+
+      const inputValue = {boolean: true};
+      const inputValueClone = {boolean: inputValue.boolean};
+
+      h.on(InputFunction, function(msg) {
+        try {
+          const contextValue = getContextValue(v);
+          nodejsAssert.deepStrictEqual(contextValue, inputValueClone);
+
+          // Context value must not be modified by a modification of the original input
+          inputValue.boolean = !inputValue.boolean;
+          nodejsAssert.deepStrictEqual(contextValue, inputValueClone);
+          done();
+        } catch (err) {
+          done(err);
+        }
+      });
+      v.receive({payload: inputValue});
+    });
+  });
+
   // ==== Output Previous Value Test ==========================================
 
   it('should store the previous persisted value', function(done) {
@@ -792,7 +978,6 @@ describe('persistent value node', function() {
     const CollectedValuesProperty = 'collected_values';
     flow[0].collectValues = true;
     flow[0].collectValuesMsgProperty = CollectedValuesProperty;
-
 
     helper.load([configNode, valueNode], flow, function() {
       const v = helper.getNode(NodeIdPersistentValue);
@@ -909,7 +1094,6 @@ describe('persistent value node', function() {
     const BlockIfCompareValue = true;
     flow[0].blockIfCompareValue = BlockIfCompareValue.toString(); // Stored as string by typed input
 
-
     helper.load([configNode, valueNode], flow, function() {
       const v = helper.getNode(NodeIdPersistentValue);
 
@@ -949,7 +1133,6 @@ describe('persistent value node', function() {
     const BlockIfCompareValue = 'match me';
     flow[0].blockIfCompareValue = BlockIfCompareValue;
 
-
     helper.load([configNode, valueNode], flow, function() {
       const v = helper.getNode(NodeIdPersistentValue);
 
@@ -961,6 +1144,30 @@ describe('persistent value node', function() {
         fill: 'red',
         shape: 'dot',
         text: `${BlockIfCompareValue} [string,global,default (memory)]`,
+      });
+      done();
+    });
+  });
+
+  it('should block further processing if equal rule matches to JSON value', function(done) {
+    const flow = structuredClone(FlowNodeAllVariants);
+    flow[0].valueId = ConfigValueIdJson;
+    flow[0].blockIfEnable = true;
+    flow[0].blockIfRule = BlockIfRuleEqual;
+    const BlockIfCompareValue = {boolean: true, string: 'match me'};
+    flow[0].blockIfCompareValue = JSON.stringify(BlockIfCompareValue, null, 2);
+
+    helper.load([configNode, valueNode], flow, function() {
+      const v = helper.getNode(NodeIdPersistentValue);
+
+      setContextValue(v, BlockIfCompareValue);
+
+      v.receive({payload: AnyInputString});
+      v.send.should.be.calledWithExactly([null, null]);
+      v.status.should.be.calledWithMatch({
+        fill: 'red',
+        shape: 'dot',
+        text: `{JSON} [json,global,default (memory)]`,
       });
       done();
     });
@@ -1110,6 +1317,33 @@ describe('persistent value node', function() {
       h.on(InputFunction, function(msg) {
         try {
           msg.should.have.property(PropertyPayload, BlockIfCompareValue);
+          done();
+        } catch (err) {
+          done(err);
+        }
+      });
+      v.receive({payload: AnyInputString});
+    });
+  });
+
+  it('should not block further processing if compare value type cannot be parsed - JSON', function(done) {
+    const flow = structuredClone(FlowNodeAllVariants);
+    flow[0].valueId = ConfigValueIdJson;
+    flow[0].blockIfEnable = true;
+    flow[0].blockIfRule = BlockIfRuleEqual;
+    flow[0].blockIfCompareValue = '{ incomplete JSON: X';
+
+    helper.load([configNode, valueNode], flow, function() {
+      const v = helper.getNode(NodeIdPersistentValue);
+      const h = helper.getNode(NodeIdHelperCurrentValue);
+
+      const simulatedContextValue = {valid: 'JSON object'};
+      setContextValue(v, simulatedContextValue);
+
+      h.on(InputFunction, function(msg) {
+        try {
+          msg.should.have.property(PropertyPayload, simulatedContextValue);
+          v.error.should.be.calledWithMatch(`Failed to convert value`);
           done();
         } catch (err) {
           done(err);

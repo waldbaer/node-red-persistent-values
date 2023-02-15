@@ -22,7 +22,7 @@ Persistent values are typically states, configuration options etc. which shall s
 # Key Features
 
 - Central configuration of all known persistent values (states, config options, ...).
-  - Dataypes: Bool, Number, String
+  - Dataypes: Bool, Number, String, JSON
   - Default value
   - Scope and Storage type
 - Node to read and write a concrete persistent value referenced via the config.
