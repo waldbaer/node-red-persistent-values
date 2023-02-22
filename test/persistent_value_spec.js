@@ -1084,6 +1084,33 @@ describe('persistent value node', function() {
     });
   });
 
+  it('should skip value collection if msg property cannot be created', function(done) {
+    const flow = structuredClone(FlowNodeAllVariants);
+    flow[0].valueId = ConfigValueIdNumber;
+    flow[0].msgProperty = 'output';
+    const CollectedValuesProperty = 'payload.collected_values';
+    flow[0].collectValues = true;
+    flow[0].collectValuesMsgProperty = CollectedValuesProperty;
+
+    helper.load([configNode, valueNode], flow, function() {
+      const c = helper.getNode(NodeIdConfig);
+      const v = helper.getNode(NodeIdPersistentValue);
+      const h = helper.getNode(NodeIdHelperCurrentValue);
+
+      h.on(InputFunction, function(msg) {
+        try {
+          msg.should.have.property('output', c.values[1].default);
+          msg.payload.should.not.have.property('collected_values');
+          done();
+        } catch (err) {
+          done(err);
+        }
+      });
+      v.receive({payload: AnyInputString});
+      v.warn.should.be.calledWithMatch(`Failed to create Object at msg.${CollectedValuesProperty}`);
+    });
+  });
+
   // ==== Blocker Further Flow Processing Tests ===============================
 
   it('should block further processing if equal rule matches to boolean value', function(done) {

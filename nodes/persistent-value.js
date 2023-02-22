@@ -153,8 +153,12 @@ module.exports = function(RED) {
     if (node.collectValues) {
       let collectedValues = RED.util.getMessageProperty(msg, node.collectValuesMsgProperty);
       if ((collectedValues === undefined) || (typeof collectedValues !== 'object')) {
-        RED.util.setMessageProperty(msg, node.collectValuesMsgProperty, {}, true);
-        collectedValues = RED.util.getMessageProperty(msg, node.collectValuesMsgProperty);
+        if (RED.util.setMessageProperty(msg, node.collectValuesMsgProperty, {}, true)) {
+          collectedValues = RED.util.getMessageProperty(msg, node.collectValuesMsgProperty);
+        } else {
+          node.warn(`Failed to create Object at msg.${node.collectValuesMsgProperty}. Creation only possible for object types!`);
+          return;
+        }
       }
 
       const contextKey = getContextKey(node);
