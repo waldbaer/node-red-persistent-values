@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 
 
+## [1.3.0] - 2023-02-22
+
+### Features
+- Support datatype 'JSON'.
+
+### Improvements
+- Editor: CSS
+
+### Fixes
+- Support nested message properties for Input/Output, Output Previous Value, Collect Values.
+
+
 ## [1.2.0] - 2023-02-11
 
 ### Features
