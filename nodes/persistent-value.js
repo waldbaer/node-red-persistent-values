@@ -145,17 +145,17 @@ module.exports = function(RED) {
 
   function addPreviousValue(node, msg, previousValue) {
     if (node.outputPreviousValue) {
-      msg[node.outputPreviousValueMsgProperty] = previousValue;
+      RED.util.setMessageProperty(msg, node.outputPreviousValueMsgProperty, previousValue);
     }
   }
 
   function updateCollectedValues(node, msg, currentValue, previousValue) {
     if (node.collectValues) {
-      if (!msg.hasOwnProperty(node.collectValuesMsgProperty) ||
-          (typeof msg[node.collectValuesMsgProperty] !== 'object')) {
-        msg[node.collectValuesMsgProperty] = {};
+      let collectedValues = RED.util.getMessageProperty(msg, node.collectValuesMsgProperty);
+      if ((collectedValues === undefined) || (typeof collectedValues !== 'object')) {
+        RED.util.setMessageProperty(msg, node.collectValuesMsgProperty, {});
       }
-      const collectedValues = msg[node.collectValuesMsgProperty];
+      collectedValues = RED.util.getMessageProperty(msg, node.collectValuesMsgProperty);
 
       const contextKey = getContextKey(node);
       if (node.outputPreviousValue) {
@@ -363,16 +363,17 @@ module.exports = function(RED) {
       const command = determineCommand(node, msg);
       if (command === kCommandRead) {
         // ---- Command: Read ----
-        msg[node.msgProperty] = currentValue;
+        RED.util.setMessageProperty(msg, node.msgProperty, currentValue);
         updateCollectedValues(node, msg, currentValue);
       } else if (command === kCommandWrite) {
         // ---- Command: Write ----
-        if (!msg.hasOwnProperty(node.msgProperty)) {
+        let inputValue = RED.util.getMessageProperty(msg, node.msgProperty);
+        if (inputValue === undefined) {
           node.error(`Passed msg does not have the configured property '${node.msgProperty}'`, msg);
           return;
         }
 
-        let inputValue = msg[node.msgProperty];
+        inputValue = RED.util.getMessageProperty(msg, node.msgProperty);
         inputValue = deepCloneIfEnabled(node, inputValue);
 
         if (!compareToConfiguredDatatype(node, inputValue)) {

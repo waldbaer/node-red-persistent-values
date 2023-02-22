@@ -477,7 +477,7 @@ describe('persistent value node', function() {
 
   it('should read the context value to non-default msg property', function(done) {
     const flow = structuredClone(FlowNodeAllVariants);
-    const OutputMsgProperty = 'non_default_output_property';
+    const OutputMsgProperty = 'output.non_default_output_property';
     flow[0].msgProperty = OutputMsgProperty;
 
     helper.load([configNode, valueNode], flow, function() {
@@ -489,7 +489,7 @@ describe('persistent value node', function() {
 
       h.on(InputFunction, function(msg) {
         try {
-          msg.should.have.property(OutputMsgProperty, simulatedValue);
+          nodejsAssert.deepStrictEqual(msg.output, {non_default_output_property: simulatedValue});
           done();
         } catch (err) {
           done(err);
@@ -708,7 +708,7 @@ describe('persistent value node', function() {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].valueId = ConfigValueIdString;
     flow[0].command = CommandWrite;
-    const InputMsgProperty = 'non_default_input_property';
+    const InputMsgProperty = 'input.non_default_input_property';
     flow[0].msgProperty = InputMsgProperty;
 
     helper.load([configNode, valueNode], flow, function() {
@@ -720,7 +720,7 @@ describe('persistent value node', function() {
 
       h.on(InputFunction, function(msg) {
         try {
-          msg.should.have.property(InputMsgProperty, simulatedValue);
+          nodejsAssert.deepStrictEqual(msg.input, {non_default_input_property: simulatedValue});
 
           const contextValue = getContextValue(v);
           contextValue.should.equal(simulatedValue);
@@ -730,8 +730,7 @@ describe('persistent value node', function() {
         }
       });
 
-      const msg = {};
-      msg[InputMsgProperty] = simulatedValue;
+      const msg = {input: {non_default_input_property: simulatedValue}};
       v.receive(msg);
     });
   });
@@ -972,10 +971,10 @@ describe('persistent value node', function() {
     flow[0].valueId = ConfigValueIdString;
     flow[0].command = CommandWrite;
     flow[0].outputPreviousValue = true;
-    const previousValueMsgProperty = 'store_previous_value';
+    const previousValueMsgProperty = 'output.store_previous_value';
     flow[0].outputPreviousValueMsgProperty = previousValueMsgProperty;
 
-    const CollectedValuesProperty = 'collected_values';
+    const CollectedValuesProperty = 'output.collected_values';
     flow[0].collectValues = true;
     flow[0].collectValuesMsgProperty = CollectedValuesProperty;
 
@@ -990,18 +989,19 @@ describe('persistent value node', function() {
       h.on(InputFunction, function(msg) {
         try {
           msg.should.have.property(PropertyPayload, newValue);
-          msg.should.have.property(previousValueMsgProperty, expectedPreviousValue);
 
           const contextValue = getContextValue(v);
           contextValue.should.equal(newValue);
 
-          const ExpectedCollectedValues = {};
-          ExpectedCollectedValues[buildContextKeyName(v)] = {
+          const expectedOutputProperty = {
+            store_previous_value: expectedPreviousValue,
+            collected_values: {},
+          };
+          expectedOutputProperty.collected_values[buildContextKeyName(v)] = {
             current: newValue,
             previous: expectedPreviousValue,
           };
-          msg.should.have.property(CollectedValuesProperty, ExpectedCollectedValues);
-
+          nodejsAssert.deepStrictEqual(msg.output, expectedOutputProperty);
           done();
         } catch (err) {
           done(err);
@@ -1022,7 +1022,7 @@ describe('persistent value node', function() {
 
     // Insert before the default node another persistent value node
     const FirstPersistentvalueNode = structuredClone(PersistentValueNodeDefault);
-    FirstPersistentvalueNode.id= NodeIdPersistentValue + '2';
+    FirstPersistentvalueNode.id = NodeIdPersistentValue + '2';
     FirstPersistentvalueNode.valueId = ConfigValueIdString;
     FirstPersistentvalueNode.collectValues = true;
     FirstPersistentvalueNode.collectValuesMsgProperty = CollectedValuesProperty;
