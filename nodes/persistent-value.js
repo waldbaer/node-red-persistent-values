@@ -145,7 +145,7 @@ module.exports = function(RED) {
 
   function addPreviousValue(node, msg, previousValue) {
     if (node.outputPreviousValue) {
-      RED.util.setMessageProperty(msg, node.outputPreviousValueMsgProperty, previousValue);
+      RED.util.setMessageProperty(msg, node.outputPreviousValueMsgProperty, previousValue, true);
     }
   }
 
@@ -153,9 +153,9 @@ module.exports = function(RED) {
     if (node.collectValues) {
       let collectedValues = RED.util.getMessageProperty(msg, node.collectValuesMsgProperty);
       if ((collectedValues === undefined) || (typeof collectedValues !== 'object')) {
-        RED.util.setMessageProperty(msg, node.collectValuesMsgProperty, {});
+        RED.util.setMessageProperty(msg, node.collectValuesMsgProperty, {}, true);
+        collectedValues = RED.util.getMessageProperty(msg, node.collectValuesMsgProperty);
       }
-      collectedValues = RED.util.getMessageProperty(msg, node.collectValuesMsgProperty);
 
       const contextKey = getContextKey(node);
       if (node.outputPreviousValue) {
@@ -363,7 +363,7 @@ module.exports = function(RED) {
       const command = determineCommand(node, msg);
       if (command === kCommandRead) {
         // ---- Command: Read ----
-        RED.util.setMessageProperty(msg, node.msgProperty, currentValue);
+        RED.util.setMessageProperty(msg, node.msgProperty, currentValue, true);
         updateCollectedValues(node, msg, currentValue);
       } else if (command === kCommandWrite) {
         // ---- Command: Write ----
