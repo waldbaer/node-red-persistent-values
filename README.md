@@ -17,7 +17,7 @@ all known persistent values is used.
 The persistent values itself can then be comfortably accessed with nodes just referencing the central
 configuration and the persistent value to be accessed.
 
-Persistent values are typically states, configuration options etc. which shall survice a restart of Node-RED.
+Persistent values are typically states, configuration options etc. which shall survive a restart of Node-RED.
 
 # Key Features
 
