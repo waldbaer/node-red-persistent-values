@@ -124,15 +124,17 @@ module.exports = function(RED) {
       currentValue = context.get(contextKey, node.valueConfig.storage);
     }
 
-    // Apply default value if context contains no value
-    if (currentValue === undefined) {
-      currentValue = node.valueConfig.default;
-
-      if (node.valueConfig.datatype === kConfigDatatypeJson) {
-        currentValue = JSON.parse(currentValue);
-      }
-    }
     return currentValue;
+  }
+
+  function getDefaultValue(node) {
+    let value = node.valueConfig.default;
+
+    if (node.valueConfig.datatype === kConfigDatatypeJson) {
+      value = JSON.parse(value);
+    }
+
+    return value;
   }
 
   function setContext(node, context, contextKey, newValue) {
@@ -353,7 +355,17 @@ module.exports = function(RED) {
       const context = getUsedContext(node);
       const contextKey = getContextKey(node);
 
+      // Get value from context store
       let currentValue = getContext(node, context, contextKey);
+
+      // If no value is present in context store, get the default value
+      let currentValueIsDefault = false;
+      if (currentValue === undefined) {
+        currentValueIsDefault = true;
+        currentValue = getDefaultValue(node);
+      }
+
+      // Deep clone if option is enabled
       currentValue = deepCloneIfEnabled(node, currentValue);
 
       if (!compareToConfiguredDatatype(node, currentValue)) {
@@ -389,7 +401,10 @@ module.exports = function(RED) {
         addPreviousValue(node, msg, currentValue);
         updateCollectedValues(node, msg, inputValue, currentValue);
 
-        if (!isDeepStrictEqual(inputValue, currentValue)) {
+        // Only write context if:
+        //  - current value is a default value (allow writing of input values equal to default)
+        //  - input value differs from the current value
+        if (currentValueIsDefault || (!isDeepStrictEqual(inputValue, currentValue))) {
           setContext(node, context, contextKey, inputValue);
           onChangeMsg = msg;
         }

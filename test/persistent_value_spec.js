@@ -704,6 +704,36 @@ describe('persistent value node', function() {
     });
   });
 
+  it('should write to the context storage even if the input value is equal to the default value', function(done) {
+    const testedStorage = StorageMemory;
+
+    const flow = structuredClone(FlowNodeAllVariants);
+    flow[1].values[2].storage = testedStorage;
+    flow[0].valueId = ConfigValueIdString;
+    flow[0].command = CommandWrite;
+
+    helper.load([configNode, valueNode], flow, function() {
+      const v = helper.getNode(NodeIdPersistentValue);
+      const h = helper.getNode(NodeIdHelperCurrentValue);
+
+      const simulatedInput = flow[1].values[2].default; // Equal to default value
+
+      setContextValue(v, undefined, testedStorage); // Clear the context
+
+      h.on(InputFunction, function(msg) {
+        try {
+          msg.should.have.property(PropertyPayload, simulatedInput);
+          const contextValue = getContextValue(v, testedStorage);
+          contextValue.should.be.equal(simulatedInput);
+          done();
+        } catch (err) {
+          done(err);
+        }
+      });
+      v.receive({payload: simulatedInput});
+    });
+  });
+
   it('should write to the context storage from non-default input msg property', function(done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].valueId = ConfigValueIdString;
