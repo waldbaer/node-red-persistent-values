@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.1] - 2023-04-03
+
+### Improvements
+- Editor: CSS
+
+### Fixes
+- Write input value to context store even if it is equal to the configured default value.
+
 
 ## [1.3.0] - 2023-02-22
 
