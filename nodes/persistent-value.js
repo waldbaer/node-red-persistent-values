@@ -387,8 +387,7 @@ module.exports = function(RED) {
         // ---- Command: Read ----
         RED.util.setMessageProperty(msg, node.msgProperty, currentValue, true);
         updateCollectedValues(node, msg, currentValue);
-      }
-      if (command === kCommandMultiRead) {
+      } else if (command === kCommandMultiRead) {
         // ---- Command: MultiRead ----
         let outputObject = {};
         const attributes = RED.util.getMessageProperty(msg, node.msgProperty);
