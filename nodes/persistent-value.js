@@ -28,8 +28,9 @@ module.exports = function(RED) {
   const kMsgPropertyDefault = 'payload';
 
   const kCommandRead = 'read';
+  const kCommandMultiRead = 'multi_read';
   const kCommandWrite = 'write';
-  const kSupportedCommands = [kCommandRead, kCommandWrite];
+  const kSupportedCommands = [kCommandRead, kCommandMultiRead, kCommandWrite];
 
   const kCommandDefault = kCommandRead;
 
@@ -83,7 +84,12 @@ module.exports = function(RED) {
       if (typeof msgCommand === 'string') {
         msgCommand = msgCommand.trim().toLowerCase();
       }
-      if (kSupportedCommands.includes(msgCommand)) {
+      if (
+        
+        
+        
+        
+        .includes(msgCommand)) {
         command = msgCommand;
       } else {
         node.warn(`Command '${msgCommand}' set via msg.${commandProperty} is not known / supported!` +
@@ -381,6 +387,16 @@ module.exports = function(RED) {
         // ---- Command: Read ----
         RED.util.setMessageProperty(msg, node.msgProperty, currentValue, true);
         updateCollectedValues(node, msg, currentValue);
+      }
+      if (command === kCommandMultiRead) {
+        // ---- Command: MultiRead ----
+        let outputObject = {};
+        const attributes = RED.util.getMessageProperty(msg, node.msgProperty);
+        attributes.each((contextKey) => {
+          const value = getContext(node, context, contextKey);
+          outputObject[contextKey] = value;
+        });
+        RED.util.setMessageProperty(msg, node.msgProperty, outputObject, true);
       } else if (command === kCommandWrite) {
         // ---- Command: Write ----
         let inputValue = RED.util.getMessageProperty(msg, node.msgProperty);
