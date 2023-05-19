@@ -84,12 +84,7 @@ module.exports = function(RED) {
       if (typeof msgCommand === 'string') {
         msgCommand = msgCommand.trim().toLowerCase();
       }
-      if (
-        
-        
-        
-        
-        .includes(msgCommand)) {
+      if (kSupportedCommands.includes(msgCommand)) {
         command = msgCommand;
       } else {
         node.warn(`Command '${msgCommand}' set via msg.${commandProperty} is not known / supported!` +
