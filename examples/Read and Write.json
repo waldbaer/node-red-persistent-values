@@ -19,8 +19,8 @@
             "b81bbc8a37e050dc",
             "f152cc1d43d5898b"
         ],
-        "x": 54,
-        "y": 439,
+        "x": 74,
+        "y": 99,
         "w": 712,
         "h": 322
     },
@@ -36,13 +36,19 @@
         "value": "LightOn",
         "command": "write",
         "msgProperty": "payload",
+        "dynamicControl": false,
+        "dynamicCommandMsgProperty": "command",
+        "dynamicValueMsgProperty": "topic",
+        "deepCloneValue": false,
+        "outputPreviousValue": false,
+        "outputPreviousValueMsgProperty": "previous_value",
         "collectValues": false,
         "collectValuesMsgProperty": "values",
         "blockIfEnable": false,
         "blockIfRule": "eq",
         "blockIfCompareValue": "true",
-        "x": 410,
-        "y": 600,
+        "x": 430,
+        "y": 260,
         "wires": [
             [
                 "41c998f03b6f3c81"
@@ -72,8 +78,8 @@
         "topic": "",
         "payload": "true",
         "payloadType": "bool",
-        "x": 180,
-        "y": 580,
+        "x": 200,
+        "y": 240,
         "wires": [
             [
                 "6680edf3f52a5ba5"
@@ -102,8 +108,8 @@
         "topic": "",
         "payload": "false",
         "payloadType": "bool",
-        "x": 180,
-        "y": 620,
+        "x": 200,
+        "y": 280,
         "wires": [
             [
                 "6680edf3f52a5ba5"
@@ -122,13 +128,19 @@
         "value": "LightOn",
         "command": "read",
         "msgProperty": "payload",
-        "collectValues": true,
+        "dynamicControl": false,
+        "dynamicCommandMsgProperty": "command",
+        "dynamicValueMsgProperty": "topic",
+        "deepCloneValue": false,
+        "outputPreviousValue": false,
+        "outputPreviousValueMsgProperty": "previous_value",
+        "collectValues": false,
         "collectValuesMsgProperty": "values",
         "blockIfEnable": false,
         "blockIfRule": "eq",
         "blockIfCompareValue": "true",
-        "x": 410,
-        "y": 720,
+        "x": 430,
+        "y": 380,
         "wires": [
             [
                 "2c51a7143fe34691"
@@ -146,12 +158,12 @@
         "tosidebar": true,
         "console": false,
         "tostatus": true,
-        "complete": "true",
-        "targetType": "full",
+        "complete": "payload",
+        "targetType": "msg",
         "statusVal": "payload",
         "statusType": "auto",
-        "x": 650,
-        "y": 720,
+        "x": 670,
+        "y": 380,
         "wires": []
     },
     {
@@ -161,8 +173,8 @@
         "g": "02ec365d88ac27a1",
         "name": "Write persistent value",
         "info": "# Write persistent data\n\nUpdate the persistent value by writing any value matching the configured data type.\n\n- The value will be persistet in the Node-RED context with the configured name / scope.\n- The node status shows the last persistet value and infos about the datatype / scope.\n- The `msg.payload` will contain the last persistet value.",
-        "x": 180,
-        "y": 540,
+        "x": 200,
+        "y": 200,
         "wires": []
     },
     {
@@ -179,8 +191,8 @@
         "targetType": "msg",
         "statusVal": "payload",
         "statusType": "auto",
-        "x": 650,
-        "y": 600,
+        "x": 670,
+        "y": 260,
         "wires": []
     },
     {
@@ -190,8 +202,8 @@
         "g": "02ec365d88ac27a1",
         "name": "Read persistent value",
         "info": "# Read persistent data\n\nRead the current persistet value.\n\n- The node status shows the current value read from the Node-RED context\n  and infos about the datatype / scope.\n- The `msg.payload` will contain current value read from the Node-RED context.\n- In `msg.values` the current value will be added to a object with named attributes equal\n  to the persistent value configuration.",
-        "x": 180,
-        "y": 680,
+        "x": 200,
+        "y": 340,
         "wires": []
     },
     {
@@ -216,8 +228,8 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 170,
-        "y": 720,
+        "x": 190,
+        "y": 380,
         "wires": [
             [
                 "ddb2c95fae17feef"
@@ -230,9 +242,9 @@
         "z": "613529d99b084479",
         "g": "02ec365d88ac27a1",
         "name": "*Important*: Make config available",
-        "info": "# Workaround for import of example configuration\n\nPersistent values relies on an interactive relation between the\nconfiguration and the concrete presistent values node.\n\nDue to limitations of Node-RED the configuration is not properly\nregister with the backend when importing an example flow.\n\nTherefore the following workaround shall be applied after the\ninitial example import:\n\n 1. Open the edit dialog of any of the presistent value nodes.\n 2. Open the edit dialog if the referenced configuration \"House Config\".\n 3. Press \"Update\".\n \nAfter these steps the drop-down menu of the \"Value\" should be populated with all\nthree configured persistent values. \nThe first drop-down value \"LightOn\" should be selected for the example.",
-        "x": 220,
-        "y": 480,
+        "info": "# Workaround for import of example configuration\n\nPersistent values relies on an interactive relation between the\nconfiguration and the concrete presistent values node.\n\nDue to limitations of Node-RED the configuration is not properly\nregister with the backend when importing an example flow.\n\nTherefore the following workaround shall be applied after the\ninitial example import:\n\n 1. Open the edit dialog of any of the presistent value nodes.\n 2. Open the edit dialog of the referenced configuration.\n 3. Press \"Update\".\n \nAfter these steps the drop-down menu of the \"Value\" should be populated with all\nthree configured persistent values. \nThe first drop-down value \"LightOn\" should be selected for the example.",
+        "x": 240,
+        "y": 140,
         "wires": []
     },
     {

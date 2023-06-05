@@ -75,6 +75,9 @@
           return valid;
         },
       },
+      dynamicControl: {value: false, required: false},
+      dynamicCommandMsgProperty: {value: 'command', required: false},
+      dynamicValueMsgProperty: {value: 'topic', required: false},
       deepCloneValue: {value: false, required: false},
       outputPreviousValue: {value: false, required: false},
       outputPreviousValueMsgProperty: {value: 'previous_value', required: false},
@@ -82,7 +85,6 @@
       collectValuesMsgProperty: {
         value: 'values',
         required: false,
-
       },
       blockIfEnable: {value: false, required: false},
       blockIfRule: {value: kBlockIfRuleDefault, required: false},
@@ -130,6 +132,11 @@
       const msgPropertyField = $('#node-input-msgProperty');
       const msgPropertyLabelFieldInput = $('#node-input-msgProperty-label-input');
       const msgPropertyLabelFieldOutput = $('#node-input-msgProperty-label-output');
+
+      const dynamicControlField = $('#node-input-dynamicControl');
+      const dynamicControlRow = $('#node-input-dynamicControl-row');
+      const dynamicCommandMsgPropertyField = $('#node-input-dynamicCommandMsgProperty');
+      const dynamicValueMsgPropertyField = $('#node-input-dynamicValueMsgProperty');
 
       const deepCloneField =$('#node-input-node-input-deepCloneValue');
       const deepCloneFieldRow =$('#node-input-deepCloneValue-row');
@@ -256,6 +263,13 @@
       // msg property
       msgPropertyField.typedInput({types: [{label: 'msg.', value: 'str'}]});
 
+      // dynamicControl property
+      dynamicControlField.on('change', function() {
+        this.checked ? dynamicControlRow.show() : dynamicControlRow.hide();
+      });
+      dynamicCommandMsgPropertyField.typedInput({types: [{label: 'msg.', value: 'str'}]});
+      dynamicValueMsgPropertyField.typedInput({types: [{label: 'msg.', value: 'str'}]});
+
       // collectValues property
       outputPreviousValueField.on('change', function() {
         this.checked ? outputPreviousValueRow.show() : outputPreviousValueRow.hide();
@@ -311,6 +325,20 @@
     <input type="hidden" id="node-input-msgPropertyType">
     <input type="text" id="node-input-msgProperty" placeholder="payload" style="width: calc(100% - 105px)">
   </div>
+  <div class="form-row">
+    <input type="checkbox" id="node-input-dynamicControl" style="display: inline-block; width: auto; vertical-align: top;">
+    <label for="node-input-dynamicControl" style="width: auto;"> Dynamic Control</label>
+    <div id="node-input-dynamicControl-row" class="hide">
+      <div id="node-input-dynamicCommand-row" class="hide" style="margin-left: 30px; margin-bottom: 12px; display: block">
+        <label for="node-input-dynamicCommandMsgProperty" style="width: auto;margin-right: 5px;"> Command</label>
+        <input type="text" id="node-input-dynamicCommandMsgProperty" placeholder="command" style="width: calc(100% - 75px)">
+      </div>
+      <div id="node-input-dynamicValue-row" class="hide" style="margin-left: 30px; display: block">
+        <label for="node-input-dynamicValueMsgProperty" style="width: auto;margin-right: 5px;"> Value</label>
+        <input type="text" id="node-input-dynamicValueMsgProperty" placeholder="topic" style="margin-left:30px; width: calc(100% - 75px)">
+      </div>
+    </div>
+  </div>
   <div class="form-row" id="node-input-deepCloneValue-row">
     <input type="checkbox" id="node-input-deepCloneValue" style="display: inline-block; width: auto; vertical-align: top;">
     <label for="node-input-deepCloneValue" style="width: auto;"> Deep Clone Value</label>
@@ -318,17 +346,17 @@
   <div class="form-row">
     <input type="checkbox" id="node-input-outputPreviousValue" style="display: inline-block; width: auto; vertical-align: top;">
     <label for="node-input-outputPreviousValue" style="width: auto;"> Output the Previous Value</label>
-    <div id="node-input-outputPreviousValue-row" class="hide" style="margin-left: 50px; display: block">
+    <div id="node-input-outputPreviousValue-row" class="hide" style="margin-left: 30px; display: block">
       <label for="node-input-outputPreviousValueMsgProperty" style="width: auto;"> Store to</label>
-      <input type="text" id="node-input-outputPreviousValueMsgProperty" placeholder="previous_value" style="width: calc(100% - 55px)">
+      <input type="text" id="node-input-outputPreviousValueMsgProperty" placeholder="previous_value" style="margin-left: 20px;width: calc(100% - 75px)">
     </div>
   </div>
   <div class="form-row">
     <input type="checkbox" id="node-input-collectValues" style="display: inline-block; width: auto; vertical-align: top;">
     <label for="node-input-collectValues" style="width: auto;"> Collect Values</label>
-    <div id="node-input-collectValues-row" class="hide" style="margin-left: 50px; display: block">
+    <div id="node-input-collectValues-row" class="hide" style="margin-left: 30px; display: block">
       <label for="node-input-collectValuesMsgProperty" style="width: auto;"> Store to</label>
-      <input type="text" id="node-input-collectValuesMsgProperty" placeholder="values" style="width: calc(100% - 55px)">
+      <input type="text" id="node-input-collectValuesMsgProperty" placeholder="values" style="margin-left: 20px;width: calc(100% - 75px)">
     </div>
   </div>
   <div class="form-row">
@@ -367,13 +395,32 @@
       <dt>Command <span class="property-type">read | write</span></dt>
       <dd>Handling type of the persistent value.
         <ul>
-          <li>Read: Read (<code>get</code>) the current value of the persistent value from the context store.</li>
-          <li>Write: Write (<code>set</code>) a new value to the persistent value in the context store.</li>
+          <li><i>Read:</i> Read (<code>get</code>) the current value of the persistent value from the context store.</li>
+          <li><i>Write:</i> Write (<code>set</code>) a new value to the persistent value in the context store.</li>
         </ul>
       </dd>
 
       <dt>Input / Output</dt>
       <dd>Overwrite the message property used for reading or writing the new persistent value.</dd>
+
+      <dt>Dynamic Control</dt>
+      <dd>
+          Enable dynamic override of the configured command and/or persistent value with <code>msg</code> properties.
+
+          <ul>
+            <li><i>Command:</i> <code>msg</code> property to override the configured command (read or write).
+                Default property: <code>msg.command</code>.
+                The configured 'Command' is used if the <code>msg</code> property is not set.
+            </li>
+            <li><i>Value:</i> <code>msg</code> property to override the configured persistent value (Option 'Value').
+                Default property: <code>msg.topic</code>.
+                The configured 'Value' is used if the <code>msg</code> property is not set.
+            </li>
+          </ul>
+
+          <i>Hint</i>: Due to backward compatibility with previous 1.x versions the command override
+          is always activated, independent of the 'Dynamic Control' setting.
+      </dd>
 
       <dt>Deep Clone Value</dt>
       <dd>
@@ -412,6 +459,13 @@
         <dt class="optional">command <span class="property-type">"read" | "write"</span></dt>
         <dd>
             Override the configured command.
+            The default property name <code>msg.command</code> can be re-configured with config option 'Dynamic Control' -> 'Command'.
+        </dd>
+        <dt class="optional">topic <span class="property-type">"&lt;Persistent Value Name&gt;"</span></dt>
+        <dd>
+            Override the configured persistent value if option 'Dynamic Control' option is enabled.
+            A string matching exactly one of the available persistent values must be passed.
+            The default property name <code>msg.topic</code> can be re-configured with config option 'Dynamic Control' -> 'Value'.
         </dd>
     </dl>
 
@@ -456,6 +510,32 @@
       The configured command can be overridden by setting <code>msg.command</code> to
       <code>"read"</code> or <code>"write"</code> (whitespace and case insensitive).
     </p>
+
+    <h4>Dynamic Control</h4>
+      <p>
+        With the dynamic control enabled it is possible to dynamically set the used command (read or write)
+        and the concrete persistent value of a single configuration.
+        In this case the configured command / persistent value is ignored and instead the settings
+        from the <code>msg</code> are used.
+      </p>
+      <p>
+        Example:
+        Configured persistent values of a single configuration:
+        <ul>
+          <li><code>LightOn</code></li>
+          <li><code>OpenWindows</code></li>
+          <li><code>NextGarbageCollection</code></li>
+        </ul>
+      </p>
+      <p>
+<code>msg</code> to dynamically set command / persistent value:
+<pre><code>let msg = {
+  command: "write",
+  topic: "NextGarbageCollection"
+  payload: "Wednesday, 2023-06-07"
+}
+</code></pre>
+      </p>
 
     <h4>Deep Clone Value</h4>
       <p>

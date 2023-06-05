@@ -36,6 +36,10 @@ module.exports = function(RED) {
 
   const kDeepCloneValueDefault = false;
 
+  const kDynamicControlsDefault = false;
+  const kDynamicCommandMsgPropertyDefault = 'command';
+  const kDynamicValueMsgPropertyDefault = 'value';
+
   const kOutputPreviousValueDefault = false; // Do not output the previous value by default
   const kOutputPreviousValueMsgProperty = 'previous_value';
 
@@ -54,41 +58,78 @@ module.exports = function(RED) {
                           `'${node.name}' with ID ${node.id}. Skipping further processing.`, node);
   }
 
-  function buildNodeStatus(node, currentValue, blockFlow) {
+  function buildNodeStatus(node, valueConfig, currentValue, blockFlow) {
     let value = currentValue;
-    if (node.valueConfig.datatype === kConfigDatatypeJson) {
+    if (valueConfig.datatype === kConfigDatatypeJson) {
       value = `{JSON}`;
     }
 
-    let storage = node.valueConfig.storage;
+    const metaInfos = []; // List of meta-infos shown behind the value
+
+    if (valueConfig !== node.valueConfig) {
+      metaInfos.push(valueConfig.name);
+    }
+
+    metaInfos.push(kSupportedDatatypesByTypedInput[valueConfig.datatype]);
+    metaInfos.push(valueConfig.scope);
+
+    let storage = valueConfig.storage;
     if (storage === kStorageDefault) {
       if (RED.settings.contextStorage !== undefined && RED.settings.contextStorage.default !== undefined) {
         storage += ` (${RED.settings.contextStorage.default})`;
       }
     }
+    metaInfos.push(storage);
 
     node.status({
       fill: `${blockFlow ? 'red' : 'green'}`,
       shape: 'dot',
-      text: `${value} [${kSupportedDatatypesByTypedInput[node.valueConfig.datatype]},${node.valueConfig.scope},${storage}]`,
+      text: `${value} [${metaInfos.join(',')}]`,
     });
+  }
+
+  function determineValueConfig(node, msg) {
+    let valueConfig = node.valueConfig;
+
+    if (node.dynamicControl === true) { // Dynamic controls enabled?
+      const msgValue = RED.util.getMessageProperty(msg, node.dynamicValueMsgProperty);
+      // value override property set?
+      if (msgValue !== undefined) {
+        const foundValueConfig = node.valueConfigs.find((value) => value.name === msgValue);
+        if (foundValueConfig !== undefined) {
+          valueConfig = foundValueConfig;
+        } else {
+          logger.logWarning(node, `Persistent value '${msgValue}' dynamically selected with ` +
+                                  `msg.${node.dynamicValueMsgProperty} not found! ` +
+                                  `Falling back to configured value '${valueConfig.name}'. ` +
+                                  `Known persistent values of the configuration '${node.configName}': ` +
+                                  `${node.valueConfigs.map((value) => {
+                                    return value.name;
+                                  }).join(', ')}`);
+        }
+      }
+    }
+    return valueConfig;
   }
 
   function determineCommand(node, msg) {
     let command = node.command;
 
+    // Due to backward compatibility with 1.x versions the node.dynamicControl
+    // is not necessary to allow dynamic command override.
+    // With breaking change 2.x the behaviour will be aligned with dynamic value override.
+
     // Command overwrite by msg.command property?
-    const commandProperty = 'command';
-    if (msg.hasOwnProperty(commandProperty)) {
-      let msgCommand = msg[commandProperty];
+    let msgCommand = RED.util.getMessageProperty(msg, node.dynamicCommandMsgProperty);
+    if (msgCommand !== undefined) {
       if (typeof msgCommand === 'string') {
         msgCommand = msgCommand.trim().toLowerCase();
       }
       if (kSupportedCommands.includes(msgCommand)) {
         command = msgCommand;
       } else {
-        logger.logWarning(node, `Command '${msgCommand}' set via msg.${commandProperty} is not known / supported!` +
-                                ` Falling back to configured command.` +
+        logger.logWarning(node, `Command '${msgCommand}' set via msg.${node.dynamicCommandMsgProperty} is not known / supported!` +
+                                ` Falling back to configured command '${command}'.` +
                                 ` Supported commands: ${kSupportedCommands.join(', ')}`
         , msg);
       }
@@ -96,19 +137,19 @@ module.exports = function(RED) {
     return command;
   }
 
-  function getUsedContext(node) {
+  function getUsedContext(node, valueConfig) {
     let context = node.context();
-    if (node.valueConfig.scope === 'flow') {
+    if (valueConfig.scope === 'flow') {
       context = context.flow;
     }
-    if (node.valueConfig.scope === 'global') {
+    if (valueConfig.scope === 'global') {
       context = context.global;
     }
     return context;
   }
 
-  function getContextKey(node) {
-    return getContextKeyFromNames(node.configName, node.value);
+  function getContextKey(node, valueConfig) {
+    return getContextKeyFromNames(node.configName, valueConfig.name);
   }
 
   function getContextKeyFromNames(configName, valueName) {
@@ -117,32 +158,32 @@ module.exports = function(RED) {
     return contextKey;
   }
 
-  function getContext(node, context, contextKey) {
+  function getContext(valueConfig, context, contextKey) {
     let currentValue = undefined;
-    if (node.valueConfig.storage === kStorageDefault) {
+    if (valueConfig.storage === kStorageDefault) {
       currentValue = context.get(contextKey);
     } else {
-      currentValue = context.get(contextKey, node.valueConfig.storage);
+      currentValue = context.get(contextKey, valueConfig.storage);
     }
 
     return currentValue;
   }
 
-  function getDefaultValue(node) {
-    let value = node.valueConfig.default;
+  function getDefaultValue(valueConfig) {
+    let value = valueConfig.default;
 
-    if (node.valueConfig.datatype === kConfigDatatypeJson) {
+    if (valueConfig.datatype === kConfigDatatypeJson) {
       value = JSON.parse(value);
     }
 
     return value;
   }
 
-  function setContext(node, context, contextKey, newValue) {
-    if (node.valueConfig.storage === kStorageDefault) {
+  function setContext(valueConfig, context, contextKey, newValue) {
+    if (valueConfig.storage === kStorageDefault) {
       context.set(contextKey, newValue);
     } else {
-      context.set(contextKey, newValue, node.valueConfig.storage);
+      context.set(contextKey, newValue, valueConfig.storage);
     }
   }
 
@@ -152,19 +193,20 @@ module.exports = function(RED) {
     }
   }
 
-  function updateCollectedValues(node, msg, currentValue, previousValue) {
+  function updateCollectedValues(node, valueConfig, msg, currentValue, previousValue) {
     if (node.collectValues) {
       let collectedValues = RED.util.getMessageProperty(msg, node.collectValuesMsgProperty);
       if ((collectedValues === undefined) || (typeof collectedValues !== 'object')) {
         if (RED.util.setMessageProperty(msg, node.collectValuesMsgProperty, {}, true)) {
           collectedValues = RED.util.getMessageProperty(msg, node.collectValuesMsgProperty);
         } else {
-          logger.logWarning(node, `Failed to create Object at msg.${node.collectValuesMsgProperty}. Creation only possible for object types!`);
+          logger.logWarning(node, `Failed to create Object at msg.${node.collectValuesMsgProperty}. ` +
+                                  `Creation only possible for object types!`);
           return;
         }
       }
 
-      const contextKey = getContextKey(node);
+      const contextKey = getContextKey(node, valueConfig);
       if (node.outputPreviousValue) {
         collectedValues[contextKey] = {
           current: currentValue,
@@ -176,9 +218,9 @@ module.exports = function(RED) {
     }
   }
 
-  function convertToExpectedType(node, value) {
+  function convertToExpectedType(node, valueConfig, value) {
     let convertedValue = undefined;
-    switch (node.valueConfig.datatype) {
+    switch (valueConfig.datatype) {
     case kConfigDatatypeBool:
       if (value === 'true') {
         convertedValue = true;
@@ -205,25 +247,25 @@ module.exports = function(RED) {
       } catch (e) { }
       break;
     default:
-      logger.logError(node, `Unsupported or invalid compare value type '${node.valueConfig.datatype}' configured!`);
+      logger.logError(node, `Unsupported or invalid compare value type '${valueConfig.datatype}' configured!`);
     }
 
     if (convertedValue === undefined) {
-      logger.logError(node, `Failed to convert value '${value}' to expected datatype '${node.valueConfig.datatype}'!`);
+      logger.logError(node, `Failed to convert value '${value}' to expected datatype '${valueConfig.datatype}'!`);
     }
 
     return convertedValue;
   }
 
-  function compareToConfiguredDatatype(node, value) {
+  function compareToConfiguredDatatype(valueConfig, value) {
     let result = true;
 
-    if (node.valueConfig.datatype == kConfigDatatypeJson) {
+    if (valueConfig.datatype == kConfigDatatypeJson) {
       result = isPureJsonObject(value);
     } else {
       const typeOfValue = typeof value;
       result = kSupportedDatatypesLanguageType.hasOwnProperty(typeOfValue) &&
-           (kSupportedDatatypesLanguageType[typeOfValue] === node.valueConfig.datatype);
+           (kSupportedDatatypesLanguageType[typeOfValue] === valueConfig.datatype);
     }
     return result;
   }
@@ -304,7 +346,7 @@ module.exports = function(RED) {
     RED.nodes.createNode(this, nodeConfig);
     const node = this;
 
-    // ---- Retrieve node properties and referenced config properties ----
+    // ---- Get node settings and referenced config properties ----
 
     // Retrieve the selected config
     const configNode = RED.nodes.getNode(nodeConfig.valuesConfig);
@@ -312,33 +354,38 @@ module.exports = function(RED) {
       reportIncorrectConfiguration(node);
       return null;
     }
+    node.configName = configNode.name; // Name of the referenced configuration
 
     // Selected value by ID or name
     node.valueId = nodeConfig.valueId;
-    node.value = nodeConfig.value;
-    if (node.valueId !== undefined && !uuid.validate(node.valueId)) {
+    node.valueName = nodeConfig.value;
+    if ((node.valueId !== undefined) && (!uuid.validate(node.valueId))) {
       reportIncorrectConfiguration(node);
       return null;
     }
-    // Selectd value must be referenced via ID or name (deprecated)
-    if (node.valueId === undefined && (node.value === undefined)) {
+    // Selected value must be referenced via ID or name (deprecated)
+    if ((node.valueId === undefined) && (node.valueName === undefined)) {
       reportIncorrectConfiguration(node);
       return null;
     }
 
-    node.configName = configNode.name; // Name of the referenced configuration
+    node.valueConfigs = configNode.values; // All available value configurations
     if (node.valueId) {
-      node.valueConfig = configNode.values.find((value) => value.id === node.valueId);
-      node.value = node.valueConfig.name; // Update name again in case of inconsistent value / ID config
+      node.valueConfig = node.valueConfigs.find((value) => value.id === node.valueId);
+      node.valueName = node.valueConfig.name; // Update name again in case of inconsistent value / ID config
     } else {
       // Until version 1.1.0 no ID was existing for every value. Therefore search via value name.
-      node.valueConfig = configNode.values.find((value) => value.name === node.value);
+      node.valueConfig = node.valueConfigs.find((value) => value.name === node.valueName);
     }
 
     node.command = nodeConfig.command || kCommandDefault;
     node.msgProperty = nodeConfig.msgProperty || kMsgPropertyDefault;
 
     node.deepCloneValue = nodeConfig.deepCloneValue || kDeepCloneValueDefault;
+
+    node.dynamicControl = nodeConfig.dynamicControl || kDynamicControlsDefault;
+    node.dynamicCommandMsgProperty = nodeConfig.dynamicCommandMsgProperty || kDynamicCommandMsgPropertyDefault;
+    node.dynamicValueMsgProperty = nodeConfig.dynamicValueMsgProperty || kDynamicValueMsgPropertyDefault;
 
     node.outputPreviousValue = nodeConfig.outputPreviousValue || kOutputPreviousValueDefault;
     node.outputPreviousValueMsgProperty = nodeConfig.outputPreviousValueMsgProperty || kOutputPreviousValueMsgProperty;
@@ -349,29 +396,33 @@ module.exports = function(RED) {
     node.blockIfEnable = nodeConfig.blockIfEnable || kBlockIfEnableDefault;
     node.blockIfRule = nodeConfig.blockIfRule || kBlockIfRuleDefault;
     node.blockIfCompareValue = node.blockIfEnable ?
-      convertToExpectedType(node, nodeConfig.blockIfCompareValue) : undefined;
+      convertToExpectedType(node, node.valueConfig, nodeConfig.blockIfCompareValue) : undefined;
 
     node.on('input', function(msg) {
       // ---- Execute ----
-      const context = getUsedContext(node);
-      const contextKey = getContextKey(node);
+
+      // Determine selected value config either from configuration or use dynamic msg override
+      const valueConfig = determineValueConfig(node, msg);
+
+      const context = getUsedContext(node, valueConfig);
+      const contextKey = getContextKey(node, valueConfig);
 
       // Get value from context store
-      let currentValue = getContext(node, context, contextKey);
+      let currentValue = getContext(valueConfig, context, contextKey);
 
       // If no value is present in context store, get the default value
       let currentValueIsDefault = false;
       if (currentValue === undefined) {
         currentValueIsDefault = true;
-        currentValue = getDefaultValue(node);
+        currentValue = getDefaultValue(valueConfig);
       }
 
       // Deep clone if option is enabled
       currentValue = deepCloneIfEnabled(node, currentValue);
 
-      if (!compareToConfiguredDatatype(node, currentValue)) {
-        logger.logWarning(node, `Persisted value ${node.configName} / ${node.value} does not have the configured datatype ` +
-                                `'${node.valueConfig.datatype}'!`);
+      if (!compareToConfiguredDatatype(valueConfig, currentValue)) {
+        logger.logWarning(node, `Persisted value ${node.configName} / ${valueConfig.name} does not have the configured datatype ` +
+                                `'${valueConfig.datatype}'!`);
       }
 
       let onChangeMsg = null;
@@ -381,7 +432,7 @@ module.exports = function(RED) {
       if (command === kCommandRead) {
         // ---- Command: Read ----
         RED.util.setMessageProperty(msg, node.msgProperty, currentValue, true);
-        updateCollectedValues(node, msg, currentValue);
+        updateCollectedValues(node, valueConfig, msg, currentValue);
       } else if (command === kCommandWrite) {
         // ---- Command: Write ----
         let inputValue = RED.util.getMessageProperty(msg, node.msgProperty);
@@ -393,21 +444,21 @@ module.exports = function(RED) {
         inputValue = RED.util.getMessageProperty(msg, node.msgProperty);
         inputValue = deepCloneIfEnabled(node, inputValue);
 
-        if (!compareToConfiguredDatatype(node, inputValue)) {
+        if (!compareToConfiguredDatatype(valueConfig, inputValue)) {
           logger.logError(node, `Passed value in msg.${node.msgProperty} does not have the configured datatype ` +
-                                `'${node.valueConfig.datatype}'! ` +
-                                `Persistent value config: ${node.configName} / ${node.value}`);
+                                `'${valueConfig.datatype}'! ` +
+                                `Persistent value config: ${node.configName} / ${valueConfig.name}`);
           return;
         }
 
         addPreviousValue(node, msg, currentValue);
-        updateCollectedValues(node, msg, inputValue, currentValue);
+        updateCollectedValues(node, valueConfig, msg, inputValue, currentValue);
 
         // Only write context if:
         //  - current value is a default value (allow writing of input values equal to default)
         //  - input value differs from the current value
         if (currentValueIsDefault || (!isDeepStrictEqual(inputValue, currentValue))) {
-          setContext(node, context, contextKey, inputValue);
+          setContext(valueConfig, context, contextKey, inputValue);
           onChangeMsg = msg;
         }
 
@@ -426,7 +477,7 @@ module.exports = function(RED) {
       }
 
       // ---- Output & Status ----
-      buildNodeStatus(node, currentValue, blockFlow);
+      buildNodeStatus(node, valueConfig, currentValue, blockFlow);
       node.send([msg, onChangeMsg]);
     });
   });

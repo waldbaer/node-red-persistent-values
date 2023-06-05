@@ -33,8 +33,11 @@ describe('persistent value node', function() {
   });
 
   // ==== Utilities ===================================================================================================
-  function buildContextKeyName(node) {
-    return node.configName + '_' + node.value;
+  function buildContextKeyName(node, valueName = undefined) {
+    if (valueName === undefined) {
+      valueName = node.valueName; // Use configured value if not explicitely set
+    }
+    return node.configName + '_' + valueName;
   }
 
   function getContext(node) {
@@ -48,19 +51,23 @@ describe('persistent value node', function() {
     return context;
   }
 
-  function getContextValue(node, storage = undefined) {
+  function getContextValue(node, storage = undefined, valueName = undefined) {
+    const contextKeyName = buildContextKeyName(node, valueName);
+
     if (storage !== undefined) {
-      return getContext(node).get(buildContextKeyName(node), storage);
+      return getContext(node).get(contextKeyName, storage);
     } else {
-      return getContext(node).get(buildContextKeyName(node));
+      return getContext(node).get(contextKeyName);
     }
   }
 
-  function setContextValue(node, value, storage = undefined) {
+  function setContextValue(node, value, storage = undefined, valueName = undefined) {
+    const contextKeyName = buildContextKeyName(node, valueName);
+
     if (storage !== undefined) {
-      getContext(node).set(buildContextKeyName(node), value, storage);
+      getContext(node).set(contextKeyName, value, storage);
     } else {
-      getContext(node).set(buildContextKeyName(node), value);
+      getContext(node).set(contextKeyName, value);
     }
   }
 
@@ -404,10 +411,9 @@ describe('persistent value node', function() {
     });
   });
 
-
   it('should read the context value - string', function(done) {
     const flow = structuredClone(FlowNodeAllVariants);
-    flow[0].valueId = ConfigValueIdNumber;
+    flow[0].valueId = ConfigValueIdString;
 
     helper.load([configNode, valueNode], flow, function() {
       const v = helper.getNode(NodeIdPersistentValue);
@@ -565,7 +571,7 @@ describe('persistent value node', function() {
       const h = helper.getNode(NodeIdHelperOnChange);
 
       setContextValue(v, '', testedStorage);
-      const simulatedValue = 'Store it to file context';
+      const simulatedValue = 'Store it to memory context';
 
       h.on(InputFunction, function(msg) {
         try {
@@ -840,12 +846,181 @@ describe('persistent value node', function() {
     });
   });
 
-  // ==== Command override (msg.command) Tests ================================
+  // ==== Dynamic Control - Value override (msg.value) Test ===================
+
+  it('should use the dynamic value override to read the context value', function(done) {
+    const flow = structuredClone(FlowNodeAllVariants);
+    flow[0].valueId = ConfigValueIdString;
+    flow[0].dynamicControl = true; // enable dynamic controls
+    flow[0].dynamicValueMsgProperty = 'override_topic'; // custom msg property
+
+    helper.load([configNode, valueNode], flow, function() {
+      const v = helper.getNode(NodeIdPersistentValue);
+      const h = helper.getNode(NodeIdHelperCurrentValue);
+
+      const configuredValue = 'Original configured value';
+      setContextValue(v, configuredValue);
+
+      const overrideValueName = ConfigValueNumber;
+      const overrideValue = 2305;
+      const storage = undefined; // use default
+      setContextValue(v, overrideValue, storage, overrideValueName);
+
+      h.on(InputFunction, function(msg) {
+        try {
+          msg.should.have.property(PropertyPayload, overrideValue);
+          done();
+        } catch (err) {
+          done(err);
+        }
+      });
+      v.receive({
+        payload: AnyInputString,
+        override_topic: overrideValueName});
+    });
+  });
+
+  it('should use the dynamic value override to write the context value', function(done) {
+    const flow = structuredClone(FlowNodeAllVariants);
+    flow[0].valueId = ConfigValueIdNumber;
+    flow[0].command = CommandWrite;
+    flow[0].dynamicControl = true;
+    flow[0].dynamicValueMsgProperty = 'override_topic';
+
+    helper.load([configNode, valueNode], flow, function() {
+      const v = helper.getNode(NodeIdPersistentValue);
+      const h = helper.getNode(NodeIdHelperCurrentValue);
+
+      setContextValue(v, '');
+
+      const overrideValueName = ConfigValueString;
+      const overrideValue = 'dynamic override value';
+      const storage = undefined; // use default
+
+
+      h.on(InputFunction, function(msg) {
+        try {
+          msg.should.have.property(PropertyPayload, overrideValue);
+          const contextValue = getContextValue(v, storage, overrideValueName);
+          contextValue.should.equal(overrideValue);
+          done();
+        } catch (err) {
+          done(err);
+        }
+      });
+      v.receive({
+        payload: overrideValue,
+        override_topic: overrideValueName});
+    });
+  });
+
+  it('should fall back to configured value if dynamic value override is invalid', function(done) {
+    const flow = structuredClone(FlowNodeAllVariants);
+    flow[0].valueId = ConfigValueIdString;
+    flow[0].dynamicControl = true;
+
+    helper.load([configNode, valueNode], flow, function() {
+      const v = helper.getNode(NodeIdPersistentValue);
+      const h = helper.getNode(NodeIdHelperCurrentValue);
+
+      const configuredValue = 'Original configured value';
+      setContextValue(v, configuredValue);
+
+      const overrideValueName = ConfigValueNumber;
+      const overrideValue = 2305;
+      const storage = undefined; // use default
+      setContextValue(v, overrideValue, storage, overrideValueName);
+
+      const invalidOverrideValue = false;
+
+      h.on(InputFunction, function(msg) {
+        try {
+          msg.should.have.property(PropertyPayload, configuredValue);
+          v.warn.should.be.calledWithMatch(
+            new RegExp(`'${invalidOverrideValue}'.*not found.*falling back.*${ConfigValueString}.*`, 'i'));
+          done();
+        } catch (err) {
+          done(err);
+        }
+      });
+      v.receive({
+        payload: AnyInputString,
+        value: invalidOverrideValue,
+      });
+    });
+  });
+
+  it('should ignore the dynamic value override if dynamic control is disabled', function(done) {
+    const flow = structuredClone(FlowNodeAllVariants);
+    flow[0].valueId = ConfigValueIdString;
+    flow[0].dynamicControl = false; // disable dynamic controls
+    flow[0].dynamicValueMsgProperty = 'override_topic'; // custom msg property
+
+    helper.load([configNode, valueNode], flow, function() {
+      const v = helper.getNode(NodeIdPersistentValue);
+      const h = helper.getNode(NodeIdHelperCurrentValue);
+
+      const configuredValue = 'Original configured value';
+      setContextValue(v, configuredValue);
+
+      const overrideValueName = ConfigValueNumber;
+      const overrideValue = 2305;
+      const storage = undefined; // use default
+      setContextValue(v, overrideValue, storage, overrideValueName);
+
+      h.on(InputFunction, function(msg) {
+        try {
+          // Value of configured instead of overridden value expected
+          msg.should.have.property(PropertyPayload, configuredValue);
+          done();
+        } catch (err) {
+          done(err);
+        }
+      });
+      v.receive({
+        payload: AnyInputString,
+        override_topic: overrideValueName});
+    });
+  });
+
+  it('should use configure value if dynamic value override is enabled but msg property not set', function(done) {
+    const flow = structuredClone(FlowNodeAllVariants);
+    flow[0].valueId = ConfigValueIdNumber;
+    flow[0].command = CommandWrite;
+    flow[0].dynamicControl = true;
+    flow[0].dynamicValueMsgProperty = 'override_topic';
+
+    helper.load([configNode, valueNode], flow, function() {
+      const v = helper.getNode(NodeIdPersistentValue);
+      const h = helper.getNode(NodeIdHelperCurrentValue);
+
+      setContextValue(v, '');
+      const simulatedValue = 4223;
+
+      h.on(InputFunction, function(msg) {
+        try {
+          msg.should.have.property(PropertyPayload, simulatedValue);
+          const contextValue = getContextValue(v);
+          contextValue.should.equal(simulatedValue);
+          done();
+        } catch (err) {
+          done(err);
+        }
+      });
+      v.receive({payload: simulatedValue});
+    });
+  });
+
+  // ==== Dynamic Control - Command override (msg.command) Tests ==============
 
   it(`should use 'read' command override`, function(done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].valueId = ConfigValueIdString;
     flow[0].command = CommandWrite;
+    // extra test: Due to backward compatibility with 1.x the dynamic controls
+    //             must not be activated to support dynamic command overrides.
+    flow[0].dynamicControl = false;
+    flow[0].dynamicCommandMsgProperty = 'override_command'; // Custom msg property
 
     helper.load([configNode, valueNode], flow, function() {
       const v = helper.getNode(NodeIdPersistentValue);
@@ -867,7 +1042,7 @@ describe('persistent value node', function() {
       });
       v.receive({
         payload: AnyInputString,
-        command: CommandRead,
+        override_command: CommandRead,
       });
     });
   });

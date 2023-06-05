@@ -1,0 +1,291 @@
+[
+    {
+        "id": "9fb710e21c6ccf9e",
+        "type": "group",
+        "z": "613529d99b084479",
+        "name": "node-red-persistent-values example: Dynamic value override",
+        "style": {
+            "label": true
+        },
+        "nodes": [
+            "6a6d8d7c4f68967e",
+            "0a27bb3984c049c7",
+            "62a48044a14d94cb",
+            "39b8a226fe9bbf83",
+            "e297454e0e5a1e3f",
+            "48d361970c98ec39",
+            "9148098205d70bb0",
+            "093be5a9c98417e9",
+            "f7745348a352416c",
+            "8a9fbf1ea8412a9b",
+            "36d9c6bd20d11f1c"
+        ],
+        "x": 34,
+        "y": 119,
+        "w": 1052,
+        "h": 342
+    },
+    {
+        "id": "6a6d8d7c4f68967e",
+        "type": "change",
+        "z": "613529d99b084479",
+        "g": "9fb710e21c6ccf9e",
+        "name": "msg.topic=AirConditionOn",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "AirConditionOn",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 430,
+        "y": 340,
+        "wires": [
+            [
+                "36d9c6bd20d11f1c"
+            ]
+        ]
+    },
+    {
+        "id": "0a27bb3984c049c7",
+        "type": "inject",
+        "z": "613529d99b084479",
+        "g": "9fb710e21c6ccf9e",
+        "name": "Override configured value",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "x": 190,
+        "y": 340,
+        "wires": [
+            [
+                "6a6d8d7c4f68967e"
+            ]
+        ]
+    },
+    {
+        "id": "62a48044a14d94cb",
+        "type": "inject",
+        "z": "613529d99b084479",
+        "g": "9fb710e21c6ccf9e",
+        "name": "Read configured value",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "x": 180,
+        "y": 260,
+        "wires": [
+            [
+                "36d9c6bd20d11f1c"
+            ]
+        ]
+    },
+    {
+        "id": "39b8a226fe9bbf83",
+        "type": "comment",
+        "z": "613529d99b084479",
+        "g": "9fb710e21c6ccf9e",
+        "name": "Override value with msg.topic=AirConditionOn (default=true)",
+        "info": "",
+        "x": 280,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "e297454e0e5a1e3f",
+        "type": "comment",
+        "z": "613529d99b084479",
+        "g": "9fb710e21c6ccf9e",
+        "name": "Read configured value (RadioOn, default false)",
+        "info": "",
+        "x": 240,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "48d361970c98ec39",
+        "type": "comment",
+        "z": "613529d99b084479",
+        "g": "9fb710e21c6ccf9e",
+        "name": "*Important*: Make config available",
+        "info": "# Workaround for import of example configuration\n\nPersistent values relies on an interactive relation between the\nconfiguration and the concrete presistent values node.\n\nDue to limitations of Node-RED the configuration is not properly\nregister with the backend when importing an example flow.\n\nTherefore the following workaround shall be applied after the\ninitial example import:\n\n 1. Open the edit dialog of any of the presistent value nodes.\n 2. Open the edit dialog of the referenced configuration.\n 3. Press \"Update\".\n \nAfter these steps the drop-down menu of the \"Value\" should be populated with all\nthree configured persistent values. \nThe first drop-down value \"RadioOn\" should be selected for the example.",
+        "x": 200,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "9148098205d70bb0",
+        "type": "debug",
+        "z": "613529d99b084479",
+        "g": "9fb710e21c6ccf9e",
+        "name": "Output",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "payload",
+        "statusType": "auto",
+        "x": 990,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "093be5a9c98417e9",
+        "type": "comment",
+        "z": "613529d99b084479",
+        "g": "9fb710e21c6ccf9e",
+        "name": "Fall back to configured value if dynamic override is unknown/invalid ",
+        "info": "",
+        "x": 300,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "f7745348a352416c",
+        "type": "inject",
+        "z": "613529d99b084479",
+        "g": "9fb710e21c6ccf9e",
+        "name": "Override configured value",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "x": 190,
+        "y": 420,
+        "wires": [
+            [
+                "8a9fbf1ea8412a9b"
+            ]
+        ]
+    },
+    {
+        "id": "8a9fbf1ea8412a9b",
+        "type": "change",
+        "z": "613529d99b084479",
+        "g": "9fb710e21c6ccf9e",
+        "name": "msg.topic=UnknownValue",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "UnknownValue",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 430,
+        "y": 420,
+        "wires": [
+            [
+                "36d9c6bd20d11f1c"
+            ]
+        ]
+    },
+    {
+        "id": "36d9c6bd20d11f1c",
+        "type": "persistent value",
+        "z": "613529d99b084479",
+        "g": "9fb710e21c6ccf9e",
+        "name": "",
+        "valuesConfig": "464fad304a574086",
+        "valuesConfigName": "CarStates",
+        "valueId": "e4c73e70-03de-11ee-9023-735e6269c0b9",
+        "value": "RadioOn",
+        "command": "read",
+        "msgProperty": "payload",
+        "dynamicControl": true,
+        "dynamicCommandMsgProperty": "command",
+        "dynamicValueMsgProperty": "topic",
+        "deepCloneValue": false,
+        "outputPreviousValue": false,
+        "outputPreviousValueMsgProperty": "previous_value",
+        "collectValues": false,
+        "collectValuesMsgProperty": "values",
+        "blockIfEnable": false,
+        "blockIfRule": "eq",
+        "blockIfCompareValue": "true",
+        "x": 740,
+        "y": 260,
+        "wires": [
+            [
+                "9148098205d70bb0"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "464fad304a574086",
+        "type": "persistent values config",
+        "name": "CarStates",
+        "values": [
+            {
+                "id": "e4c73e70-03de-11ee-9023-735e6269c0b9",
+                "name": "RadioOn",
+                "datatype": "bool",
+                "default": false,
+                "scope": "global",
+                "storage": "default"
+            },
+            {
+                "id": "f9bed400-03de-11ee-9023-735e6269c0b9",
+                "name": "AirConditionOn",
+                "datatype": "bool",
+                "default": true,
+                "scope": "global",
+                "storage": "default"
+            }
+        ]
+    }
+]

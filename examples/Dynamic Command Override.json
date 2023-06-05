@@ -16,12 +16,15 @@
             "0cd8ecd3bc7d4ec6",
             "9b1708c25844b780",
             "13f153a8fea5af28",
-            "7f11b06448e03736"
+            "7f11b06448e03736",
+            "617e444e0285cbe4",
+            "96d7f0d3b9e34020",
+            "0fc61dc7c0f2ea9c"
         ],
-        "x": 54,
-        "y": 99,
+        "x": 34,
+        "y": 519,
         "w": 1032,
-        "h": 302
+        "h": 382
     },
     {
         "id": "24f1221376048410",
@@ -35,13 +38,19 @@
         "value": "DoorOpen",
         "command": "write",
         "msgProperty": "payload",
+        "dynamicControl": true,
+        "dynamicCommandMsgProperty": "command",
+        "dynamicValueMsgProperty": "topic",
+        "deepCloneValue": false,
+        "outputPreviousValue": false,
+        "outputPreviousValueMsgProperty": "",
         "collectValues": false,
         "collectValuesMsgProperty": "values",
         "blockIfEnable": false,
         "blockIfRule": "eq",
         "blockIfCompareValue": "true",
-        "x": 750,
-        "y": 280,
+        "x": 730,
+        "y": 700,
         "wires": [
             [
                 "7f11b06448e03736"
@@ -71,8 +80,8 @@
         "topic": "",
         "payload": "false",
         "payloadType": "bool",
-        "x": 170,
-        "y": 280,
+        "x": 150,
+        "y": 700,
         "wires": [
             [
                 "24f1221376048410"
@@ -99,8 +108,8 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 460,
-        "y": 360,
+        "x": 440,
+        "y": 780,
         "wires": [
             [
                 "24f1221376048410"
@@ -129,8 +138,8 @@
         "topic": "",
         "payload": "true",
         "payloadType": "bool",
-        "x": 220,
-        "y": 360,
+        "x": 200,
+        "y": 780,
         "wires": [
             [
                 "497624662b327ecb"
@@ -159,8 +168,8 @@
         "topic": "",
         "payload": "true",
         "payloadType": "bool",
-        "x": 170,
-        "y": 240,
+        "x": 150,
+        "y": 660,
         "wires": [
             [
                 "24f1221376048410"
@@ -174,8 +183,8 @@
         "g": "09f2b3c2682ff81f",
         "name": "Override command with msg.command",
         "info": "",
-        "x": 230,
-        "y": 320,
+        "x": 210,
+        "y": 740,
         "wires": []
     },
     {
@@ -185,8 +194,8 @@
         "g": "09f2b3c2682ff81f",
         "name": "Use configured command (Write)",
         "info": "",
-        "x": 210,
-        "y": 200,
+        "x": 190,
+        "y": 620,
         "wires": []
     },
     {
@@ -195,9 +204,9 @@
         "z": "613529d99b084479",
         "g": "09f2b3c2682ff81f",
         "name": "*Important*: Make config available",
-        "info": "# Workaround for import of example configuration\n\nPersistent values relies on an interactive relation between the\nconfiguration and the concrete presistent values node.\n\nDue to limitations of Node-RED the configuration is not properly\nregister with the backend when importing an example flow.\n\nTherefore the following workaround shall be applied after the\ninitial example import:\n\n 1. Open the edit dialog of any of the presistent value nodes.\n 2. Open the edit dialog if the referenced configuration \"House Config\".\n 3. Press \"Update\".\n \nAfter these steps the drop-down menu of the \"Value\" should be populated with all\nthree configured persistent values. \nThe first drop-down value \"LightOn\" should be selected for the example.",
-        "x": 220,
-        "y": 140,
+        "info": "# Workaround for import of example configuration\n\nPersistent values relies on an interactive relation between the\nconfiguration and the concrete presistent values node.\n\nDue to limitations of Node-RED the configuration is not properly\nregister with the backend when importing an example flow.\n\nTherefore the following workaround shall be applied after the\ninitial example import:\n\n 1. Open the edit dialog of any of the presistent value nodes.\n 2. Open the edit dialog of the referenced configuration.\n 3. Press \"Update\".\n \nAfter these steps the drop-down menu of the \"Value\" should be populated with\nthe configured persistent values. \nThe first drop-down value \"DoorOpen\" should be selected for the example.",
+        "x": 200,
+        "y": 560,
         "wires": []
     },
     {
@@ -214,9 +223,85 @@
         "targetType": "msg",
         "statusVal": "payload",
         "statusType": "auto",
-        "x": 970,
-        "y": 280,
+        "x": 950,
+        "y": 700,
         "wires": []
+    },
+    {
+        "id": "617e444e0285cbe4",
+        "type": "comment",
+        "z": "613529d99b084479",
+        "g": "09f2b3c2682ff81f",
+        "name": "Fall back to configured command if override is unknown/invalid.",
+        "info": "",
+        "x": 290,
+        "y": 820,
+        "wires": []
+    },
+    {
+        "id": "96d7f0d3b9e34020",
+        "type": "inject",
+        "z": "613529d99b084479",
+        "g": "09f2b3c2682ff81f",
+        "name": "Invalid command override",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "x": 190,
+        "y": 860,
+        "wires": [
+            [
+                "0fc61dc7c0f2ea9c"
+            ]
+        ]
+    },
+    {
+        "id": "0fc61dc7c0f2ea9c",
+        "type": "change",
+        "z": "613529d99b084479",
+        "g": "09f2b3c2682ff81f",
+        "name": "msg.command=UnknownCommand",
+        "rules": [
+            {
+                "t": "set",
+                "p": "command",
+                "pt": "msg",
+                "to": "UnknownCommand",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "true",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 480,
+        "y": 860,
+        "wires": [
+            [
+                "24f1221376048410"
+            ]
+        ]
     },
     {
         "id": "bbc8971830771b8e",

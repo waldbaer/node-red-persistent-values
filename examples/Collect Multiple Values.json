@@ -22,10 +22,10 @@
             "6095559003933bc8",
             "c656f47ce9c41dba"
         ],
-        "x": 54,
-        "y": 799,
-        "w": 852,
-        "h": 462
+        "x": 74,
+        "y": 79,
+        "w": 1132,
+        "h": 422
     },
     {
         "id": "23502e64849ddc1d",
@@ -33,9 +33,9 @@
         "z": "613529d99b084479",
         "g": "05156e99b1d98425",
         "name": "*Important*: Make config available",
-        "info": "# Workaround for import of example configuration\n\nPersistent values relies on an interactive relation between the\nconfiguration and the concrete presistent values node.\n\nDue to limitations of Node-RED the configuration is not properly\nregister with the backend when importing an example flow.\n\nTherefore the following workaround shall be applied after the\ninitial example import:\n\n 1. Open the edit dialog of any of the presistent value nodes.\n 2. Open the edit dialog if the referenced configuration \"House Config\".\n 3. Press \"Update\".\n \nAfter these steps the drop-down menu of the \"Value\" should be populated with all\nthree configured persistent values. \nThe first drop-down value \"LightOn\" should be selected for the example.",
-        "x": 220,
-        "y": 840,
+        "info": "# Workaround for import of example configuration\n\nPersistent values relies on an interactive relation between the\nconfiguration and the concrete presistent values node.\n\nDue to limitations of Node-RED the configuration is not properly\nregister with the backend when importing an example flow.\n\nTherefore the following workaround shall be applied after the\ninitial example import:\n\n 1. Open the edit dialog of any of the presistent value nodes.\n 2. Open the edit dialog of the referenced configuration.\n 3. Press \"Update\".\n \nAfter these steps the drop-down menu of the \"Value\" should be populated with\nthe configured persistent values.",
+        "x": 240,
+        "y": 120,
         "wires": []
     },
     {
@@ -50,13 +50,19 @@
         "value": "DoorOpen",
         "command": "write",
         "msgProperty": "payload",
+        "dynamicControl": false,
+        "dynamicCommandMsgProperty": "command",
+        "dynamicValueMsgProperty": "topic",
+        "deepCloneValue": false,
+        "outputPreviousValue": false,
+        "outputPreviousValueMsgProperty": "previous_value",
         "collectValues": false,
         "collectValuesMsgProperty": "values",
         "blockIfEnable": false,
         "blockIfRule": "eq",
         "blockIfCompareValue": "true",
-        "x": 490,
-        "y": 960,
+        "x": 550,
+        "y": 240,
         "wires": [
             [],
             []
@@ -74,13 +80,19 @@
         "value": "OpenWindows",
         "command": "write",
         "msgProperty": "payload",
+        "dynamicControl": false,
+        "dynamicCommandMsgProperty": "command",
+        "dynamicValueMsgProperty": "topic",
+        "deepCloneValue": false,
+        "outputPreviousValue": false,
+        "outputPreviousValueMsgProperty": "previous_value",
         "collectValues": false,
         "collectValuesMsgProperty": "values",
         "blockIfEnable": false,
         "blockIfRule": "eq",
         "blockIfCompareValue": "true",
-        "x": 510,
-        "y": 1060,
+        "x": 560,
+        "y": 340,
         "wires": [
             [],
             []
@@ -108,8 +120,8 @@
         "topic": "",
         "payload": "true",
         "payloadType": "bool",
-        "x": 170,
-        "y": 940,
+        "x": 190,
+        "y": 220,
         "wires": [
             [
                 "5d68c0af5d524ffd"
@@ -138,8 +150,8 @@
         "topic": "",
         "payload": "false",
         "payloadType": "bool",
-        "x": 170,
-        "y": 980,
+        "x": 190,
+        "y": 260,
         "wires": [
             [
                 "5d68c0af5d524ffd"
@@ -168,8 +180,8 @@
         "topic": "",
         "payload": "4",
         "payloadType": "num",
-        "x": 190,
-        "y": 1040,
+        "x": 210,
+        "y": 320,
         "wires": [
             [
                 "24e0c021885c319b"
@@ -198,8 +210,8 @@
         "topic": "",
         "payload": "0",
         "payloadType": "num",
-        "x": 190,
-        "y": 1080,
+        "x": 210,
+        "y": 360,
         "wires": [
             [
                 "24e0c021885c319b"
@@ -213,8 +225,8 @@
         "g": "05156e99b1d98425",
         "name": "Update the states (Write)",
         "info": "",
-        "x": 190,
-        "y": 900,
+        "x": 210,
+        "y": 180,
         "wires": []
     },
     {
@@ -224,8 +236,8 @@
         "g": "05156e99b1d98425",
         "name": "Collect all states and assess the overall situation",
         "info": "",
-        "x": 260,
-        "y": 1140,
+        "x": 280,
+        "y": 420,
         "wires": []
     },
     {
@@ -240,13 +252,19 @@
         "value": "DoorOpen",
         "command": "read",
         "msgProperty": "payload",
+        "dynamicControl": false,
+        "dynamicCommandMsgProperty": "command",
+        "dynamicValueMsgProperty": "topic",
+        "deepCloneValue": false,
+        "outputPreviousValue": false,
+        "outputPreviousValueMsgProperty": "previous_value",
         "collectValues": true,
         "collectValuesMsgProperty": "states",
         "blockIfEnable": false,
         "blockIfRule": "eq",
         "blockIfCompareValue": "true",
-        "x": 250,
-        "y": 1220,
+        "x": 550,
+        "y": 460,
         "wires": [
             [
                 "6095559003933bc8"
@@ -276,8 +294,8 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 240,
-        "y": 1180,
+        "x": 260,
+        "y": 460,
         "wires": [
             [
                 "fc487d7a5e510131"
@@ -296,13 +314,19 @@
         "value": "OpenWindows",
         "command": "read",
         "msgProperty": "payload",
+        "dynamicControl": false,
+        "dynamicCommandMsgProperty": "command",
+        "dynamicValueMsgProperty": "topic",
+        "deepCloneValue": false,
+        "outputPreviousValue": false,
+        "outputPreviousValueMsgProperty": "previous_value",
         "collectValues": true,
         "collectValuesMsgProperty": "states",
         "blockIfEnable": false,
         "blockIfRule": "eq",
         "blockIfCompareValue": "true",
-        "x": 540,
-        "y": 1220,
+        "x": 840,
+        "y": 460,
         "wires": [
             [
                 "c656f47ce9c41dba"
@@ -322,8 +346,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 790,
-        "y": 1220,
+        "x": 1090,
+        "y": 460,
         "wires": [
             []
         ]
