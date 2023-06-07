@@ -1,5 +1,5 @@
 module.exports = function(RED) {
-  const logger = require('./logger');
+  const logger = require('../resources/logger');
   const uuid = require('uuid');
   const assert = require('assert'); // nodejs assert module
 
@@ -54,8 +54,8 @@ module.exports = function(RED) {
 
   // ---- Utility functions -----------------------------------------------------------------------
   function reportIncorrectConfiguration(node) {
-    logger.logError(node, `Incorrect or inconsistent configuration of persistent-values node ` +
-                          `'${node.name}' with ID ${node.id}. Skipping further processing.`, node);
+    logger.logError(`Incorrect or inconsistent configuration of persistent-values node ` +
+                    `'${node.name}' with ID ${node.id}. Skipping further processing.`, node);
   }
 
   function buildNodeStatus(node, valueConfig, currentValue, blockFlow) {
@@ -99,13 +99,13 @@ module.exports = function(RED) {
         if (foundValueConfig !== undefined) {
           valueConfig = foundValueConfig;
         } else {
-          logger.logWarning(node, `Persistent value '${msgValue}' dynamically selected with ` +
-                                  `msg.${node.dynamicValueMsgProperty} not found! ` +
-                                  `Falling back to configured value '${valueConfig.name}'. ` +
-                                  `Known persistent values of the configuration '${node.configName}': ` +
-                                  `${node.valueConfigs.map((value) => {
-                                    return value.name;
-                                  }).join(', ')}`);
+          logger.logWarning(`Persistent value '${msgValue}' dynamically selected with ` +
+                            `msg.${node.dynamicValueMsgProperty} not found! ` +
+                            `Falling back to configured value '${valueConfig.name}'. ` +
+                            `Known persistent values of the configuration '${node.configName}': ` +
+                            `${node.valueConfigs.map((value) => {
+                              return value.name;
+                            }).join(', ')}`, node);
         }
       }
     }
@@ -128,10 +128,10 @@ module.exports = function(RED) {
       if (kSupportedCommands.includes(msgCommand)) {
         command = msgCommand;
       } else {
-        logger.logWarning(node, `Command '${msgCommand}' set via msg.${node.dynamicCommandMsgProperty} is not known / supported!` +
-                                ` Falling back to configured command '${command}'.` +
-                                ` Supported commands: ${kSupportedCommands.join(', ')}`
-        , msg);
+        logger.logWarning(`Command '${msgCommand}' set via msg.${node.dynamicCommandMsgProperty} is not known / supported!` +
+                          ` Falling back to configured command '${command}'.` +
+                          ` Supported commands: ${kSupportedCommands.join(', ')}`
+        , node);
       }
     }
     return command;
@@ -200,8 +200,8 @@ module.exports = function(RED) {
         if (RED.util.setMessageProperty(msg, node.collectValuesMsgProperty, {}, true)) {
           collectedValues = RED.util.getMessageProperty(msg, node.collectValuesMsgProperty);
         } else {
-          logger.logWarning(node, `Failed to create Object at msg.${node.collectValuesMsgProperty}. ` +
-                                  `Creation only possible for object types!`);
+          logger.logWarning(`Failed to create Object at msg.${node.collectValuesMsgProperty}. ` +
+                            `Creation only possible for object types!`, node);
           return;
         }
       }
@@ -247,11 +247,11 @@ module.exports = function(RED) {
       } catch (e) { }
       break;
     default:
-      logger.logError(node, `Unsupported or invalid compare value type '${valueConfig.datatype}' configured!`);
+      logger.logError(`Unsupported or invalid compare value type '${valueConfig.datatype}' configured!`, node);
     }
 
     if (convertedValue === undefined) {
-      logger.logError(node, `Failed to convert value '${value}' to expected datatype '${valueConfig.datatype}'!`);
+      logger.logError(`Failed to convert value '${value}' to expected datatype '${valueConfig.datatype}'!`, node);
     }
 
     return convertedValue;
@@ -312,11 +312,11 @@ module.exports = function(RED) {
           blockFlow = !isDeepStrictEqual(currentValue, node.blockIfCompareValue);
           break;
         default:
-          logger.logWarning(node, `Unknown block-if rule '${node.blockIfRule}'. Skipping blocking value check.`);
+          logger.logWarning(`Unknown block-if rule '${node.blockIfRule}'. Skipping blocking value check.`, node);
         }
       } else {
-        logger.logWarning(node, `Type mismatch of block flow values. Type of persistent value: ${typeofCurrentValue}. ` +
-                                `Type of compare value: ${typeofBlockIfCompareValue}. Skipping blocking value check.`);
+        logger.logWarning(`Type mismatch of block flow values. Type of persistent value: ${typeofCurrentValue}. ` +
+                          `Type of compare value: ${typeofBlockIfCompareValue}. Skipping blocking value check.`, node);
       }
     }
 
@@ -421,8 +421,8 @@ module.exports = function(RED) {
       currentValue = deepCloneIfEnabled(node, currentValue);
 
       if (!compareToConfiguredDatatype(valueConfig, currentValue)) {
-        logger.logWarning(node, `Persisted value ${node.configName} / ${valueConfig.name} does not have the configured datatype ` +
-                                `'${valueConfig.datatype}'!`);
+        logger.logWarning(`Persisted value ${node.configName} / ${valueConfig.name} does not have the configured datatype ` +
+                          `'${valueConfig.datatype}'!`, node);
       }
 
       let onChangeMsg = null;
@@ -437,7 +437,7 @@ module.exports = function(RED) {
         // ---- Command: Write ----
         let inputValue = RED.util.getMessageProperty(msg, node.msgProperty);
         if (inputValue === undefined) {
-          logger.logError(node, `Passed msg does not have the configured property '${node.msgProperty}'`, msg);
+          logger.logError(`Passed msg does not have the configured input property '${node.msgProperty}'`, node, msg);
           return;
         }
 
@@ -445,9 +445,9 @@ module.exports = function(RED) {
         inputValue = deepCloneIfEnabled(node, inputValue);
 
         if (!compareToConfiguredDatatype(valueConfig, inputValue)) {
-          logger.logError(node, `Passed value in msg.${node.msgProperty} does not have the configured datatype ` +
-                                `'${valueConfig.datatype}'! ` +
-                                `Persistent value config: ${node.configName} / ${valueConfig.name}`);
+          logger.logError(`Passed value in msg.${node.msgProperty} does not have the configured datatype ` +
+                          `'${valueConfig.datatype}'! ` +
+                          `Persistent value config: ${node.configName} / ${valueConfig.name}`, node, msg);
           return;
         }
 
@@ -465,7 +465,7 @@ module.exports = function(RED) {
         currentValue = inputValue;
       } else {
         // ---- Command: unknown / unsupported ----
-        logger.logError(node, `Unknown or unsupported persistent value command '${command}' used!`);
+        logger.logError(`Unknown or unsupported persistent value command '${command}' used!`, node);
         return null;
       }
 

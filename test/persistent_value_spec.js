@@ -781,7 +781,7 @@ describe('persistent value node', function() {
       const v = helper.getNode(NodeIdPersistentValue);
 
       v.receive({incorrect_msg_property: false});
-      v.error.should.be.calledWithMatch(`Passed msg does not have the configured property '${InputMsgProperty}'`);
+      v.error.should.be.calledWithMatch(`Passed msg does not have the configured input property '${InputMsgProperty}'`);
       v.send.should.have.callCount(0);
       done();
     });

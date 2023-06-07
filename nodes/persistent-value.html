@@ -1,3 +1,4 @@
+<script type="text/javascript" src="resources/@waldbaer/node-red-persistent-values/logger.js"></script>
 <script type="text/javascript">
   // ---- Constants ----
   const httpPathGetContextKey = 'persistentvalues/util/getcontextkey';
@@ -24,7 +25,7 @@
     try {
       config = await $.getJSON(httpPathConfigGet, {id: id});
     } catch (error) {
-      console.log(`[Persistent Values][error]: Failed to get configuration with ID ${id} from backend: ${error}`);
+      logger.logError(`Failed to get configuration with ID ${id} from backend: ${error}`);
     }
     return config;
   }
@@ -34,7 +35,7 @@
     try {
       name = $.getJSON(httpPathGetContextKey, {configName: configName, valueName: valueName});
     } catch (error) {
-      console.log(`[Persistent Values][warn]: Failed to get context key name with ID ${id} from backend: ${error}`);
+      logger.logWarning(`Failed to get context key name with ID ${id} from backend: ${error}`);
     }
     return name;
   }

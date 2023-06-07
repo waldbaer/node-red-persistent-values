@@ -12,6 +12,7 @@
   }
 </style>
 
+<script type="text/javascript" src="resources/@waldbaer/node-red-persistent-values/logger.js"></script>
 <script type='text/javascript'>
   const httpPathConfigGet = 'persistentvalues/config/get';
   const httpPathConfigSave = 'persistentvalues/config/save';
@@ -53,7 +54,7 @@
       try {
         uuid = await $.getJSON(httpPathGenerateUUID);
       } catch (error) {
-        console.log(`[Persistent Values][error]: Failed to generate new UUID via backend: ${error}`);
+        logger.logError(`Failed to generate new UUID via backend: ${error}`);
       }
       return uuid;
     }
@@ -82,7 +83,7 @@
           if (!datatypeAndDefault.typedInput('validate')) {
             const name = value.find('.node-input-value-name').typedInput('value');
             const datatype = datatypeAndDefault.typedInput('type');
-            console.log(`[Persistent Values][error]: Default value of persistent value '${name}' is no valid '${datatype}' datatype.`);
+            logger.logError(`Default value of persistent value '${name}' is no valid '${datatype}' datatype.`);
             result = false;
           }
         }
