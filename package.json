@@ -1,6 +1,6 @@
 {
   "name": "@waldbaer/node-red-persistent-values",
-  "version": "1.3.1",
+  "version": "1.4.0",
   "description": "A user-friendly abstraction of the Node-RED context stores.",
   "author": "waldbaer",
   "license": "MIT",
@@ -14,7 +14,8 @@
     "persistence",
     "persistency",
     "state",
-    "config"
+    "config",
+    "storage"
   ],
   "node-red": {
     "version": ">=1.3.0",

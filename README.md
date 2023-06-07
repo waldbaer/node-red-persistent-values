@@ -30,6 +30,7 @@ Persistent values are typically states, configuration options etc. which shall s
 - Configurable `msg` property for output of previous persisted value.
 - Append the current persistent value as object attribute to an configurable `msg` property.
 - Block further flow processing (no output) if the current value matches with a configured rule.
+- Dynamic override of configured command and value with `msg` properties.
 
 # Installation
 You can install the nodes using the Node-RED 'Manage palette' in the side bar.
