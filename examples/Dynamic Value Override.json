@@ -21,8 +21,8 @@
             "36d9c6bd20d11f1c"
         ],
         "x": 34,
-        "y": 119,
-        "w": 1052,
+        "y": 499,
+        "w": 992,
         "h": 342
     },
     {
@@ -46,7 +46,7 @@
         "to": "",
         "reg": false,
         "x": 430,
-        "y": 340,
+        "y": 720,
         "wires": [
             [
                 "36d9c6bd20d11f1c"
@@ -76,7 +76,7 @@
         "payload": "true",
         "payloadType": "bool",
         "x": 190,
-        "y": 340,
+        "y": 720,
         "wires": [
             [
                 "6a6d8d7c4f68967e"
@@ -92,10 +92,6 @@
         "props": [
             {
                 "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
             }
         ],
         "repeat": "",
@@ -106,7 +102,7 @@
         "payload": "true",
         "payloadType": "bool",
         "x": 180,
-        "y": 260,
+        "y": 640,
         "wires": [
             [
                 "36d9c6bd20d11f1c"
@@ -121,7 +117,7 @@
         "name": "Override value with msg.topic=AirConditionOn (default=true)",
         "info": "",
         "x": 280,
-        "y": 300,
+        "y": 680,
         "wires": []
     },
     {
@@ -132,7 +128,7 @@
         "name": "Read configured value (RadioOn, default false)",
         "info": "",
         "x": 240,
-        "y": 220,
+        "y": 600,
         "wires": []
     },
     {
@@ -143,7 +139,7 @@
         "name": "*Important*: Make config available",
         "info": "# Workaround for import of example configuration\n\nPersistent values relies on an interactive relation between the\nconfiguration and the concrete presistent values node.\n\nDue to limitations of Node-RED the configuration is not properly\nregister with the backend when importing an example flow.\n\nTherefore the following workaround shall be applied after the\ninitial example import:\n\n 1. Open the edit dialog of any of the presistent value nodes.\n 2. Open the edit dialog of the referenced configuration.\n 3. Press \"Update\".\n \nAfter these steps the drop-down menu of the \"Value\" should be populated with all\nthree configured persistent values. \nThe first drop-down value \"RadioOn\" should be selected for the example.",
         "x": 200,
-        "y": 160,
+        "y": 540,
         "wires": []
     },
     {
@@ -160,8 +156,8 @@
         "targetType": "msg",
         "statusVal": "payload",
         "statusType": "auto",
-        "x": 990,
-        "y": 260,
+        "x": 930,
+        "y": 640,
         "wires": []
     },
     {
@@ -172,7 +168,7 @@
         "name": "Fall back to configured value if dynamic override is unknown/invalid ",
         "info": "",
         "x": 300,
-        "y": 380,
+        "y": 760,
         "wires": []
     },
     {
@@ -198,7 +194,7 @@
         "payload": "true",
         "payloadType": "bool",
         "x": 190,
-        "y": 420,
+        "y": 800,
         "wires": [
             [
                 "8a9fbf1ea8412a9b"
@@ -226,7 +222,7 @@
         "to": "",
         "reg": false,
         "x": 430,
-        "y": 420,
+        "y": 800,
         "wires": [
             [
                 "36d9c6bd20d11f1c"
@@ -257,7 +253,7 @@
         "blockIfRule": "eq",
         "blockIfCompareValue": "true",
         "x": 740,
-        "y": 260,
+        "y": 640,
         "wires": [
             [
                 "9148098205d70bb0"
