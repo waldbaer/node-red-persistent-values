@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.4.0] - 2023-06-07
+
+### Features
+- Support dynamic override of configured 'Value' with configurable `msg` property.
+- Support configurable `msg` property for dynamic 'Command' override.
+
 ## [1.3.1] - 2023-04-03
 
 ### Improvements
