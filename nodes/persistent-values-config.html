@@ -27,6 +27,7 @@
   const kDataTypeJson = 'json';
   const kDataTypeDefault = kDataTypeBoolean;
 
+  const kScopeNode = 'node';
   const kScopeFlow = 'flow';
   const kScopeGlobal = 'global';
   const kScopeDefault = kScopeGlobal;
@@ -38,6 +39,10 @@
     {
       value: kScopeFlow,
       label: 'Flow',
+    },
+    {
+      value: kScopeNode,
+      label: 'Node',
     },
   ];
 
@@ -200,7 +205,15 @@
           });
 
         if (!this.values) {
-          this.values = [{name: '', datatype: 'boolean', default: false, scope: 'global', storage: 'file'}];
+          // Set default value if nothing is configured yet
+          this.values = [
+            {
+              name: '',
+              datatype: kDataTypeDefault,
+              default: kDefaultValueDefault,
+              scope: kScopeGlobal,
+              storage: kStorageDefault,
+            }];
         }
 
         for (const value of this.values) {

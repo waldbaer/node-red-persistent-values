@@ -41,13 +41,22 @@ describe('persistent value node', function() {
   }
 
   function getContext(node) {
-    let context = node.context();
-    if (node.valueConfig.scope === 'flow') {
-      context = context.flow;
+    let context = undefined;
+
+    switch (node.valueConfig.scope) {
+    case 'node':
+      context = node.context();
+      break;
+    case 'flow':
+      context = node.context().flow;
+      break;
+    case 'global':
+      context = node.context().global;
+      break;
+    default:
+      context = undefined;
     }
-    if (node.valueConfig.scope === 'global') {
-      context = context.global;
-    }
+
     return context;
   }
 
@@ -84,6 +93,7 @@ describe('persistent value node', function() {
 
   const ScopeGlobal = 'global';
   const ScopeFlow = 'flow';
+  const ScopeNode = 'node';
 
   const StorageDefault = 'default';
   const StorageMemory = 'memory';
@@ -481,6 +491,46 @@ describe('persistent value node', function() {
     });
   });
 
+  it('should read the context value from scope node', function(done) {
+    const flow = structuredClone(FlowNodeAllVariants);
+    flow[0].valueId = ConfigValueIdNumber;
+    flow[1].values[1].scope = ScopeNode;
+
+    helper.load([configNode, valueNode], flow, function() {
+      const v = helper.getNode(NodeIdPersistentValue);
+      const h = helper.getNode(NodeIdHelperCurrentValue);
+
+      const simulatedValue = 23.05;
+      setContextValue(v, simulatedValue);
+
+      h.on(InputFunction, function(msg) {
+        try {
+          msg.should.have.property(PropertyPayload, simulatedValue);
+          done();
+        } catch (err) {
+          done(err);
+        }
+      });
+      v.receive({payload: AnyInputString});
+    });
+  });
+
+  it('should abort if an invalid scope is configured', function(done) {
+    const flow = structuredClone(FlowNodeAllVariants);
+    flow[0].valueId = ConfigValueIdNumber;
+    const kInvalidScopeName = 'invalidScope';
+    flow[1].values[1].scope = kInvalidScopeName;
+
+    helper.load([configNode, valueNode], flow, function() {
+      const v = helper.getNode(NodeIdPersistentValue);
+
+      v.receive({payload: {invalidBigInt: BigInt(123)}});
+      v.error.should.be.calledWithMatch(`Failed to get context scope '${kInvalidScopeName}'`);
+      v.send.should.have.callCount(0);
+      done();
+    });
+  });
+
   it('should read the context value to non-default msg property', function(done) {
     const flow = structuredClone(FlowNodeAllVariants);
     const OutputMsgProperty = 'output.non_default_output_property';
@@ -694,6 +744,34 @@ describe('persistent value node', function() {
 
       setContextValue(v, '');
       const simulatedValue = 'write with scope flow';
+
+      h.on(InputFunction, function(msg) {
+        try {
+          msg.should.have.property(PropertyPayload, simulatedValue);
+
+          const contextValue = getContextValue(v);
+          contextValue.should.equal(simulatedValue);
+          done();
+        } catch (err) {
+          done(err);
+        }
+      });
+      v.receive({payload: simulatedValue});
+    });
+  });
+
+  it('should write to the context storage with scope node', function(done) {
+    const flow = structuredClone(FlowNodeAllVariants);
+    flow[0].valueId = ConfigValueIdString;
+    flow[0].command = CommandWrite;
+    flow[1].values[1].scope = ScopeNode;
+
+    helper.load([configNode, valueNode], flow, function() {
+      const v = helper.getNode(NodeIdPersistentValue);
+      const h = helper.getNode(NodeIdHelperCurrentValue);
+
+      setContextValue(v, '');
+      const simulatedValue = 'write with scope node';
 
       h.on(InputFunction, function(msg) {
         try {

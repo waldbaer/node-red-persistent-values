@@ -19,7 +19,7 @@ configuration and the persistent value to be accessed.
 
 Persistent values are typically states, configuration options etc. which shall survive a restart of Node-RED.
 
-# Key Features
+# Features
 
 - Central configuration of all known persistent values (states, config options, ...).
   - Dataypes: Bool, Number, String, JSON

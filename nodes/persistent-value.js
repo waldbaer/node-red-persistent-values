@@ -138,13 +138,22 @@ module.exports = function(RED) {
   }
 
   function getUsedContext(node, valueConfig) {
-    let context = node.context();
-    if (valueConfig.scope === 'flow') {
-      context = context.flow;
+    let context = undefined;
+
+    switch (valueConfig.scope) {
+    case 'node':
+      context = node.context();
+      break;
+    case 'flow':
+      context = node.context().flow;
+      break;
+    case 'global':
+      context = node.context().global;
+      break;
+    default:
+      context = undefined;
     }
-    if (valueConfig.scope === 'global') {
-      context = context.global;
-    }
+
     return context;
   }
 
@@ -405,6 +414,11 @@ module.exports = function(RED) {
       const valueConfig = determineValueConfig(node, msg);
 
       const context = getUsedContext(node, valueConfig);
+      if (context === undefined) {
+        logger.logError(`Failed to get context scope '${valueConfig.scope}' of ${node.configName} / ${valueConfig.name}`, node);
+        return;
+      }
+
       const contextKey = getContextKey(node, valueConfig);
 
       // Get value from context store
