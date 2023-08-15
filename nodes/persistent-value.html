@@ -97,6 +97,8 @@
             $('#node-input-blockIfCompareValue').typedInput('validate') : true;
         },
       },
+      outputMetaData: {value: false, required: false},
+      outputMetaDataMsgProperty: {value: 'meta', required: false},
     },
 
     label: function() {
@@ -154,6 +156,10 @@
       const blockIfRow = $('#node-input-blockIfRule-row');
       const blockIfRuleField = $('#node-input-blockIfRule');
       const blockIfCompareValueField = $('#node-input-blockIfCompareValue');
+
+      const outputMetaDataField = $('#node-input-outputMetaData');
+      const outputMetaDataRow = $('#node-input-outputMetaData-row');
+      const outputMetaDataMsgPropertyField = $('#node-input-outputMetaDataMsgProperty');
 
       // Initialize all possible types of compare value field. Concrete type dynamically switched based on config.
       blockIfCompareValueField.typedInput({type: 'str', types: ['str', 'num', 'bool', 'json']});
@@ -271,7 +277,7 @@
       dynamicCommandMsgPropertyField.typedInput({types: [{label: 'msg.', value: 'str'}]});
       dynamicValueMsgPropertyField.typedInput({types: [{label: 'msg.', value: 'str'}]});
 
-      // collectValues property
+      // output Previous Value property
       outputPreviousValueField.on('change', function() {
         this.checked ? outputPreviousValueRow.show() : outputPreviousValueRow.hide();
       });
@@ -292,6 +298,12 @@
         blockIfRuleField.append(`<option value="${value}">${label}</option>`);
       }
       blockIfRuleField.val(node.blockIfRule);
+
+      // output MetaData property
+      outputMetaDataField.on('change', function() {
+        this.checked ? outputMetaDataRow.show() : outputMetaDataRow.hide();
+      });
+      outputMetaDataMsgPropertyField.typedInput({types: [{label: 'msg.', value: 'str'}]});
     },
 });
 </script>
@@ -366,6 +378,14 @@
     <div id="node-input-blockIfRule-row" class="hide" style="margin-left: 35px; display: block">
       <select id="node-input-blockIfRule" style="width: 60px; text-align: center;"></select>
       <input type="text" id="node-input-blockIfCompareValue" placeholder="" style="margin-left: 5px; width: calc(100% - 70px)">
+    </div>
+  </div>
+  <div class="form-row">
+    <input type="checkbox" id="node-input-outputMetaData" style="display: inline-block; width: auto; vertical-align: top;">
+    <label for="node-input-outputMetaData" style="width: auto;"> Output Meta Data</label>
+    <div id="node-input-outputMetaData-row" class="hide" style="margin-left: 30px; display: block">
+      <label for="node-input-outputMetaDataMsgProperty" style="width: auto;"> Store to</label>
+      <input type="text" id="node-input-outputMetaDataMsgProperty" placeholder="meta" style="margin-left: 20px;width: calc(100% - 75px)">
     </div>
   </div>
   <div class="form-tips" id="tip-context-variable-row" style="max-width: 100%;" hidden>
@@ -447,6 +467,23 @@
           Example:
           No output is send if current value of the persistent value is <code>23</code> and the 'Block Further Flow Processing'
           rule is configured to <code>== 23</code>.
+      </dd>
+
+      <dt>Output Meta Data</dt>
+      <dd>
+          Add meta data about the persistent value to the configurable <code>msg</code> property.
+          Meta Data Output Format:
+<pre><code>{
+  config: 'Name of config',
+  value: 'Name of value',
+  datatype: 'num',                 // possible: str, num, bool, json
+  default: 23,
+  scope: 'global',                 // possible: global, flow, node
+  storage: 'default',              // possible: all available context store names
+  description: 'description text',
+  command: 'read',                 // possible: read, write
+}
+</code></pre>
       </dd>
     </dl>
 

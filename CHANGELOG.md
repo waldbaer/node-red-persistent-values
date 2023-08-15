@@ -6,7 +6,7 @@ All notable changes to this project will be documented in this file.
 
 ### Features
 - Support possibility to add a description for every configured value.
-- Support scope `Node`.
+- Support scope 'Node'.
 
 ## [1.4.0] - 2023-06-07
 

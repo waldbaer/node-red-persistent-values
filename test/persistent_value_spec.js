@@ -145,6 +145,7 @@ describe('persistent value node', function() {
         default: true,
         scope: ScopeGlobal,
         storage: StorageDefault,
+        description: 'boolean value, default true, scope global, storage default',
       },
       {
         id: ConfigValueIdNumber,
@@ -153,6 +154,7 @@ describe('persistent value node', function() {
         default: 23,
         scope: ScopeGlobal,
         storage: StorageDefault,
+        description: 'number value, default 23, scope global, storage default',
       },
       {
         id: ConfigValueIdString,
@@ -161,6 +163,7 @@ describe('persistent value node', function() {
         default: 'my string default value',
         scope: ScopeGlobal,
         storage: StorageDefault,
+
       },
       {
         id: ConfigValueIdJson,
@@ -926,11 +929,14 @@ describe('persistent value node', function() {
 
   // ==== Dynamic Control - Value override (msg.value) Test ===================
 
-  it('should use the dynamic value override to read the context value', function(done) {
+  it('should use the dynamic value override to read the context value with meta data', function(done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].valueId = ConfigValueIdString;
     flow[0].dynamicControl = true; // enable dynamic controls
     flow[0].dynamicValueMsgProperty = 'override_topic'; // custom msg property
+    flow[0].outputMetaData = true; // enable output of meta data
+    const kMetaDataMsgProperty = 'meta_data';
+    flow[0].outputMetaDataMsgProperty = kMetaDataMsgProperty;
 
     helper.load([configNode, valueNode], flow, function() {
       const v = helper.getNode(NodeIdPersistentValue);
@@ -947,6 +953,19 @@ describe('persistent value node', function() {
       h.on(InputFunction, function(msg) {
         try {
           msg.should.have.property(PropertyPayload, overrideValue);
+
+          // check additional meta data
+          msg.should.have.property(kMetaDataMsgProperty,
+            {
+              config: 'TestConfig',
+              value: overrideValueName,
+              datatype: DataTypeNumber,
+              default: 23,
+              scope: ScopeGlobal,
+              storage: StorageDefault,
+              description: 'number value, default 23, scope global, storage default',
+              command: CommandRead,
+            });
           done();
         } catch (err) {
           done(err);
@@ -958,12 +977,13 @@ describe('persistent value node', function() {
     });
   });
 
-  it('should use the dynamic value override to write the context value', function(done) {
+  it('should use the dynamic value override to write the context value with meta data', function(done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].valueId = ConfigValueIdNumber;
     flow[0].command = CommandWrite;
     flow[0].dynamicControl = true;
     flow[0].dynamicValueMsgProperty = 'override_topic';
+    flow[0].outputMetaData = true;
 
     helper.load([configNode, valueNode], flow, function() {
       const v = helper.getNode(NodeIdPersistentValue);
@@ -979,6 +999,19 @@ describe('persistent value node', function() {
       h.on(InputFunction, function(msg) {
         try {
           msg.should.have.property(PropertyPayload, overrideValue);
+          // check additional meta data
+          msg.should.have.property('meta',
+            {
+              config: 'TestConfig',
+              value: overrideValueName,
+              datatype: DataTypeString,
+              default: 'my string default value',
+              scope: ScopeGlobal,
+              storage: StorageDefault,
+              description: '', // undefined must be converted to empty string
+              command: CommandWrite,
+            });
+
           const contextValue = getContextValue(v, storage, overrideValueName);
           contextValue.should.equal(overrideValue);
           done();

@@ -52,6 +52,9 @@ module.exports = function(RED) {
   const kBlockIfEnableDefault = false;
   const kBlockIfRuleDefault = kBlockIfRuleEq;
 
+  const kOutputMetaDataDefault = false; // Do not output the meta data by default
+  const kOutputMetaDataMsgPropertyDefault = 'meta';
+
   // ---- Utility functions -----------------------------------------------------------------------
   function reportIncorrectConfiguration(node) {
     logger.logError(`Incorrect or inconsistent configuration of persistent-values node ` +
@@ -196,9 +199,25 @@ module.exports = function(RED) {
     }
   }
 
-  function addPreviousValue(node, msg, previousValue) {
+  function outputPreviousValue(node, msg, previousValue) {
     if (node.outputPreviousValue) {
       RED.util.setMessageProperty(msg, node.outputPreviousValueMsgProperty, previousValue, true);
+    }
+  }
+
+  function outputMetaData(node, msg, valueConfig) {
+    if (node.outputMetaData) {
+      const metaData = {
+        config: node.configName,
+        value: valueConfig.name,
+        datatype: valueConfig.datatype,
+        default: valueConfig.default,
+        scope: valueConfig.scope,
+        storage: valueConfig.storage,
+        description: valueConfig.description !== undefined ? valueConfig.description : '',
+        command: node.command,
+      };
+      RED.util.setMessageProperty(msg, node.outputMetaDataMsgProperty, metaData, true);
     }
   }
 
@@ -407,6 +426,9 @@ module.exports = function(RED) {
     node.blockIfCompareValue = node.blockIfEnable ?
       convertToExpectedType(node, node.valueConfig, nodeConfig.blockIfCompareValue) : undefined;
 
+    node.outputMetaData = nodeConfig.outputMetaData || kOutputMetaDataDefault;
+    node.outputMetaDataMsgProperty = nodeConfig.outputMetaDataMsgProperty || kOutputMetaDataMsgPropertyDefault;
+
     node.on('input', function(msg) {
       // ---- Execute ----
 
@@ -465,7 +487,7 @@ module.exports = function(RED) {
           return;
         }
 
-        addPreviousValue(node, msg, currentValue);
+        outputPreviousValue(node, msg, currentValue);
         updateCollectedValues(node, valueConfig, msg, inputValue, currentValue);
 
         // Only write context if:
@@ -489,6 +511,9 @@ module.exports = function(RED) {
         msg = null;
         onChangeMsg = null;
       }
+
+      // -- Output Meta Data --
+      outputMetaData(node, msg, valueConfig);
 
       // ---- Output & Status ----
       buildNodeStatus(node, valueConfig, currentValue, blockFlow);
