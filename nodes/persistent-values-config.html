@@ -4,11 +4,15 @@
   }
 
   .persistent-values-row {
-        flex-wrap: wrap;
+        flex-wrap: nowrap;
   }
 
   .persistent-values-row-item {
     margin: 0px 2px 0px 2px;
+  }
+
+  .persistent-values-row2-item {
+    margin: 4px 2px 0px 2px;
   }
 </style>
 
@@ -52,6 +56,7 @@
     kStorages.push(store);
   }
 
+  const kDescriptionDefault = '';
 
   (function() {
     async function generateUuidFromBackend(id) {
@@ -113,6 +118,7 @@
               name: '',
               datatype: kDataTypeDefault,
               default: kDefaultValueDefault,
+              description: kDescriptionDefault,
               scope: kScopeDefault,
               storage: kStorageDefault,
             }],
@@ -147,13 +153,17 @@
               });
 
               const inputRows = $('<div></div>', {}).appendTo(container);
-              const row = $('<div></div>', {style: 'display: flex;', class: 'persistent-values-row'}).appendTo(inputRows);
+
+              const row1 = $('<div></div>', {style: 'display: flex;', class: 'persistent-values-row'}).appendTo(inputRows);
+              const row2 = $('<div></div>', {style: 'display: flex;', class: 'persistent-values-row'}).appendTo(inputRows);
+
+              // ---- Row 1 ----
 
               // Name
               const nameFieldRowItem = $('<div/>',
-                {style: 'display:flex;flex-grow:1;', class: 'persistent-values-row-item'}).appendTo(row);
+                {style: 'display:flex;flex-grow:1;', class: 'persistent-values-row-item'}).appendTo(row1);
 
-              const nameField = $('<input/>', {class: 'node-input-value-name', type: 'text', width: '180px'})
+              const nameField = $('<input/>', {class: 'node-input-value-name', type: 'text', width: '150px'})
                 .appendTo(nameFieldRowItem)
                 .typedInput({types: [{label: 'Name', value: kDataTypeString}]});
 
@@ -163,15 +173,26 @@
 
               // Datatype + Default value
               const datatypeDefaultFieldRowItem = $('<div/>',
-                {style: 'display:flex;flex-grow:1;', class: 'persistent-values-row-item'}).appendTo(row);
+                {style: 'display:flex;flex-grow:0;', class: 'persistent-values-row-item'}).appendTo(row1);
               const datatypeDefaultField = $('<input/>',
-                {class: 'node-input-value-datatypedefault', type: 'text', width: '120px'})
+                {class: 'node-input-value-datatypedefault', type: 'text', width: '284px'})
                 .appendTo(datatypeDefaultFieldRowItem)
                 .typedInput({default: kDataTypeDefault, types: [kDataTypeString, kDataTypeNumber, kDataTypeBoolean, kDataTypeJson]});
 
+              // ---- Row 2 ----
+
+              // Description
+              const descriptionFieldRowItem = $('<div/>',
+                {style: 'display:flex; flex-grow:1;', class: 'persistent-values-row2-item'}).appendTo(row2);
+              const descriptionField = $('<input/>', {class: 'node-input-value-description', type: 'text', width: '150px'})
+                .appendTo(descriptionFieldRowItem)
+                .typedInput({
+                  types: [{value: 'storage', label: 'Description', showLabel: true}],
+                });
+
               // Scope
               const scopeFieldRowItem = $('<div/>',
-                {style: 'display:flex;flex-grow:0;', class: 'persistent-values-row-item'}).appendTo(row);
+                {style: 'display:flex; flex-grow:0;', class: 'persistent-values-row2-item'}).appendTo(row2);
               const scopeField = $('<input/>',
                 {class: 'node-input-value-scope', type: 'text', width: '130px'})
                 .appendTo(scopeFieldRowItem)
@@ -181,7 +202,7 @@
 
               // Storage
               const storageFieldRowItem = $('<div/>',
-                {style: 'display:flex;flex-grow:0;', class: 'persistent-values-row-item'}).appendTo(row);
+                {style: 'display:flex; flex-grow:0;', class: 'persistent-values-row2-item'}).appendTo(row2);
               const storageField = $('<input/>', {class: 'node-input-value-storage', type: 'text', width: '150px'})
                 .appendTo(storageFieldRowItem)
                 .typedInput({
@@ -193,6 +214,7 @@
               nameField.typedInput('value', value.name || ('Value ' + (index + 1)));
               datatypeDefaultField.typedInput('type', value.datatype || kDataTypeDefault);
               datatypeDefaultField.typedInput('value', (value.default !== undefined) ? value.default : kDefaultValueDefault );
+              descriptionField.typedInput('value', value.description || kDescriptionDefault);
               scopeField.typedInput('value', value.scope || kScopeDefault);
 
               if (!kStorages.includes(value.storage)) {
@@ -206,14 +228,14 @@
 
         if (!this.values) {
           // Set default value if nothing is configured yet
-          this.values = [
-            {
-              name: '',
-              datatype: kDataTypeDefault,
-              default: kDefaultValueDefault,
-              scope: kScopeGlobal,
-              storage: kStorageDefault,
-            }];
+          this.values = [{
+            name: '',
+            datatype: kDataTypeDefault,
+            default: kDefaultValueDefault,
+            description: kDescriptionDefault,
+            scope: kScopeGlobal,
+            storage: kStorageDefault,
+          }];
         }
 
         for (const value of this.values) {
@@ -240,10 +262,15 @@
             defaultValue = (defaultValue === 'true');
           }
 
+          const description = value.find('.node-input-value-description').typedInput('value');
           const scope = value.find('.node-input-value-scope').typedInput('value');
           const storage = value.find('.node-input-value-storage').typedInput('value');
 
-          this.values.push({id: id, name: name, datatype: datatype, default: defaultValue, scope: scope, storage: storage});
+          this.values.push({
+            id: id,
+            name: name, datatype: datatype, default: defaultValue,
+            description: description, scope: scope, storage: storage,
+          });
         }
 
         // Store in server backend. Required for live re-population of state select drop-down

@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 ## [1.5.0] - not yet released
 
 ### Features
+- Support possibility to add a description for every configured value.
 - Support scope `Node`.
 
 ## [1.4.0] - 2023-06-07

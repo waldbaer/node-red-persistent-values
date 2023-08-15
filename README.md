@@ -25,6 +25,7 @@ Persistent values are typically states, configuration options etc. which shall s
   - Dataypes: Bool, Number, String, JSON
   - Default value
   - Scope and Storage type
+  - Optional description
 - Node to read and write a concrete persistent value referenced via the config.
 - Configurable `msg` property for input of new persistent value or output of the current value.
 - Configurable `msg` property for output of previous persisted value.
