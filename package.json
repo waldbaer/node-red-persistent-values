@@ -28,7 +28,7 @@
     "node": ">=8"
   },
   "dependencies": {
-    "uuid": ">=8.3"
+    "uuid": ">=9.0"
   },
   "devDependencies": {
     "eslint": "^8.17.0",
