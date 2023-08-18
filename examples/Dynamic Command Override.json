@@ -298,7 +298,8 @@
                 "datatype": "bool",
                 "default": false,
                 "scope": "global",
-                "storage": "default"
+                "storage": "default",
+                "description": "State of door (open/closed)"
             }
         ]
     }

@@ -258,7 +258,8 @@
                 "datatype": "bool",
                 "default": false,
                 "scope": "global",
-                "storage": "default"
+                "storage": "default",
+                "description": "State of light (on/off)"
             },
             {
                 "id": "645fe1d0-a577-11ed-b30d-21918a802e2e",
@@ -266,7 +267,8 @@
                 "datatype": "num",
                 "default": 0,
                 "scope": "global",
-                "storage": "default"
+                "storage": "default",
+                "description": "Number of open windows"
             },
             {
                 "id": "6465d540-a577-11ed-b30d-21918a802e2e",
@@ -274,7 +276,8 @@
                 "datatype": "str",
                 "default": "Monday, 2023-01-08",
                 "scope": "global",
-                "storage": "default"
+                "storage": "default",
+                "description": "Date of next garbage collection"
             }
         ]
     }

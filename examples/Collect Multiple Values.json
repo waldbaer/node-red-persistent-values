@@ -363,7 +363,8 @@
                 "datatype": "bool",
                 "default": false,
                 "scope": "global",
-                "storage": "default"
+                "storage": "default",
+                "description": "State of door (open/closed)"
             },
             {
                 "id": "c538aaf0-a577-11ed-b30d-21918a802e2e",
@@ -371,7 +372,8 @@
                 "datatype": "num",
                 "default": 3,
                 "scope": "global",
-                "storage": "default"
+                "storage": "default",
+                "description": "Number of open windows"
             }
         ]
     }

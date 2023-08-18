@@ -272,7 +272,8 @@
                 "datatype": "bool",
                 "default": false,
                 "scope": "global",
-                "storage": "default"
+                "storage": "default",
+                "description": "State of radio (on/off)"
             },
             {
                 "id": "f9bed400-03de-11ee-9023-735e6269c0b9",
@@ -280,7 +281,8 @@
                 "datatype": "bool",
                 "default": true,
                 "scope": "global",
-                "storage": "default"
+                "storage": "default",
+                "description": "State of air condition (on/off)"
             }
         ]
     }
