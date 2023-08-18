@@ -2,9 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
-## [1.5.0] - not yet released
+## [1.5.0] - 2023-08-18
 
 ### Features
+- Support output of meta data (config name, default value, description, ...) to configurable `msg` property.
 - Support possibility to add a description for every configured value.
 - Support scope 'Node'.
 
