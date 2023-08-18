@@ -58,7 +58,7 @@ Changes can be followed [here](/CHANGELOG.md).
 
 2) Select the desired configuration and value for read / write operations.
 
-   <img src="doc/images/usage_node_configuration.png" title="Value Node" width="450" />
+   <img src="doc/images/usage_node_configuration.png" title="Value Node" width="460" />
 
 3) Read, write or collect the persistet values in your flows!
 
