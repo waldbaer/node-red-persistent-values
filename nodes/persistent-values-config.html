@@ -315,10 +315,16 @@
 
     <dl class="message-properties">
         <dt>Name <span class="property-type">string</span></dt>
-        <dd> The name of the persistent value. Must be unique within a configuration.</dd>
+        <dd>The name of the persistent value. Must be unique within a configuration.</dd>
 
         <dt>Datatype and Default Value</dt>
-        <dd>The datatype of the persistent value and it's default value. </dd>
+        <dd>The datatype of the persistent value and it's default value.</dd>
+
+        <dt>Description</dt>
+        <dd>
+            Optional value description is provided for documentation purposes only.
+            The description is also available in the meta data if 'Output Meta Data' option is enabled in the node config.
+        </dd>
 
         <dt>Scope</dt>
         <dd>
@@ -327,6 +333,7 @@
             <ul>
               <li>Global - visible to all nodes</li>
               <li>Flow - visible to all nodes on the same flow (or tab in the editor)</li>
+              <li>Node - visible only to the persistent value node itself</li>
             </ul>
         </dd>
 
