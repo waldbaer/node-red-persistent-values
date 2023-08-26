@@ -129,7 +129,13 @@
       const valueSelectField = $('#valueSelect'); // Drop-down
 
       const tipContextVariableRow = $('#tip-context-variable-row');
-      const tipContextVariable = $('#tip-context-variable');
+      const tipContextVariable = $('#form-tip-variablename');
+      const tipDatatype = $('#form-tip-datatype');
+      const tipDefault = $('#form-tip-default');
+      const tipStorage = $('#form-tip-storage');
+      const tipScope = $('#form-tip-scope');
+      const tipDescription = $('#form-tip-description');
+
 
       const commandField = $('#node-input-command');
       const msgPropertyField = $('#node-input-msgProperty');
@@ -183,14 +189,39 @@
 
           // Switch datatype of blockIf compare value input field
           const selectedDatatype = selected.data('datatype');
+
           blockIfCompareValueField.typedInput('type', selectedDatatype);
           blockIfCompareValueField.typedInput('types', [selectedDatatype]);
+          if (selectedDatatype === 'json') {
+            deepCloneFieldRow.show();
+          } else {
+            deepCloneFieldRow.hide();
+          }
 
-          (selectedDatatype === 'json') ? deepCloneFieldRow.show() : deepCloneFieldRow.hide();
-
+          // Fill form tip
           const contextKeyName = await getContextKeyNameFromBackend(node.valuesConfigName, node.value);
           if (contextKeyName !== undefined) {
-            tipContextVariable.html(`Value will be persisted in context variable <code>${contextKeyName}</code>.`);
+            const stringLengthLimit = 95;
+            let selectedDefault = decodeURIComponent(selected.data('default'));
+            if (selectedDefault.length > stringLengthLimit) {
+              selectedDefault = selectedDefault.substr(0, stringLengthLimit) + '...';
+            }
+
+            const selectedScope = selected.data('scope');
+            const selectedStorage = selected.data('storage');
+
+            let selectedDescription = decodeURIComponent(selected.data('description'));
+            if (selectedDescription.length > stringLengthLimit) {
+              selectedDescription = selectedDescription.substr(0, stringLengthLimit) + '...';
+            }
+
+            tipContextVariable.html(contextKeyName);
+            tipDatatype.html(selectedDatatype);
+            tipDefault.html(selectedDefault);
+            tipScope.html(selectedScope);
+            tipStorage.html(selectedStorage);
+            tipDescription.html(selectedDescription);
+
             tipContextVariableRow.show();
           } else {
             tipContextVariableRow.hide();
@@ -222,9 +253,12 @@
           // Re-populate value select widget
           valueSelectField.empty();
           for (const value of backendConfig.values) {
-            const optionText = `${value.name} [${value.datatype}, ${value.storage}]`;
+            const optionText = `${value.name}`;
+            const valueDescription = value.description || '-';
             valueSelectField.append(
-              `<option value="${value.name}" data-id="${value.id}" data-datatype="${value.datatype}">${optionText}</option>`);
+              `<option value="${value.name}" data-id="${value.id}" data-description="${encodeURIComponent(valueDescription)}" ` +
+              `data-datatype="${value.datatype}" data-default="${encodeURIComponent(value.default)}" ` +
+              `data-scope="${value.scope}" data-storage="${value.storage}">${optionText}</option>`);
           }
 
           // Select the previously selected value or set to invalid if the value is not known anymore
@@ -308,6 +342,18 @@
 });
 </script>
 
+<style>
+  .formtip-row {
+    clear: both;
+    margin-bottom: 5px;
+  }
+
+  .formtip-label {
+    float: left;
+    width: 105px
+  }
+</style>
+
 <script type="text/html" data-template-name="persistent value">
   <div class="form-row">
       <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
@@ -389,7 +435,26 @@
     </div>
   </div>
   <div class="form-tips" id="tip-context-variable-row" style="max-width: 100%;" hidden>
-    <i class="fa fa-info" aria-hidden="true"></i> <span id="tip-context-variable"></span>
+    <div><i class="fa fa-info" aria-hidden="true"></i> <i>Selected Value Configuration</i><br/></div>
+    <br/>
+    <div class="formtip-row">
+      <label for="form-tip-variablename" class="formtip-label">Variable:</label><b><div id="form-tip-variablename"></div></b>
+    </div>
+    <div class="formtip-row">
+      <label for="form-tip-datatype" class="formtip-label">Datatype:</label><b><div id="form-tip-datatype"></div></b>
+    </div>
+    <div class="formtip-row">
+      <label for="form-tip-datatype" class="formtip-label">Default:</label><b><div id="form-tip-default"></div></b>
+    </div>
+    <div class="formtip-row">
+      <label for="form-tip-scope" class="formtip-label">Scope:</label><b><div id="form-tip-scope"></div></b>
+    </div>
+    <div class="formtip-row">
+      <label for="form-tip-storage" class="formtip-label">Storage:</label><b><div id="form-tip-storage"></div></b>
+    </div>
+    <div class="formtip-row">
+      <label for="form-tip-description" class="formtip-label">Description:</label><b><div id="form-tip-description"></div></b>
+    </div>
   </div>
 </script>
 
