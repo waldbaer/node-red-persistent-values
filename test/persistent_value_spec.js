@@ -101,6 +101,7 @@ describe('persistent value node', function() {
 
   const CommandRead = 'read';
   const CommandWrite = 'write';
+  const CommandReset = 'reset';
 
   const BlockIfRuleEqual = 'eq';
   const BlockIfRuleNotEqual = 'neq';
@@ -924,6 +925,156 @@ describe('persistent value node', function() {
       v.error.should.be.calledWithMatch(`Passed value in msg.payload does not have the configured datatype 'str'`);
       v.send.should.have.callCount(0);
       done();
+    });
+  });
+
+  // ==== Reset Command =======================================================
+
+  it('should reset a non-default to the configured default value', function(done) {
+    const flow = structuredClone(FlowNodeAllVariants);
+    flow[0].valueId = ConfigValueIdString;
+    flow[0].command = CommandReset;
+    flow[0].outputPreviousValue = true;
+    // Test previous values
+    const previousValueMsgProperty = 'store_previous_value';
+    flow[0].outputPreviousValueMsgProperty = previousValueMsgProperty;
+
+    // Test collect values
+    const CollectedValuesProperty = 'collected_values';
+    flow[0].collectValues = true;
+    flow[0].collectValuesMsgProperty = CollectedValuesProperty;
+
+    helper.load([configNode, valueNode], flow, function() {
+      const c = helper.getNode(NodeIdConfig);
+      const v = helper.getNode(NodeIdPersistentValue);
+      const h = helper.getNode(NodeIdHelperCurrentValue);
+
+      const previousValue = 'previous value before reset';
+      setContextValue(v, previousValue);
+
+      const configuredDefaultValue = c.values[2].default;
+
+      h.on(InputFunction, function(msg) {
+        try {
+          msg.should.have.property(PropertyPayload, configuredDefaultValue);
+          msg.should.have.property(previousValueMsgProperty, previousValue);
+
+          const ExpectedCollectedValues = {};
+          ExpectedCollectedValues[buildContextKeyName(v)] = {
+            current: configuredDefaultValue,
+            previous: previousValue,
+          };
+
+          msg.should.have.property(CollectedValuesProperty, ExpectedCollectedValues);
+
+          const contextValue = getContextValue(v);
+          contextValue.should.be.equal(configuredDefaultValue);
+
+          done();
+        } catch (err) {
+          done(err);
+        }
+      });
+      v.receive({payload: AnyInputString});
+    });
+  });
+
+  it('should reset an empty value to the configured default value and notify onChange', function(done) {
+    const flow = structuredClone(FlowNodeAllVariants);
+    flow[0].valueId = ConfigValueIdNumber;
+    flow[0].command = CommandReset;
+
+    helper.load([configNode, valueNode], flow, function() {
+      const c = helper.getNode(NodeIdConfig);
+      const v = helper.getNode(NodeIdPersistentValue);
+      const h = helper.getNode(NodeIdHelperOnChange);
+
+      const configuredDefaultValue = c.values[1].default;
+      setContextValue(v, undefined);
+
+      h.on(InputFunction, function(msg) {
+        try {
+          msg.should.have.property(PropertyPayload, configuredDefaultValue);
+
+          const contextValue = getContextValue(v);
+          contextValue.should.be.equal(configuredDefaultValue);
+
+          done();
+        } catch (err) {
+          done(err);
+        }
+      });
+      v.receive({payload: AnyInputString});
+    });
+  });
+
+  it('should not reset if value is already the default value', function(done) {
+    const flow = structuredClone(FlowNodeAllVariants);
+    flow[0].valueId = ConfigValueIdString;
+    flow[0].command = CommandWrite;
+    flow[0].dynamicControl = true; // enable dynamic controls
+    flow[0].outputMetaData = true; // enable output of meta data
+    const kMetaDataMsgProperty = 'meta_data';
+    flow[0].outputMetaDataMsgProperty = kMetaDataMsgProperty;
+
+    helper.load([configNode, valueNode], flow, function() {
+      const c = helper.getNode(NodeIdConfig);
+      const v = helper.getNode(NodeIdPersistentValue);
+      const h = helper.getNode(NodeIdHelperCurrentValue);
+
+      const defaultValue = c.values[2].default;
+      setContextValue(v, defaultValue);
+
+      h.on(InputFunction, function(msg) {
+        try {
+          msg.should.have.property(PropertyPayload, defaultValue);
+          msg[kMetaDataMsgProperty].should.have.property('command', CommandReset);
+
+          const contextValue = getContextValue(v);
+          contextValue.should.be.equal(defaultValue);
+
+          done();
+        } catch (err) {
+          done(err);
+        }
+      });
+      v.receive({
+        payload: AnyInputString,
+        command: CommandReset,
+      });
+    });
+  });
+
+  it('should reset to a deep cloned value', function(done) {
+    const flow = structuredClone(FlowNodeAllVariants);
+    flow[0].valueId = ConfigValueIdJson;
+    flow[0].command = CommandReset;
+    flow[0].deepCloneValue = true;
+
+    helper.load([configNode, valueNode], flow, function() {
+      const c = helper.getNode(NodeIdConfig);
+      const v = helper.getNode(NodeIdPersistentValue);
+      const h = helper.getNode(NodeIdHelperCurrentValue);
+      const configuredDefaultValue = JSON.parse(c.values[3].default);
+
+      setContextValue(v, structuredClone(configuredDefaultValue));
+
+      h.on(InputFunction, function(msg) {
+        try {
+          nodejsAssert.deepStrictEqual(msg[PropertyPayload], configuredDefaultValue);
+
+          // Without deep clone the following operation would also modify the context storage
+          msg[PropertyPayload].number += 1;
+
+          const contextValue = getContextValue(v);
+          nodejsAssert.deepStrictEqual(contextValue, configuredDefaultValue);
+
+          done();
+        } catch (err) {
+          done(err);
+        }
+      });
+      v.receive({payload: AnyInputString});
     });
   });
 

@@ -5,10 +5,12 @@
 
   const kCommandRead = 'read';
   const kCommandWrite = 'write';
+  const kCommandReset = 'reset';
   const kCommandDefault = kCommandRead;
   const kCommands = new Map([
     [kCommandRead, 'read'],
     [kCommandWrite, 'write'],
+    [kCommandReset, 'reset'],
   ]);
 
   const kBlockIfRuleEq = 'eq';
@@ -136,35 +138,33 @@
       const tipScope = $('#form-tip-scope');
       const tipDescription = $('#form-tip-description');
 
-
       const commandField = $('#node-input-command');
       const msgPropertyField = $('#node-input-msgProperty');
-      const msgPropertyLabelFieldInput = $('#node-input-msgProperty-label-input');
-      const msgPropertyLabelFieldOutput = $('#node-input-msgProperty-label-output');
+      const msgPropertyLabelField = $('#node-input-msgProperty-label');
 
       const dynamicControlField = $('#node-input-dynamicControl');
-      const dynamicControlRow = $('#node-input-dynamicControl-row');
+      const dynamicControlDetails = $('#node-input-dynamicControl-details');
       const dynamicCommandMsgPropertyField = $('#node-input-dynamicCommandMsgProperty');
       const dynamicValueMsgPropertyField = $('#node-input-dynamicValueMsgProperty');
 
-      const deepCloneField =$('#node-input-node-input-deepCloneValue');
-      const deepCloneFieldRow =$('#node-input-deepCloneValue-row');
+      const deepCloneFieldOption =$('#node-input-deepCloneValue-option');
 
       const outputPreviousValueField = $('#node-input-outputPreviousValue');
-      const outputPreviousValueRow = $('#node-input-outputPreviousValue-row');
+      const outputPreviousValueDetails = $('#node-input-outputPreviousValue-details');
       const outputPreviousValueMsgPropertyField = $('#node-input-outputPreviousValueMsgProperty');
 
+      const collectValuesOption = $('#node-input-collectValues-option');
       const collectValuesField = $('#node-input-collectValues');
-      const collectValuesRow = $('#node-input-collectValues-row');
+      const collectValuesDetails = $('#node-input-collectValues-details');
       const collectValuesMsgPropertyField = $('#node-input-collectValuesMsgProperty');
 
       const blockIfEnableField = $('#node-input-blockIfEnable');
-      const blockIfRow = $('#node-input-blockIfRule-row');
+      const blockIfDetails = $('#node-input-blockIfRule-details');
       const blockIfRuleField = $('#node-input-blockIfRule');
       const blockIfCompareValueField = $('#node-input-blockIfCompareValue');
 
       const outputMetaDataField = $('#node-input-outputMetaData');
-      const outputMetaDataRow = $('#node-input-outputMetaData-row');
+      const outputMetaDataDetails = $('#node-input-outputMetaData-details');
       const outputMetaDataMsgPropertyField = $('#node-input-outputMetaDataMsgProperty');
 
       // Initialize all possible types of compare value field. Concrete type dynamically switched based on config.
@@ -193,9 +193,9 @@
           blockIfCompareValueField.typedInput('type', selectedDatatype);
           blockIfCompareValueField.typedInput('types', [selectedDatatype]);
           if (selectedDatatype === 'json') {
-            deepCloneFieldRow.show();
+            deepCloneFieldOption.show();
           } else {
-            deepCloneFieldRow.hide();
+            deepCloneFieldOption.hide();
           }
 
           // Fill form tip
@@ -233,7 +233,7 @@
           node.value = selected.val();
           valueField.val(node.value);
 
-          deepCloneFieldRow.hide();
+          deepCloneFieldOption.hide();
 
           tipContextVariable.html(``);
           tipContextVariableRow.hide();
@@ -281,7 +281,7 @@
           valueSelectField.removeAttr('disabled');
         } else {
           valueSelectField.attr('disabled', 'disabled');
-          deepCloneFieldRow.hide();
+          deepCloneFieldOption.hide();
           tipContextVariableRow.hide();
         }
       });
@@ -292,12 +292,14 @@
       }
       commandField.val(this.command);
       commandField.on('change', function() {
-        if (commandField.val() === kCommandRead) {
-          msgPropertyLabelFieldInput.hide();
-          msgPropertyLabelFieldOutput.show();
+        if ((commandField.val() === kCommandRead) ||
+          (commandField.val() === kCommandReset)
+        ) {
+          msgPropertyLabelField.html('Output');
+          collectValuesOption.show();
         } else {
-          msgPropertyLabelFieldInput.show();
-          msgPropertyLabelFieldOutput.hide();
+          msgPropertyLabelField.html('Input');
+          collectValuesOption.show();
         }
       });
 
@@ -306,26 +308,26 @@
 
       // dynamicControl property
       dynamicControlField.on('change', function() {
-        this.checked ? dynamicControlRow.show() : dynamicControlRow.hide();
+        this.checked ? dynamicControlDetails.show() : dynamicControlDetails.hide();
       });
       dynamicCommandMsgPropertyField.typedInput({types: [{label: 'msg.', value: 'str'}]});
       dynamicValueMsgPropertyField.typedInput({types: [{label: 'msg.', value: 'str'}]});
 
       // output Previous Value property
       outputPreviousValueField.on('change', function() {
-        this.checked ? outputPreviousValueRow.show() : outputPreviousValueRow.hide();
+        this.checked ? outputPreviousValueDetails.show() : outputPreviousValueDetails.hide();
       });
       outputPreviousValueMsgPropertyField.typedInput({types: [{label: 'msg.', value: 'str'}]});
 
       // collectValues property
       collectValuesField.on('change', function() {
-        this.checked ? collectValuesRow.show() : collectValuesRow.hide();
+        this.checked ? collectValuesDetails.show() : collectValuesDetails.hide();
       });
       collectValuesMsgPropertyField.typedInput({types: [{label: 'msg.', value: 'str'}]});
 
       // block if property
       blockIfEnableField.on('change', function() {
-        this.checked ? blockIfRow.show() : blockIfRow.hide();
+        this.checked ? blockIfDetails.show() : blockIfDetails.hide();
       });
 
       for (const [value, label] of kBlockIfRules) {
@@ -335,7 +337,7 @@
 
       // output MetaData property
       outputMetaDataField.on('change', function() {
-        this.checked ? outputMetaDataRow.show() : outputMetaDataRow.hide();
+        this.checked ? outputMetaDataDetails.show() : outputMetaDataDetails.hide();
       });
       outputMetaDataMsgPropertyField.typedInput({types: [{label: 'msg.', value: 'str'}]});
     },
@@ -378,16 +380,15 @@
     <label for="node-input-command"><i class="fa fa-comment"></i> Command</label>
     <select id="node-input-command" style="width: 70px"></select>
   </div>
-  <div class="form-row">
-    <label id="node-input-msgProperty-label-input" for="node-input-msgProperty"><i class="fa fa-ellipsis-h"></i> Input</label>
-    <label id="node-input-msgProperty-label-output" for="node-input-msgProperty"><i class="fa fa-ellipsis-h"></i> Output</label>
+  <div class="form-row", id="node-input-msgProperty-row">
+    <label for="node-input-msgProperty"><i class="fa fa-ellipsis-h"></i> <span id="node-input-msgProperty-label"></span></label>
     <input type="hidden" id="node-input-msgPropertyType">
     <input type="text" id="node-input-msgProperty" placeholder="payload" style="width: calc(100% - 105px)">
   </div>
   <div class="form-row">
     <input type="checkbox" id="node-input-dynamicControl" style="display: inline-block; width: auto; vertical-align: top;">
     <label for="node-input-dynamicControl" style="width: auto;"> Dynamic Control</label>
-    <div id="node-input-dynamicControl-row" class="hide">
+    <div id="node-input-dynamicControl-details" class="hide">
       <div id="node-input-dynamicCommand-row" class="hide" style="margin-left: 30px; margin-bottom: 12px; display: block">
         <label for="node-input-dynamicCommandMsgProperty" style="width: auto;margin-right: 5px;"> Command</label>
         <input type="text" id="node-input-dynamicCommandMsgProperty" placeholder="command" style="width: calc(100% - 75px)">
@@ -398,30 +399,30 @@
       </div>
     </div>
   </div>
-  <div class="form-row" id="node-input-deepCloneValue-row">
+  <div class="form-row" id="node-input-deepCloneValue-option">
     <input type="checkbox" id="node-input-deepCloneValue" style="display: inline-block; width: auto; vertical-align: top;">
     <label for="node-input-deepCloneValue" style="width: auto;"> Deep Clone Value</label>
   </div>
   <div class="form-row">
     <input type="checkbox" id="node-input-outputPreviousValue" style="display: inline-block; width: auto; vertical-align: top;">
     <label for="node-input-outputPreviousValue" style="width: auto;"> Output the Previous Value</label>
-    <div id="node-input-outputPreviousValue-row" class="hide" style="margin-left: 30px; display: block">
+    <div id="node-input-outputPreviousValue-details" class="hide" style="margin-left: 30px; display: block">
       <label for="node-input-outputPreviousValueMsgProperty" style="width: auto;"> Store to</label>
       <input type="text" id="node-input-outputPreviousValueMsgProperty" placeholder="previous_value" style="margin-left: 20px;width: calc(100% - 75px)">
     </div>
   </div>
-  <div class="form-row">
+  <div class="form-row" id="node-input-collectValues-option">
     <input type="checkbox" id="node-input-collectValues" style="display: inline-block; width: auto; vertical-align: top;">
     <label for="node-input-collectValues" style="width: auto;"> Collect Values</label>
-    <div id="node-input-collectValues-row" class="hide" style="margin-left: 30px; display: block">
+    <div id="node-input-collectValues-details" class="hide" style="margin-left: 30px; display: block">
       <label for="node-input-collectValuesMsgProperty" style="width: auto;"> Store to</label>
       <input type="text" id="node-input-collectValuesMsgProperty" placeholder="values" style="margin-left: 20px;width: calc(100% - 75px)">
     </div>
   </div>
-  <div class="form-row">
+  <div class="form-row" id="node-input-blockIfRule-option">
     <input type="checkbox" id="node-input-blockIfEnable" style="display:inline-block; width: auto; vertical-align:top;">
     <label for="node-input-blockIfEnable" style="width: auto;"> Block Further Flow Processing</label>
-    <div id="node-input-blockIfRule-row" class="hide" style="margin-left: 35px; display: block">
+    <div id="node-input-blockIfRule-details" class="hide" style="margin-left: 35px; display: block">
       <select id="node-input-blockIfRule" style="width: 60px; text-align: center;"></select>
       <input type="text" id="node-input-blockIfCompareValue" placeholder="" style="margin-left: 5px; width: calc(100% - 70px)">
     </div>
@@ -429,7 +430,7 @@
   <div class="form-row">
     <input type="checkbox" id="node-input-outputMetaData" style="display: inline-block; width: auto; vertical-align: top;">
     <label for="node-input-outputMetaData" style="width: auto;"> Output Meta Data</label>
-    <div id="node-input-outputMetaData-row" class="hide" style="margin-left: 30px; display: block">
+    <div id="node-input-outputMetaData-details" class="hide" style="margin-left: 30px; display: block">
       <label for="node-input-outputMetaDataMsgProperty" style="width: auto;"> Store to</label>
       <input type="text" id="node-input-outputMetaDataMsgProperty" placeholder="meta" style="margin-left: 20px;width: calc(100% - 75px)">
     </div>
@@ -469,8 +470,8 @@
       <dt>Config</dt>
       <dd>
           Central configuration defining all known persistent values.
-          In complex and large Node-RED setups it's recommended to separate it
-          into multiple configuration (e.g. per domain, per building, per device, ...).
+          In complex and large Node-RED setups it is recommended to separate it
+          into multiple configurations (e.g. per domain, per building, per device, ...).
       </dd>
 
       <dt>Value</dt>
@@ -478,23 +479,24 @@
           The drop-down is populated by the related configuration.
       </dd>
 
-      <dt>Command <span class="property-type">read | write</span></dt>
+      <dt>Command <span class="property-type">read | write | reset</span></dt>
       <dd>Handling type of the persistent value.
         <ul>
           <li><i>Read:</i> Read (<code>get</code>) the current value of the persistent value from the context store.</li>
           <li><i>Write:</i> Write (<code>set</code>) a new value to the persistent value in the context store.</li>
+          <li><i>Reset:</i> Reset (<code>set</code>) to the configured default value and then read it.</li>
         </ul>
       </dd>
 
       <dt>Input / Output</dt>
-      <dd>Overwrite the message property used for reading or writing the new persistent value.</dd>
+      <dd>Overwrite the message property used for reading or writing the persistent value.</dd>
 
       <dt>Dynamic Control</dt>
       <dd>
           Enable dynamic override of the configured command and/or persistent value with <code>msg</code> properties.
 
           <ul>
-            <li><i>Command:</i> <code>msg</code> property to override the configured command (read or write).
+            <li><i>Command:</i> <code>msg</code> property to override the configured command (`read`, `write` or `reset`).
                 Default property: <code>msg.command</code>.
                 The configured 'Command' is used if the <code>msg</code> property is not set.
             </li>
@@ -517,7 +519,7 @@
       <dt>Output the Previous Value</dt>
       <dd>
           Store the previous persisted value to the configured <code>msg</code> property.
-          Only relevant for command 'write'.
+          Only relevant for command 'write' and 'reset'.
       </dd>
 
       <dt>Collect Values</dt>
@@ -546,7 +548,7 @@
   scope: 'global',                 // possible: global, flow, node
   storage: 'default',              // possible: all available context store names
   description: 'description text',
-  command: 'read'                  // possible: read, write
+  command: 'read'                  // possible: read, write, reset
 }
 </code></pre>
       </dd>
@@ -559,7 +561,7 @@
             New value to be stored in the persistent value. Only necessary if command 'write' is used.
             The default property name <code>msg.payload</code> can be re-configured with the setting 'Input'.
         </dd>
-        <dt class="optional">command <span class="property-type">"read" | "write"</span></dt>
+        <dt class="optional">command <span class="property-type">read | write | reset</span></dt>
         <dd>
             Override the configured command.
             The default property name <code>msg.command</code> can be re-configured with config option 'Dynamic Control' -> 'Command'.
@@ -577,7 +579,7 @@
       <li>current value
         <dl class="message-properties">
             <dt>payload <span class="property-type">configured datatype</span></dt>
-            <dd>Current value read from context store or last value which was written into context store.
+            <dd>Current context store value or last value which was written into context store.
                 The default property name <code>msg.payload</code> can be re-configured with config option 'Input/Output'.
             </dd>
         </dl>
@@ -586,7 +588,7 @@
         <dl class="message-properties">
             <dd>
                 The complete <code>msg</code> if the stored persistent value differed from the previous persistent value.
-                Only relevant if command 'write' is used.
+                Only relevant if command 'write' or 'reset' is used.
             </dd>
         </dl>
       </li>
@@ -611,7 +613,7 @@
       Every read or write operation will then access the same context data with the correct scope and storage type.
 
       The configured command can be overridden by setting <code>msg.command</code> to
-      <code>"read"</code> or <code>"write"</code> (whitespace and case insensitive).
+      <code>"read"</code>, <code>"write"</code> or <code>"reset"</code> (whitespace and case insensitive).
     </p>
 
     <h4>Dynamic Control</h4>
@@ -691,7 +693,6 @@
   ...
 }
 </code></pre>
-
       </p>
 
   <h3>References</h3>

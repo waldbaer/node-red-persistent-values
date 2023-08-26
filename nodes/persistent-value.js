@@ -30,7 +30,8 @@ module.exports = function(RED) {
 
   const kCommandRead = 'read';
   const kCommandWrite = 'write';
-  const kSupportedCommands = [kCommandRead, kCommandWrite];
+  const kCommandReset = 'reset';
+  const kSupportedCommands = [kCommandRead, kCommandWrite, kCommandReset];
 
   const kCommandDefault = kCommandRead;
 
@@ -447,10 +448,11 @@ module.exports = function(RED) {
       let currentValue = getContext(valueConfig, context, contextKey);
 
       // If no value is present in context store, get the default value
+      const defaultValue = getDefaultValue(valueConfig);
       let currentValueIsDefault = false;
       if (currentValue === undefined) {
         currentValueIsDefault = true;
-        currentValue = getDefaultValue(valueConfig);
+        currentValue = defaultValue;
       }
 
       // Deep clone if option is enabled
@@ -499,6 +501,20 @@ module.exports = function(RED) {
         }
 
         currentValue = inputValue;
+      } else if (command === kCommandReset) {
+        // ---- Command: Reset ----
+        const previousValue = currentValue;
+        outputPreviousValue(node, msg, previousValue);
+
+        if (currentValueIsDefault || (!isDeepStrictEqual(currentValue, defaultValue))) {
+          setContext(valueConfig, context, contextKey, defaultValue);
+
+          currentValue = deepCloneIfEnabled(node, defaultValue);
+          onChangeMsg = msg;
+        }
+
+        updateCollectedValues(node, valueConfig, msg, currentValue, previousValue);
+        RED.util.setMessageProperty(msg, node.msgProperty, currentValue, true);
       } else {
         // ---- Command: unknown / unsupported ----
         logger.logError(`Unknown or unsupported persistent value command '${command}' used!`, node);
