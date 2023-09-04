@@ -205,7 +205,7 @@ module.exports = function(RED) {
     }
   }
 
-  function outputMetaData(node, msg, valueConfig) {
+  function outputMetaData(node, msg, valueConfig, command) {
     if (node.outputMetaData) {
       const metaData = {
         config: node.configName,
@@ -215,7 +215,7 @@ module.exports = function(RED) {
         scope: valueConfig.scope,
         storage: valueConfig.storage,
         description: valueConfig.description !== undefined ? valueConfig.description : '',
-        command: node.command,
+        command: command,
       };
       RED.util.setMessageProperty(msg, node.outputMetaDataMsgProperty, metaData, true);
     }
@@ -513,7 +513,7 @@ module.exports = function(RED) {
       }
 
       // -- Output Meta Data --
-      outputMetaData(node, msg, valueConfig);
+      outputMetaData(node, msg, valueConfig, command);
 
       // ---- Output & Status ----
       buildNodeStatus(node, valueConfig, currentValue, blockFlow);

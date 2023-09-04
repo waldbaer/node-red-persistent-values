@@ -980,8 +980,9 @@ describe('persistent value node', function() {
   it('should use the dynamic value override to write the context value with meta data', function(done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].valueId = ConfigValueIdNumber;
-    flow[0].command = CommandWrite;
+    flow[0].command = CommandRead;
     flow[0].dynamicControl = true;
+    flow[0].dynamicCommandMsgProperty = 'cmd'; // Use also dyn. command to test meta data output
     flow[0].dynamicValueMsgProperty = 'override_topic';
     flow[0].outputMetaData = true;
 
@@ -994,7 +995,6 @@ describe('persistent value node', function() {
       const overrideValueName = ConfigValueString;
       const overrideValue = 'dynamic override value';
       const storage = undefined; // use default
-
 
       h.on(InputFunction, function(msg) {
         try {
@@ -1021,6 +1021,7 @@ describe('persistent value node', function() {
       });
       v.receive({
         payload: overrideValue,
+        cmd: CommandWrite,
         override_topic: overrideValueName});
     });
   });
