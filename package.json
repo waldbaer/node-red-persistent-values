@@ -6,7 +6,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/waldbaer/node-red-persistent-values.git"
+    "url": "git+https://github.com/waldbaer/node-red-persistent-values.git"
   },
   "keywords": [
     "node-red",
@@ -56,8 +56,18 @@
     },
     "rules": {
       "require-jsdoc": "off",
-      "max-len": [2, {"code": 140, "tabWidth": 2, "ignoreUrls": true}],
-      "indent": ["error", 2]
+      "max-len": [
+        2,
+        {
+          "code": 140,
+          "tabWidth": 2,
+          "ignoreUrls": true
+        }
+      ],
+      "indent": [
+        "error",
+        2
+      ]
     },
     "plugins": [
       "html"
