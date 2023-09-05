@@ -26,7 +26,7 @@ Persistent values are typically states, configuration options etc. which shall s
   - Default value
   - Scope and Storage type
   - Optional description
-- Node to read and write a concrete persistent value referenced via the config.
+- Node to read, write or reset a concrete persistent value referenced via the config.
 - Configurable `msg` property for input of new persistent value or output of the current value.
 - Configurable `msg` property for output of previous persisted value.
 - Append the current persistent value as object attribute to an configurable `msg` property.
