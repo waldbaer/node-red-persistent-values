@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.6.0] - 2023-09-05
+
+### Features
+- Support command 'reset'.
+
+### Improvements
+- Editor: Form tip now shows all configured value properties.
+
+### Fixes
+- Configured instead of the dynamic command reported in meta data.
+- Add missing documentation for 'description' and scope 'node' properties.
+
+
 ## [1.5.0] - 2023-08-18
 
 ### Features
