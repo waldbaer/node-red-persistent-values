@@ -3,7 +3,7 @@
         "id": "02ec365d88ac27a1",
         "type": "group",
         "z": "613529d99b084479",
-        "name": "node-red-persistent-values example: Read and Write",
+        "name": "node-red-persistent-values example: Read, Write and Reset",
         "style": {
             "label": true
         },
@@ -17,12 +17,16 @@
             "41c998f03b6f3c81",
             "ef2d2459870a5e5d",
             "b81bbc8a37e050dc",
-            "f152cc1d43d5898b"
+            "f152cc1d43d5898b",
+            "f93006a9ab8c0c90",
+            "645309e24bdf493d",
+            "c123a6c45308fbb6",
+            "779ed40c44ea67a2"
         ],
-        "x": 74,
-        "y": 99,
+        "x": 134,
+        "y": 79,
         "w": 712,
-        "h": 322
+        "h": 422
     },
     {
         "id": "6680edf3f52a5ba5",
@@ -47,8 +51,8 @@
         "blockIfEnable": false,
         "blockIfRule": "eq",
         "blockIfCompareValue": "true",
-        "x": 430,
-        "y": 260,
+        "x": 490,
+        "y": 240,
         "wires": [
             [
                 "41c998f03b6f3c81"
@@ -78,8 +82,8 @@
         "topic": "",
         "payload": "true",
         "payloadType": "bool",
-        "x": 200,
-        "y": 240,
+        "x": 260,
+        "y": 220,
         "wires": [
             [
                 "6680edf3f52a5ba5"
@@ -108,8 +112,8 @@
         "topic": "",
         "payload": "false",
         "payloadType": "bool",
-        "x": 200,
-        "y": 280,
+        "x": 260,
+        "y": 260,
         "wires": [
             [
                 "6680edf3f52a5ba5"
@@ -139,8 +143,8 @@
         "blockIfEnable": false,
         "blockIfRule": "eq",
         "blockIfCompareValue": "true",
-        "x": 430,
-        "y": 380,
+        "x": 490,
+        "y": 360,
         "wires": [
             [
                 "2c51a7143fe34691"
@@ -162,8 +166,8 @@
         "targetType": "msg",
         "statusVal": "payload",
         "statusType": "auto",
-        "x": 670,
-        "y": 380,
+        "x": 730,
+        "y": 360,
         "wires": []
     },
     {
@@ -173,8 +177,8 @@
         "g": "02ec365d88ac27a1",
         "name": "Write persistent value",
         "info": "# Write persistent data\n\nUpdate the persistent value by writing any value matching the configured data type.\n\n- The value will be persistet in the Node-RED context with the configured name / scope.\n- The node status shows the last persistet value and infos about the datatype / scope.\n- The `msg.payload` will contain the last persistet value.",
-        "x": 200,
-        "y": 200,
+        "x": 260,
+        "y": 180,
         "wires": []
     },
     {
@@ -191,8 +195,8 @@
         "targetType": "msg",
         "statusVal": "payload",
         "statusType": "auto",
-        "x": 670,
-        "y": 260,
+        "x": 730,
+        "y": 240,
         "wires": []
     },
     {
@@ -202,8 +206,8 @@
         "g": "02ec365d88ac27a1",
         "name": "Read persistent value",
         "info": "# Read persistent data\n\nRead the current persistet value.\n\n- The node status shows the current value read from the Node-RED context\n  and infos about the datatype / scope.\n- The `msg.payload` will contain current value read from the Node-RED context.\n- In `msg.values` the current value will be added to a object with named attributes equal\n  to the persistent value configuration.",
-        "x": 200,
-        "y": 340,
+        "x": 260,
+        "y": 320,
         "wires": []
     },
     {
@@ -228,8 +232,8 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 190,
-        "y": 380,
+        "x": 250,
+        "y": 360,
         "wires": [
             [
                 "ddb2c95fae17feef"
@@ -243,8 +247,101 @@
         "g": "02ec365d88ac27a1",
         "name": "*Important*: Make config available",
         "info": "# Workaround for import of example configuration\n\nPersistent values relies on an interactive relation between the\nconfiguration and the concrete presistent values node.\n\nDue to limitations of Node-RED the configuration is not properly\nregister with the backend when importing an example flow.\n\nTherefore the following workaround shall be applied after the\ninitial example import:\n\n 1. Open the edit dialog of any of the presistent value nodes.\n 2. Open the edit dialog of the referenced configuration.\n 3. Press \"Update\".\n \nAfter these steps the drop-down menu of the \"Value\" should be populated with all\nthree configured persistent values. \nThe first drop-down value \"LightOn\" should be selected for the example.",
-        "x": 240,
-        "y": 140,
+        "x": 300,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "f93006a9ab8c0c90",
+        "type": "comment",
+        "z": "613529d99b084479",
+        "g": "02ec365d88ac27a1",
+        "name": "Reset to default value",
+        "info": "# Read persistent data\n\nRead the current persistet value.\n\n- The node status shows the current value read from the Node-RED context\n  and infos about the datatype / scope.\n- The `msg.payload` will contain current value read from the Node-RED context.\n- In `msg.values` the current value will be added to a object with named attributes equal\n  to the persistent value configuration.",
+        "x": 260,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "645309e24bdf493d",
+        "type": "inject",
+        "z": "613529d99b084479",
+        "g": "02ec365d88ac27a1",
+        "name": "Read",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 250,
+        "y": 460,
+        "wires": [
+            [
+                "c123a6c45308fbb6"
+            ]
+        ]
+    },
+    {
+        "id": "c123a6c45308fbb6",
+        "type": "persistent value",
+        "z": "613529d99b084479",
+        "g": "02ec365d88ac27a1",
+        "name": "",
+        "valuesConfig": "7b534a78d263796e",
+        "valuesConfigName": "House States",
+        "valueId": "6459a040-a577-11ed-b30d-21918a802e2e",
+        "value": "LightOn",
+        "command": "reset",
+        "msgProperty": "payload",
+        "dynamicControl": false,
+        "dynamicCommandMsgProperty": "command",
+        "dynamicValueMsgProperty": "topic",
+        "deepCloneValue": false,
+        "outputPreviousValue": false,
+        "outputPreviousValueMsgProperty": "previous_value",
+        "collectValues": false,
+        "collectValuesMsgProperty": "values",
+        "blockIfEnable": false,
+        "blockIfRule": "eq",
+        "blockIfCompareValue": "true",
+        "outputMetaData": false,
+        "outputMetaDataMsgProperty": "",
+        "x": 490,
+        "y": 460,
+        "wires": [
+            [
+                "779ed40c44ea67a2"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "779ed40c44ea67a2",
+        "type": "debug",
+        "z": "613529d99b084479",
+        "g": "02ec365d88ac27a1",
+        "name": "Reset Status",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "payload",
+        "statusType": "auto",
+        "x": 730,
+        "y": 460,
         "wires": []
     },
     {
@@ -257,27 +354,27 @@
                 "name": "LightOn",
                 "datatype": "bool",
                 "default": false,
+                "description": "State of light (on/off)",
                 "scope": "global",
-                "storage": "default",
-                "description": "State of light (on/off)"
+                "storage": "default"
             },
             {
                 "id": "645fe1d0-a577-11ed-b30d-21918a802e2e",
                 "name": "OpenWindows",
                 "datatype": "num",
                 "default": 0,
+                "description": "Number of open windows",
                 "scope": "global",
-                "storage": "default",
-                "description": "Number of open windows"
+                "storage": "default"
             },
             {
                 "id": "6465d540-a577-11ed-b30d-21918a802e2e",
                 "name": "NextGarbageCollection",
                 "datatype": "str",
                 "default": "Monday, 2023-01-08",
+                "description": "Date of next garbage collection",
                 "scope": "global",
-                "storage": "default",
-                "description": "Date of next garbage collection"
+                "storage": "default"
             }
         ]
     }
