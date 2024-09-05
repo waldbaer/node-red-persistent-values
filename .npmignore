@@ -1,3 +1,4 @@
+# ---- Same as .gitignore ----
 # npm
 package-lock.json
 
@@ -13,3 +14,10 @@ coverage
 
 # Binaries
 *.tgz
+
+# ---- In addition to .gitignore ----
+# github
+.github
+
+# Tests
+test/
