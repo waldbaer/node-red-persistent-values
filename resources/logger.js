@@ -18,4 +18,5 @@
       console.error(`[${LoggerNodeName}] ${message}`);
     }
   };
+// eslint-disable-next-line no-invalid-this
 })(/* istanbul ignore next */ typeof exports === 'undefined' ? this['logger'] = {} : exports);

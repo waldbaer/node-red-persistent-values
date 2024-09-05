@@ -173,6 +173,7 @@
       const node = this; // Store access to node configuration itself
 
       valueSelectField.on('change', async function() {
+        // eslint-disable-next-line no-invalid-this
         const selected = $(this).find('option:selected');
 
         // Ignore re-population change
@@ -242,6 +243,7 @@
 
       // Initially change triggered by editor loaded, later with every user interaction.
       valuesConfigField.on('change', async function() {
+        // eslint-disable-next-line no-invalid-this
         const selectedConfigId = $(this).val();
 
         if (selectedConfigId !== '_ADD_') { // Skip if "add new config" is selected
@@ -308,6 +310,7 @@
 
       // dynamicControl property
       dynamicControlField.on('change', function() {
+        // eslint-disable-next-line no-invalid-this
         this.checked ? dynamicControlDetails.show() : dynamicControlDetails.hide();
       });
       dynamicCommandMsgPropertyField.typedInput({types: [{label: 'msg.', value: 'str'}]});
@@ -315,18 +318,21 @@
 
       // output Previous Value property
       outputPreviousValueField.on('change', function() {
+        // eslint-disable-next-line no-invalid-this
         this.checked ? outputPreviousValueDetails.show() : outputPreviousValueDetails.hide();
       });
       outputPreviousValueMsgPropertyField.typedInput({types: [{label: 'msg.', value: 'str'}]});
 
       // collectValues property
       collectValuesField.on('change', function() {
+        // eslint-disable-next-line no-invalid-this
         this.checked ? collectValuesDetails.show() : collectValuesDetails.hide();
       });
       collectValuesMsgPropertyField.typedInput({types: [{label: 'msg.', value: 'str'}]});
 
       // block if property
       blockIfEnableField.on('change', function() {
+        // eslint-disable-next-line no-invalid-this
         this.checked ? blockIfDetails.show() : blockIfDetails.hide();
       });
 
@@ -337,6 +343,7 @@
 
       // output MetaData property
       outputMetaDataField.on('change', function() {
+        // eslint-disable-next-line no-invalid-this
         this.checked ? outputMetaDataDetails.show() : outputMetaDataDetails.hide();
       });
       outputMetaDataMsgPropertyField.typedInput({types: [{label: 'msg.', value: 'str'}]});

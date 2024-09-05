@@ -372,8 +372,9 @@ module.exports = function(RED) {
 
   // ---- Node main -------------------------------------------------------------------------------
   RED.nodes.registerType('persistent value', function(nodeConfig) {
-    RED.nodes.createNode(this, nodeConfig);
+    // eslint-disable-next-line no-invalid-this
     const node = this;
+    RED.nodes.createNode(node, nodeConfig);
 
     // ---- Get node settings and referenced config properties ----
 

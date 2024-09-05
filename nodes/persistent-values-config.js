@@ -7,13 +7,15 @@ module.exports = function(RED) {
 
   // ---- Node main -------------------------------------------------------------------------------
   RED.nodes.registerType('persistent values config', function(config) {
-    RED.nodes.createNode(this, config);
+    // eslint-disable-next-line no-invalid-this
+    const node = this;
+    RED.nodes.createNode(node, config);
 
-    this.name = config.name;
-    this.values = config.values;
+    node.name = config.name;
+    node.values = config.values;
 
     // Store config in global configs object for HTTP query API.
-    configs[this.id] = {name: config.name, values: config.values};
+    configs[node.id] = {name: config.name, values: config.values};
   });
 
   // https://stackoverflow.com/questions/37265230/node-red-get-configuration-node-value-in-admin-ui

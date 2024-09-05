@@ -321,12 +321,11 @@ describe('persistent values config backend node', function() {
       helper.request()
         .get(httpPathGenerateUUID)
         .expect(function(res) {
-          const resp_uuid = res._body;
-          uuid.validate(resp_uuid).should.be.true;
+          const respUuid = res._body;
+          uuid.validate(respUuid).should.be.true;
         })
         .expect(200)
         .end(done);
     });
   });
-
 });
