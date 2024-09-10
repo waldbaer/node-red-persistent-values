@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.6.1] - 2024-09-10
+
+### Improvements
+- Improved 'Reset' command example.
+- Updated dependencies.
+- Development infrastructure (lint, test coverage, npm).
+
 ## [1.6.0] - 2023-09-05
 
 ### Features

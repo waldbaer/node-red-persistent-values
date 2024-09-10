@@ -11,6 +11,7 @@
 //   - https://sinonjs.org/releases/latest/assertions/
 //   - https://www.npmjs.com/package/supertest
 // --------------------------------------------------------------------------------------------------------------------
+require('node-red-node-test-helper');
 const sinon = require('sinon');
 const logger = require('../resources/logger.js');
 
