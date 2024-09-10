@@ -38,10 +38,11 @@
     "eslint-plugin-n": "^17.10.2",
     "eslint-plugin-promise": "^7.1.0",
     "mocha": "^10.7.3",
-    "nyc": "^17.0.0",
+    "mocha-suppress-logs": "^0.5.1",
     "node-red": "^4.0.2",
+    "node-red-dev": "^0.1.6",
     "node-red-node-test-helper": "^0.3.4",
-    "node-red-dev": "^0.1.6"
+    "nyc": "^17.0.0"
   },
   "eslintConfig": {
     "env": {
@@ -74,10 +75,18 @@
       "html"
     ]
   },
+  "nyc": {
+    "check-coverage": true,
+    "reporter": ["lcov", "text", "text-summary"],
+    "branches": 100,
+    "lines": 100,
+    "functions": 100,
+    "statements": 100
+  },
   "scripts": {
     "test": "mocha \"test/**/*_spec.js\"",
-    "coverage": "nyc --reporter=lcov npm test",
-    "coverage_local": "nyc npm test",
+    "coverage": "nyc npm test",
+    "lint": "eslint --ext .js,.html nodes resources test",
     "node-red-dev-validate": "node-red-dev validate -p ."
   }
 }
