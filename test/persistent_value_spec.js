@@ -672,8 +672,8 @@ describe('persistent value node', function() {
       });
       v.receive({payload: simulatedValue});
       v.status.should.be.calledWithMatch({
-        fill: 'red', shape: 'dot',
-        text: `${simulatedValue} [str,global,file]`,
+        fill: 'green', shape: 'dot',
+        text: `${simulatedValue} [string,global,file]`,
       });
     });
   });
@@ -716,8 +716,9 @@ describe('persistent value node', function() {
           done(err);
         }
       });
+
       v.receive({payload: pureJsonObject});
-      v.error.callCount.should.be(0);
+      v.error.should.have.callCount(0);
     });
   });
 

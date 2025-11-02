@@ -83,9 +83,19 @@ npm install --save-dev
 # Check linter
 npm run lint
 
-# Run tests
+# Run all tests incl. coverage check
 npm run coverage
+
+# Run subset of tests
+npm run test -- -g "<filter>"
 
 # Node-RED package verification
 npm run node-red-dev-validate
+```
+
+### Update dependencies to latest versions
+
+```
+# Show outdated dependencies
+npm outdated
 ```
