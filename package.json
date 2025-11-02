@@ -28,21 +28,21 @@
     "node": ">=8"
   },
   "dependencies": {
-    "uuid": ">=10.0"
+    "uuid": "10.0"
   },
   "devDependencies": {
-    "eslint": "^8.57.0",
-    "eslint-config-google": "^0.14.0",
-    "eslint-plugin-html": "^8.1.1",
-    "eslint-plugin-import": "^2.30.0",
-    "eslint-plugin-n": "^17.10.2",
-    "eslint-plugin-promise": "^7.1.0",
-    "mocha": "^10.7.3",
-    "mocha-suppress-logs": "^0.5.1",
-    "node-red": "^4.0.2",
-    "node-red-dev": "^0.1.6",
-    "node-red-node-test-helper": "^0.3.4",
-    "nyc": "^17.0.0"
+    "eslint": "8.57.0",
+    "eslint-config-google": "0.14.0",
+    "eslint-plugin-html": "8.1.1",
+    "eslint-plugin-import": "2.30.0",
+    "eslint-plugin-n": "17.10.2",
+    "eslint-plugin-promise": "7.1.0",
+    "mocha": "10.7.3",
+    "mocha-suppress-logs": "0.5.1",
+    "node-red": "4.0.2",
+    "node-red-dev": "0.1.6",
+    "node-red-node-test-helper": "0.3.4",
+    "nyc": "17.0.0"
   },
   "eslintConfig": {
     "env": {

@@ -67,3 +67,25 @@ Changes can be followed [here](/CHANGELOG.md).
 
 ## Examples
 Import into Node-RED instance via Node-RED -> Import -> Examples.
+
+
+# Development
+
+## Setup environment
+
+```
+npm install --save-dev
+```
+
+### Format / Linter / Tests
+
+```
+# Check linter
+npm run lint
+
+# Run tests
+npm run coverage
+
+# Node-RED package verification
+npm run node-red-dev-validate
+```
