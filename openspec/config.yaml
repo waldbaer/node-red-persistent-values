@@ -1,0 +1,69 @@
+schema: spec-driven
+
+context: |
+  ## Project: node-red-persistent-values
+
+  A Node-RED plugin (npm package `@waldbaer/node-red-persistent-values`) that puts a
+  user-friendly abstraction on top of the Node-RED context stores. Instead of addressing
+  the context with free-form string keys, all persisted values are declared once in a
+  central configuration node and referenced from value nodes.
+
+  ## Package layout
+
+  - `nodes/persistent-values-config.js|.html` — configuration node (`persistent values config`):
+    runtime registration + editor UI + `RED.httpAdmin` API used by the editor.
+  - `nodes/persistent-value.js|.html` — value node (`persistent value`): the runtime that
+    reads/writes/resets a configured value, plus its editor UI.
+  - `resources/logger.js` — logger shared by backend (Node.js) and editor (browser),
+    loaded in the browser via `RED.plugins`/script tag, in Node.js via `require`.
+  - `test/*_spec.js` — mocha tests using `node-red-node-test-helper`.
+  - `examples/*.json` — flows exposed through Node-RED → Import → Examples.
+
+  ## Tech stack & constraints
+
+  - Plain CommonJS JavaScript. No build step, no transpiler, no TypeScript, no bundler.
+  - Declared support: Node-RED `>=1.3.0`, Node.js `>=8` (`engines` in package.json).
+  - Exactly one runtime dependency: `uuid`. Everything else is a devDependency.
+  - Editor code is jQuery + the Node-RED editor API (`RED.nodes.registerType`, `typedInput`,
+    `editableList`) inside `<script>` blocks in the `.html` files.
+  - Linting: eslint with `eslint-config-google` + `eslint-plugin-html`, 2-space indent,
+    max line length 140. `npm run lint` must stay clean.
+  - Coverage gates are hard: nyc enforces 100% branches, lines, functions and statements.
+    `npm run coverage` must stay green.
+  - Package verification: `npm run node-red-dev-validate`.
+
+  ## Runtime conventions
+
+  - Constants are module-level `const k<Name>` (e.g. `kCommandRead`, `kStorageDefault`).
+  - All user-facing diagnostics go through `resources/logger.js`, never `console.*`
+    directly in the runtime, so messages carry the `[Persistent Values]` prefix and are
+    routed to the Node-RED debug sidebar.
+  - Every node option is read as `nodeConfig.<option> || k<Option>Default`, which means an
+    option that is absent, empty or `false` falls back to the default.
+  - The value node has one input and two outputs: output 1 always carries the current
+    value, output 2 only fires when the context store was actually written ("on change").
+
+  ## Backward compatibility
+
+  Flows and persisted context data of released versions must keep working:
+  - Context keys are `<config name>_<value name>` with spaces replaced by `_`. Changing
+    the derivation orphans every already-persisted value in user installations.
+  - Values are referenced by UUID since 1.1.1; reference by name (<= 1.1.0) must stay
+    supported as a deprecated fallback.
+  - Dynamic command override works without `dynamicControl` being enabled (1.x behaviour).
+    Aligning it with the dynamic value override is a breaking 2.x change.
+
+# Per-artifact rules
+rules:
+  proposal:
+    - No new runtime dependency without explicit justification — the package ships with `uuid` only.
+    - Existing flows and already-persisted context data must keep working (see the backward
+      compatibility notes above); call out explicitly if a change breaks them.
+    - Node-RED >= 1.3.0 / Node.js >= 8 must remain supported unless the proposal raises them on purpose.
+  tasks:
+    - List runtime tasks (`nodes/*.js`) before editor tasks (`nodes/*.html`).
+    - Every new branch needs a test — nyc enforces 100% branch coverage and the build fails otherwise.
+    - User-visible changes need a `CHANGELOG.md` entry and, if they change usage, a `README.md` update.
+    - The node's own help text lives in the `<script type="text/html" data-help-name=...>` block
+      of the `.html` file and must be updated together with the behaviour.
+    - Every task must be doable in under 2 hours.
