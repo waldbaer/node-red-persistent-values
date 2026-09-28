@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Fixes
+- Dynamic value override: the runtime fallback for the `msg` property was `msg.value`
+  instead of the documented `msg.topic`.
+
 ## [1.6.1] - 2024-09-10
 
 ### Improvements
@@ -111,7 +117,7 @@ Initial version of persistent values!
 ### Features
 
 - Central configuration of all known persistent values (states, config options, ...).
-  - Dataypes: Bool, Number, String
+  - Datatypes: Bool, Number, String
   - Default value
   - Scope and Storage type
 - Node to read and write a concrete persistent value referenced via the config.
