@@ -1207,9 +1207,10 @@ describe('persistent value node', function() {
           done(err);
         }
       });
+      // extra test: no dynamicValueMsgProperty configured -> the default property must be used.
       v.receive({
         payload: AnyInputString,
-        value: invalidOverrideValue,
+        topic: invalidOverrideValue,
       });
     });
   });
@@ -1386,7 +1387,7 @@ describe('persistent value node', function() {
           const msgValue = msg[PropertyPayload];
           nodejsAssert.deepStrictEqual(msgValue, contextValue);
 
-          // without deep clone option the following msg propery modification
+          // without deep clone option the following msg property modification
           // would also modify the context store.
           msgValue.boolean = !contextValue.boolean;
 
@@ -1910,15 +1911,15 @@ describe('persistent value node', function() {
       const testConfigName = 'test/ Configuration';
       const testPersistedValueName = 'Persisted~Value';
 
-      let expectedContexKey = testConfigName + '_' + testPersistedValueName;
-      expectedContexKey = expectedContexKey.replace(/ /g, '_');
+      let expectedContextKey = testConfigName + '_' + testPersistedValueName;
+      expectedContextKey = expectedContextKey.replace(/ /g, '_');
 
       helper.request()
         .get(httpPathGetContextKey)
         .query({configName: testConfigName, valueName: testPersistedValueName})
         .expect(function(res) {
           const contextKeyName = res._body;
-          contextKeyName.should.be.equal(expectedContexKey);
+          contextKeyName.should.be.equal(expectedContextKey);
         })
         .expect(200)
         .end(done);

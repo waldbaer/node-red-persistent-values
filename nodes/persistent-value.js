@@ -39,7 +39,7 @@ module.exports = function(RED) {
 
   const kDynamicControlsDefault = false;
   const kDynamicCommandMsgPropertyDefault = 'command';
-  const kDynamicValueMsgPropertyDefault = 'value';
+  const kDynamicValueMsgPropertyDefault = 'topic';
 
   const kOutputPreviousValueDefault = false; // Do not output the previous value by default
   const kOutputPreviousValueMsgProperty = 'previous_value';
@@ -121,7 +121,7 @@ module.exports = function(RED) {
 
     // Due to backward compatibility with 1.x versions the node.dynamicControl
     // is not necessary to allow dynamic command override.
-    // With breaking change 2.x the behaviour will be aligned with dynamic value override.
+    // With breaking change 2.x the behavior will be aligned with dynamic value override.
 
     // Command overwrite by msg.command property?
     let msgCommand = RED.util.getMessageProperty(msg, node.dynamicCommandMsgProperty);
