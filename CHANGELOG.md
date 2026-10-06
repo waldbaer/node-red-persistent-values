@@ -8,6 +8,8 @@ All notable changes to this project will be documented in this file.
 - Dynamic value override: the runtime fallback for the `msg` property was `msg.value`
   instead of the documented `msg.topic`.
 
+- Collect Values + Output Previous Value: 'read' collects entry with previous: undefined (#29).
+
 ## [1.6.1] - 2024-09-10
 
 ### Improvements

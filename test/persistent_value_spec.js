@@ -1581,6 +1581,35 @@ describe('persistent value node', function() {
     });
   });
 
+  it('should collect the read value without a previous member', function(done) {
+    const flow = structuredClone(FlowNodeAllVariants);
+    flow[0].valueId = ConfigValueIdBoolean;
+    const CollectedValuesProperty = 'collected_values';
+    flow[0].collectValues = true;
+    flow[0].collectValuesMsgProperty = CollectedValuesProperty;
+    flow[0].outputPreviousValue = true;
+
+    helper.load([configNode, valueNode], flow, function() {
+      const v = helper.getNode(NodeIdPersistentValue);
+      const h = helper.getNode(NodeIdHelperCurrentValue);
+
+      const simulatedValue = false;
+      setContextValue(v, simulatedValue);
+
+      h.on(InputFunction, function(msg) {
+        try {
+          const ExpectedCollectedValues = {};
+          ExpectedCollectedValues[buildContextKeyName(v)] = {current: simulatedValue};
+          nodejsAssert.deepStrictEqual(msg[CollectedValuesProperty], ExpectedCollectedValues);
+          done();
+        } catch (err) {
+          done(err);
+        }
+      });
+      v.receive({payload: AnyInputString});
+    });
+  });
+
   // ==== Blocker Further Flow Processing Tests ===============================
 
   it('should block further processing if equal rule matches to boolean value', function(done) {

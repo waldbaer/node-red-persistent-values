@@ -222,7 +222,7 @@ module.exports = function(RED) {
     }
   }
 
-  function updateCollectedValues(node, valueConfig, msg, currentValue, previousValue) {
+  function updateCollectedValues(node, valueConfig, msg, currentValue, previousValue, command) {
     if (node.collectValues) {
       let collectedValues = RED.util.getMessageProperty(msg, node.collectValuesMsgProperty);
       if ((collectedValues === undefined) || (typeof collectedValues !== 'object')) {
@@ -237,10 +237,11 @@ module.exports = function(RED) {
 
       const contextKey = getContextKey(node, valueConfig);
       if (node.outputPreviousValue) {
-        collectedValues[contextKey] = {
-          current: currentValue,
-          previous: previousValue,
-        };
+        const collectedValue = {current: currentValue};
+        if (command !== kCommandRead) { // A read has no previous value to collect
+          collectedValue.previous = previousValue;
+        }
+        collectedValues[contextKey] = collectedValue;
       } else {
         collectedValues[contextKey] = currentValue;
       }
@@ -471,7 +472,7 @@ module.exports = function(RED) {
       if (command === kCommandRead) {
         // ---- Command: Read ----
         RED.util.setMessageProperty(msg, node.msgProperty, currentValue, true);
-        updateCollectedValues(node, valueConfig, msg, currentValue);
+        updateCollectedValues(node, valueConfig, msg, currentValue, undefined, command);
       } else if (command === kCommandWrite) {
         // ---- Command: Write ----
         let inputValue = RED.util.getMessageProperty(msg, node.msgProperty);
@@ -491,7 +492,7 @@ module.exports = function(RED) {
         }
 
         outputPreviousValue(node, msg, currentValue);
-        updateCollectedValues(node, valueConfig, msg, inputValue, currentValue);
+        updateCollectedValues(node, valueConfig, msg, inputValue, currentValue, command);
 
         // Only write context if:
         //  - current value is a default value (allow writing of input values equal to default)
@@ -514,7 +515,7 @@ module.exports = function(RED) {
           onChangeMsg = msg;
         }
 
-        updateCollectedValues(node, valueConfig, msg, currentValue, previousValue);
+        updateCollectedValues(node, valueConfig, msg, currentValue, previousValue, command);
         RED.util.setMessageProperty(msg, node.msgProperty, currentValue, true);
       } else {
         // ---- Command: unknown / unsupported ----
