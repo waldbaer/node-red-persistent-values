@@ -403,11 +403,16 @@ module.exports = function(RED) {
     node.valueConfigs = configNode.values; // All available value configurations
     if (node.valueId) {
       node.valueConfig = node.valueConfigs.find((value) => value.id === node.valueId);
-      node.valueName = node.valueConfig.name; // Update name again in case of inconsistent value / ID config
     } else {
       // Until version 1.1.0 no ID was existing for every value. Therefore search via value name.
       node.valueConfig = node.valueConfigs.find((value) => value.name === node.valueName);
     }
+    // Selected value must exist in the configuration
+    if (node.valueConfig === undefined) {
+      reportIncorrectConfiguration(node);
+      return null;
+    }
+    node.valueName = node.valueConfig.name; // Update name again in case of inconsistent value / ID config
 
     node.command = nodeConfig.command || kCommandDefault;
     node.msgProperty = nodeConfig.msgProperty || kMsgPropertyDefault;

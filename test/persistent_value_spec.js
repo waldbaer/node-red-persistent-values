@@ -252,6 +252,33 @@ describe('persistent value node', function() {
     });
   });
 
+  it('should be not loaded with a selected value UUID missing in the configuration', function(done) {
+    const flow = structuredClone(FlowNodeAllVariants);
+    flow[0].valueId = 'de9c4df0-a591-11ed-b2b6-471886667bd8'; // Valid UUID not used by the configuration
+
+    helper.load([configNode, valueNode], flow, function() {
+      const pv = helper.getNode(NodeIdPersistentValue);
+      pv.should.have.property('_inputCallback', null);
+      pv.should.have.property('_inputCallbacks', null);
+      pv.error.should.be.calledWithMatch('Incorrect or inconsistent configuration');
+      done();
+    });
+  });
+
+  it('should be not loaded with a deprecated selected value name missing in the configuration', function(done) {
+    const flow = structuredClone(FlowNodeAllVariants);
+    delete flow[0].valueId; // No value selected by ID
+    flow[0].value = 'unknown value'; // Value name not used by the configuration
+
+    helper.load([configNode, valueNode], flow, function() {
+      const pv = helper.getNode(NodeIdPersistentValue);
+      pv.should.have.property('_inputCallback', null);
+      pv.should.have.property('_inputCallbacks', null);
+      pv.error.should.be.calledWithMatch('Incorrect or inconsistent configuration');
+      done();
+    });
+  });
+
   it('should be not loaded without selected value UUID and without selected value name', function(done) {
     const flow = structuredClone(FlowNodeAllVariants);
     delete flow[0].valueId; // No value selected by ID
