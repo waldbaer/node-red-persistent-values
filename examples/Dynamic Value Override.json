@@ -13,17 +13,16 @@
             "62a48044a14d94cb",
             "39b8a226fe9bbf83",
             "e297454e0e5a1e3f",
-            "48d361970c98ec39",
             "9148098205d70bb0",
             "093be5a9c98417e9",
             "f7745348a352416c",
             "8a9fbf1ea8412a9b",
             "36d9c6bd20d11f1c"
         ],
-        "x": 34,
-        "y": 499,
-        "w": 992,
-        "h": 342
+        "x": 194,
+        "y": 979,
+        "w": 1012,
+        "h": 322
     },
     {
         "id": "6a6d8d7c4f68967e",
@@ -45,8 +44,8 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 430,
-        "y": 720,
+        "x": 610,
+        "y": 1160,
         "wires": [
             [
                 "36d9c6bd20d11f1c"
@@ -75,8 +74,8 @@
         "topic": "",
         "payload": "true",
         "payloadType": "bool",
-        "x": 190,
-        "y": 720,
+        "x": 350,
+        "y": 1160,
         "wires": [
             [
                 "6a6d8d7c4f68967e"
@@ -101,8 +100,8 @@
         "topic": "",
         "payload": "true",
         "payloadType": "bool",
-        "x": 180,
-        "y": 640,
+        "x": 340,
+        "y": 1060,
         "wires": [
             [
                 "36d9c6bd20d11f1c"
@@ -116,8 +115,8 @@
         "g": "9fb710e21c6ccf9e",
         "name": "Override value with msg.topic=AirConditionOn (default=true)",
         "info": "",
-        "x": 280,
-        "y": 680,
+        "x": 440,
+        "y": 1120,
         "wires": []
     },
     {
@@ -127,19 +126,8 @@
         "g": "9fb710e21c6ccf9e",
         "name": "Read configured value (RadioOn, default false)",
         "info": "",
-        "x": 240,
-        "y": 600,
-        "wires": []
-    },
-    {
-        "id": "48d361970c98ec39",
-        "type": "comment",
-        "z": "613529d99b084479",
-        "g": "9fb710e21c6ccf9e",
-        "name": "*Important*: Make config available",
-        "info": "# Workaround for import of example configuration\n\nPersistent values relies on an interactive relation between the\nconfiguration and the concrete presistent values node.\n\nDue to limitations of Node-RED the configuration is not properly\nregister with the backend when importing an example flow.\n\nTherefore the following workaround shall be applied after the\ninitial example import:\n\n 1. Open the edit dialog of any of the presistent value nodes.\n 2. Open the edit dialog of the referenced configuration.\n 3. Press \"Update\".\n \nAfter these steps the drop-down menu of the \"Value\" should be populated with all\nthree configured persistent values. \nThe first drop-down value \"RadioOn\" should be selected for the example.",
-        "x": 200,
-        "y": 540,
+        "x": 400,
+        "y": 1020,
         "wires": []
     },
     {
@@ -156,8 +144,8 @@
         "targetType": "msg",
         "statusVal": "payload",
         "statusType": "auto",
-        "x": 930,
-        "y": 640,
+        "x": 1110,
+        "y": 1060,
         "wires": []
     },
     {
@@ -167,8 +155,8 @@
         "g": "9fb710e21c6ccf9e",
         "name": "Fall back to configured value if dynamic override is unknown/invalid ",
         "info": "",
-        "x": 300,
-        "y": 760,
+        "x": 460,
+        "y": 1220,
         "wires": []
     },
     {
@@ -193,8 +181,8 @@
         "topic": "",
         "payload": "true",
         "payloadType": "bool",
-        "x": 190,
-        "y": 800,
+        "x": 350,
+        "y": 1260,
         "wires": [
             [
                 "8a9fbf1ea8412a9b"
@@ -221,8 +209,8 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 430,
-        "y": 800,
+        "x": 610,
+        "y": 1260,
         "wires": [
             [
                 "36d9c6bd20d11f1c"
@@ -252,8 +240,8 @@
         "blockIfEnable": false,
         "blockIfRule": "eq",
         "blockIfCompareValue": "true",
-        "x": 740,
-        "y": 640,
+        "x": 900,
+        "y": 1060,
         "wires": [
             [
                 "9148098205d70bb0"

@@ -22,16 +22,6 @@
   ]);
 
   // ---- Utilities ----
-  async function getConfigFromBackend(id) {
-    let config = undefined;
-    try {
-      config = await $.getJSON(httpPathConfigGet, {id: id});
-    } catch (error) {
-      logger.logError(`Failed to get configuration with ID ${id} from backend: ${error}`);
-    }
-    return config;
-  }
-
   async function getContextKeyNameFromBackend(configName, valueName) {
     let name = undefined;
     try {
@@ -239,19 +229,19 @@
       });
 
       // Initially change triggered by editor loaded, later with every user interaction.
-      valuesConfigField.on('change', async function() {
+      valuesConfigField.on('change', function() {
         // eslint-disable-next-line no-invalid-this
         const selectedConfigId = $(this).val();
 
         // Skip the lookup if "add new config" is selected
-        const backendConfig = (selectedConfigId !== '_ADD_') ? await getConfigFromBackend(selectedConfigId) : undefined;
-        if (backendConfig) {
+        const selectedConfig = (selectedConfigId !== '_ADD_') ? RED.nodes.node(selectedConfigId) : undefined;
+        if (selectedConfig) {
           // Store current selected configuration name
-          valuesConfigNameField.val(backendConfig.name);
+          valuesConfigNameField.val(selectedConfig.name);
 
           // Re-populate value select widget
           valueSelectField.empty();
-          for (const value of backendConfig.values) {
+          for (const value of selectedConfig.values) {
             const optionText = `${value.name}`;
             const valueDescription = value.description || '-';
             valueSelectField.append(
@@ -263,7 +253,7 @@
           // Select the node's stored value, or none if this configuration doesn't contain it.
           // The node itself only changes on Done, so switching back selects the stored value again.
           if (node.valueId) {
-            const selectedValue = backendConfig.values.find((value) => value.id === node.valueId);
+            const selectedValue = selectedConfig.values.find((value) => value.id === node.valueId);
             if (selectedValue) {
               $(`#valueSelect option[data-id="${selectedValue.id}"]`).attr('selected', true).trigger('change');
             } else {
@@ -271,7 +261,7 @@
             }
           } else {
             // Until version 1.1.0 no ID was existing for every value. Therefore search via value name.
-            const selectedValue = backendConfig.values.find((value) => value.name === node.value);
+            const selectedValue = selectedConfig.values.find((value) => value.name === node.value);
             if (selectedValue) {
               valueSelectField.val(selectedValue.name).trigger('change');
             } else {
@@ -280,7 +270,11 @@
           }
           valueSelectField.removeAttr('disabled');
         } else {
-          // No configuration selected, or the backend doesn't know it. Don't trigger the value list's change:
+          if (selectedConfigId !== '_ADD_') {
+            logger.logError(`Configuration with ID ${selectedConfigId} not found in the editor`);
+          }
+
+          // No configuration selected, or the editor doesn't know it. Don't trigger the value list's change:
           // with an empty selection it clears the node's stored value reference.
           valueSelectField.empty().attr('disabled', 'disabled');
           deepCloneFieldOption.hide();
