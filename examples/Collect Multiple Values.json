@@ -8,7 +8,6 @@
             "label": true
         },
         "nodes": [
-            "23502e64849ddc1d",
             "5d68c0af5d524ffd",
             "24e0c021885c319b",
             "299e109b7ff74314",
@@ -22,21 +21,10 @@
             "6095559003933bc8",
             "c656f47ce9c41dba"
         ],
-        "x": 74,
+        "x": 34,
         "y": 79,
-        "w": 1132,
-        "h": 422
-    },
-    {
-        "id": "23502e64849ddc1d",
-        "type": "comment",
-        "z": "613529d99b084479",
-        "g": "05156e99b1d98425",
-        "name": "*Important*: Make config available",
-        "info": "# Workaround for import of example configuration\n\nPersistent values relies on an interactive relation between the\nconfiguration and the concrete presistent values node.\n\nDue to limitations of Node-RED the configuration is not properly\nregister with the backend when importing an example flow.\n\nTherefore the following workaround shall be applied after the\ninitial example import:\n\n 1. Open the edit dialog of any of the presistent value nodes.\n 2. Open the edit dialog of the referenced configuration.\n 3. Press \"Update\".\n \nAfter these steps the drop-down menu of the \"Value\" should be populated with\nthe configured persistent values.",
-        "x": 240,
-        "y": 120,
-        "wires": []
+        "w": 1192,
+        "h": 382
     },
     {
         "id": "5d68c0af5d524ffd",
@@ -61,8 +49,8 @@
         "blockIfEnable": false,
         "blockIfRule": "eq",
         "blockIfCompareValue": "true",
-        "x": 550,
-        "y": 240,
+        "x": 530,
+        "y": 180,
         "wires": [
             [],
             []
@@ -91,8 +79,8 @@
         "blockIfEnable": false,
         "blockIfRule": "eq",
         "blockIfCompareValue": "true",
-        "x": 560,
-        "y": 340,
+        "x": 540,
+        "y": 280,
         "wires": [
             [],
             []
@@ -120,8 +108,8 @@
         "topic": "",
         "payload": "true",
         "payloadType": "bool",
-        "x": 190,
-        "y": 220,
+        "x": 150,
+        "y": 160,
         "wires": [
             [
                 "5d68c0af5d524ffd"
@@ -150,8 +138,8 @@
         "topic": "",
         "payload": "false",
         "payloadType": "bool",
-        "x": 190,
-        "y": 260,
+        "x": 150,
+        "y": 200,
         "wires": [
             [
                 "5d68c0af5d524ffd"
@@ -180,8 +168,8 @@
         "topic": "",
         "payload": "4",
         "payloadType": "num",
-        "x": 210,
-        "y": 320,
+        "x": 170,
+        "y": 260,
         "wires": [
             [
                 "24e0c021885c319b"
@@ -210,8 +198,8 @@
         "topic": "",
         "payload": "0",
         "payloadType": "num",
-        "x": 210,
-        "y": 360,
+        "x": 170,
+        "y": 300,
         "wires": [
             [
                 "24e0c021885c319b"
@@ -225,8 +213,8 @@
         "g": "05156e99b1d98425",
         "name": "Update the states (Write)",
         "info": "",
-        "x": 210,
-        "y": 180,
+        "x": 170,
+        "y": 120,
         "wires": []
     },
     {
@@ -236,8 +224,8 @@
         "g": "05156e99b1d98425",
         "name": "Collect all states and assess the overall situation",
         "info": "",
-        "x": 280,
-        "y": 420,
+        "x": 240,
+        "y": 380,
         "wires": []
     },
     {
@@ -263,8 +251,8 @@
         "blockIfEnable": false,
         "blockIfRule": "eq",
         "blockIfCompareValue": "true",
-        "x": 550,
-        "y": 460,
+        "x": 530,
+        "y": 420,
         "wires": [
             [
                 "6095559003933bc8"
@@ -294,8 +282,8 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 260,
-        "y": 460,
+        "x": 220,
+        "y": 420,
         "wires": [
             [
                 "fc487d7a5e510131"
@@ -326,7 +314,7 @@
         "blockIfRule": "eq",
         "blockIfCompareValue": "true",
         "x": 840,
-        "y": 460,
+        "y": 420,
         "wires": [
             [
                 "c656f47ce9c41dba"
@@ -346,8 +334,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1090,
-        "y": 460,
+        "x": 1110,
+        "y": 420,
         "wires": [
             []
         ]

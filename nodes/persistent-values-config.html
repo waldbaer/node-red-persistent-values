@@ -18,9 +18,6 @@
 
 <script type="text/javascript" src="resources/@waldbaer/node-red-persistent-values/logger.js"></script>
 <script type='text/javascript'>
-  const httpPathConfigGet = 'persistentvalues/config/get';
-  const httpPathConfigSave = 'persistentvalues/config/save';
-  const httpPathConfigDelete = 'persistentvalues/config/delete';
   const httpPathGenerateUUID = 'persistentvalues/config/generate_uuid';
 
   const kDefaultValueDefault = false;
@@ -135,10 +132,13 @@
       oneditprepare: function() {
         // Build default config name if not configured
         if (this.name === null || this.name === undefined || this.name === '') {
-          $.getJSON(httpPathConfigGet, {}) // missing id propery: get all available configs
-            .done(function(configs) {
-              $('#node-config-input-name').val(`Persistent Values Config ${Object.keys(configs).length}`);
-            });
+          let numOfOtherConfigs = 0;
+          RED.nodes.eachConfig((config) => {
+            if ((config.type === this.type) && (config.id !== this.id)) {
+              numOfOtherConfigs++;
+            }
+          });
+          $('#node-config-input-name').val(`Persistent Values Config ${numOfOtherConfigs}`);
         }
 
         // Value config container
@@ -243,9 +243,6 @@
           $('#node-config-input-values-container').editableList('addItem', value);
         }
       },
-      oneditdelete: function() {
-        $.post(httpPathConfigDelete, {id: this.id}, function() { }, 'json');
-      },
       oneditsave: function() {
         this.name = $('#node-config-input-name').val();
         this.values = [];
@@ -273,9 +270,6 @@
             description: description, scope: scope, storage: storage,
           });
         }
-
-        // Store in server backend. Required for live re-population of state select drop-down
-        $.post(httpPathConfigSave, {id: this.id, name: this.name, values: this.values}, function() { }, 'json');
       },
       oneditcancel: function() { },
       oneditresize: function(size) {

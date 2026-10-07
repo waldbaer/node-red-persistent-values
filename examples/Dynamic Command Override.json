@@ -15,16 +15,15 @@
             "cf833bb67577bd1b",
             "0cd8ecd3bc7d4ec6",
             "9b1708c25844b780",
-            "13f153a8fea5af28",
             "7f11b06448e03736",
             "617e444e0285cbe4",
             "96d7f0d3b9e34020",
             "0fc61dc7c0f2ea9c"
         ],
-        "x": 34,
-        "y": 519,
-        "w": 1032,
-        "h": 382
+        "x": 14,
+        "y": 59,
+        "w": 1152,
+        "h": 362
     },
     {
         "id": "24f1221376048410",
@@ -49,8 +48,8 @@
         "blockIfEnable": false,
         "blockIfRule": "eq",
         "blockIfCompareValue": "true",
-        "x": 730,
-        "y": 700,
+        "x": 810,
+        "y": 160,
         "wires": [
             [
                 "7f11b06448e03736"
@@ -76,8 +75,8 @@
         "topic": "",
         "payload": "false",
         "payloadType": "bool",
-        "x": 150,
-        "y": 700,
+        "x": 130,
+        "y": 180,
         "wires": [
             [
                 "24f1221376048410"
@@ -105,7 +104,7 @@
         "to": "",
         "reg": false,
         "x": 440,
-        "y": 780,
+        "y": 280,
         "wires": [
             [
                 "24f1221376048410"
@@ -130,8 +129,8 @@
         "topic": "",
         "payload": "true",
         "payloadType": "bool",
-        "x": 200,
-        "y": 780,
+        "x": 180,
+        "y": 280,
         "wires": [
             [
                 "497624662b327ecb"
@@ -156,8 +155,8 @@
         "topic": "",
         "payload": "true",
         "payloadType": "bool",
-        "x": 150,
-        "y": 660,
+        "x": 130,
+        "y": 140,
         "wires": [
             [
                 "24f1221376048410"
@@ -171,8 +170,8 @@
         "g": "09f2b3c2682ff81f",
         "name": "Override command with msg.command",
         "info": "",
-        "x": 210,
-        "y": 740,
+        "x": 190,
+        "y": 240,
         "wires": []
     },
     {
@@ -182,19 +181,8 @@
         "g": "09f2b3c2682ff81f",
         "name": "Use configured command (Write)",
         "info": "",
-        "x": 190,
-        "y": 620,
-        "wires": []
-    },
-    {
-        "id": "13f153a8fea5af28",
-        "type": "comment",
-        "z": "613529d99b084479",
-        "g": "09f2b3c2682ff81f",
-        "name": "*Important*: Make config available",
-        "info": "# Workaround for import of example configuration\n\nPersistent values relies on an interactive relation between the\nconfiguration and the concrete presistent values node.\n\nDue to limitations of Node-RED the configuration is not properly\nregister with the backend when importing an example flow.\n\nTherefore the following workaround shall be applied after the\ninitial example import:\n\n 1. Open the edit dialog of any of the presistent value nodes.\n 2. Open the edit dialog of the referenced configuration.\n 3. Press \"Update\".\n \nAfter these steps the drop-down menu of the \"Value\" should be populated with\nthe configured persistent values. \nThe first drop-down value \"DoorOpen\" should be selected for the example.",
-        "x": 200,
-        "y": 560,
+        "x": 170,
+        "y": 100,
         "wires": []
     },
     {
@@ -211,8 +199,8 @@
         "targetType": "msg",
         "statusVal": "payload",
         "statusType": "auto",
-        "x": 950,
-        "y": 700,
+        "x": 1050,
+        "y": 160,
         "wires": []
     },
     {
@@ -222,8 +210,8 @@
         "g": "09f2b3c2682ff81f",
         "name": "Fall back to configured command if override is unknown/invalid.",
         "info": "",
-        "x": 290,
-        "y": 820,
+        "x": 270,
+        "y": 340,
         "wires": []
     },
     {
@@ -244,8 +232,8 @@
         "topic": "",
         "payload": "true",
         "payloadType": "bool",
-        "x": 190,
-        "y": 860,
+        "x": 170,
+        "y": 380,
         "wires": [
             [
                 "0fc61dc7c0f2ea9c"
@@ -280,7 +268,7 @@
         "to": "",
         "reg": false,
         "x": 480,
-        "y": 860,
+        "y": 380,
         "wires": [
             [
                 "24f1221376048410"
