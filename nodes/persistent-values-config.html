@@ -64,7 +64,8 @@
       try {
         uuid = await $.getJSON(httpPathGenerateUUID);
       } catch (error) {
-        logger.logError(`Failed to generate new UUID via backend: ${error}`);
+        const reason = error.status ? `HTTP ${error.status} ${error.statusText}` : `no response (${error.statusText})`;
+        logger.logError(`Failed to generate new UUID via backend: ${reason}`);
       }
       return uuid;
     }
