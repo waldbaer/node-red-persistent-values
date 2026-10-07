@@ -181,12 +181,10 @@
           // Store actual selected value ID and name
           const selectedId = selected.data('id');
           if (selectedId !== 'undefined') {
-            node.valueId = selectedId;
-            valueIdField.val(node.valueId);
+            valueIdField.val(selectedId);
           }
 
-          node.value = selected.val();
-          valueField.val(node.value);
+          valueField.val(selected.val());
 
           // Switch datatype of blockIf compare value input field
           const selectedDatatype = selected.data('datatype');
@@ -200,7 +198,7 @@
           }
 
           // Fill form tip
-          const contextKeyName = await getContextKeyNameFromBackend(node.valuesConfigName, node.value);
+          const contextKeyName = await getContextKeyNameFromBackend(valuesConfigNameField.val(), selected.val());
           if (contextKeyName !== undefined) {
             const stringLengthLimit = 95;
             let selectedDefault = decodeURIComponent(selected.data('default'));
@@ -228,11 +226,8 @@
             tipContextVariableRow.hide();
           }
         } else {
-          node.valueId = undefined;
-          valueIdField.val(node.valueId);
-
-          node.value = selected.val();
-          valueField.val(node.value);
+          valueIdField.val('');
+          valueField.val('');
 
           deepCloneFieldOption.hide();
 
@@ -247,10 +242,9 @@
         const selectedConfigId = $(this).val();
 
         if (selectedConfigId !== '_ADD_') { // Skip if "add new config" is selected
-          backendConfig = await getConfigFromBackend(selectedConfigId);
+          const backendConfig = await getConfigFromBackend(selectedConfigId);
           // Store current selected configuration name
-          node.valuesConfigName = backendConfig.name;
-          valuesConfigNameField.val(node.valuesConfigName);
+          valuesConfigNameField.val(backendConfig.name);
 
           // Re-populate value select widget
           valueSelectField.empty();
@@ -263,7 +257,8 @@
               `data-scope="${value.scope}" data-storage="${value.storage}">${optionText}</option>`);
           }
 
-          // Select the previously selected value or set to invalid if the value is not known anymore
+          // Select the node's stored value, or none if this configuration doesn't contain it.
+          // The node itself only changes on Done, so switching back selects the stored value again.
           if (node.valueId) {
             const selectedValue = backendConfig.values.find((value) => value.id === node.valueId);
             if (selectedValue) {
