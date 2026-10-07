@@ -35,9 +35,11 @@
   async function getContextKeyNameFromBackend(configName, valueName) {
     let name = undefined;
     try {
-      name = $.getJSON(httpPathGetContextKey, {configName: configName, valueName: valueName});
+      name = await $.getJSON(httpPathGetContextKey, {configName: configName, valueName: valueName});
     } catch (error) {
-      logger.logWarning(`Failed to get context key name with ID ${id} from backend: ${error}`);
+      const reason = error.status ? `HTTP ${error.status} ${error.statusText}` : `no response (${error.statusText})`;
+      logger.logWarning(`Failed to get context key name of value '${valueName}' in configuration '${configName}' ` +
+                        `from backend: ${reason}`);
     }
     return name;
   }

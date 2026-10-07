@@ -9,7 +9,7 @@ All notable changes to this project will be documented in this file.
   instead of the documented `msg.topic`.
 
 - Collect Values + Output Previous Value: 'read' collects entry with previous: undefined (#29).
-- Miscellaneous Editor Fixes
+- Miscellaneous Editor Fixes (#34, #35)
 
 ## [1.6.1] - 2024-09-10
 
