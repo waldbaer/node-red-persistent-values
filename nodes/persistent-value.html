@@ -243,8 +243,9 @@
         // eslint-disable-next-line no-invalid-this
         const selectedConfigId = $(this).val();
 
-        if (selectedConfigId !== '_ADD_') { // Skip if "add new config" is selected
-          const backendConfig = await getConfigFromBackend(selectedConfigId);
+        // Skip the lookup if "add new config" is selected
+        const backendConfig = (selectedConfigId !== '_ADD_') ? await getConfigFromBackend(selectedConfigId) : undefined;
+        if (backendConfig) {
           // Store current selected configuration name
           valuesConfigNameField.val(backendConfig.name);
 
@@ -279,7 +280,9 @@
           }
           valueSelectField.removeAttr('disabled');
         } else {
-          valueSelectField.attr('disabled', 'disabled');
+          // No configuration selected, or the backend doesn't know it. Don't trigger the value list's change:
+          // with an empty selection it clears the node's stored value reference.
+          valueSelectField.empty().attr('disabled', 'disabled');
           deepCloneFieldOption.hide();
           tipContextVariableRow.hide();
         }
