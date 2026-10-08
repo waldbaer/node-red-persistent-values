@@ -22,12 +22,15 @@ context: |
   ## Tech stack & constraints
 
   - Plain CommonJS JavaScript. No build step, no transpiler, no TypeScript, no bundler.
-  - Declared support: Node-RED `>=1.3.0`, Node.js `>=8` (`engines` in package.json).
+  - Declared support: Node-RED `>=1.3.0`, Node.js `^20.19.0 || >=22.9.0`
+    (`engines` in package.json).
   - Exactly one runtime dependency: `uuid`. Everything else is a devDependency.
   - Editor code is jQuery + the Node-RED editor API (`RED.nodes.registerType`, `typedInput`,
     `editableList`) inside `<script>` blocks in the `.html` files.
-  - Linting: eslint with `eslint-config-google` + `eslint-plugin-html`, 2-space indent,
-    max line length 140. `npm run lint` must stay clean.
+  - Linting: ESLint 10 (`eslint.config.js`) with `@eslint/js` recommended, the `@stylistic`
+    `customize()` preset (semicolons, `1tbs` braces, parenthesized arrow parameters) and
+    `eslint-plugin-html`, 2-space indent, max line length 120, `||`/`&&`/`+` at the end of a
+    wrapped line. `npm run lint` must stay clean.
   - Coverage gates are hard: nyc enforces 100% branches, lines, functions and statements.
     `npm run coverage` must stay green.
   - Package verification: `npm run node-red-dev-validate`.
@@ -59,7 +62,8 @@ rules:
     - No new runtime dependency without explicit justification — the package ships with `uuid` only.
     - Existing flows and already-persisted context data must keep working (see the backward
       compatibility notes above); call out explicitly if a change breaks them.
-    - Node-RED >= 1.3.0 / Node.js >= 8 must remain supported unless the proposal raises them on purpose.
+    - Node-RED >= 1.3.0 / Node.js ^20.19.0 || >=22.9.0 must remain supported unless the proposal
+      raises them on purpose.
   tasks:
     - List runtime tasks (`nodes/*.js`) before editor tasks (`nodes/*.html`).
     - Every new branch needs a test — nyc enforces 100% branch coverage and the build fails otherwise.

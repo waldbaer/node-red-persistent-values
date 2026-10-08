@@ -15,11 +15,11 @@ const helper = require('node-red-node-test-helper');
 const uuid = require('uuid');
 const configNode = require('../nodes/persistent-values-config.js');
 
-describe('persistent values config backend node', function() {
-  beforeEach(function() {
+describe('persistent values config backend node', function () {
+  beforeEach(function () {
     // Nothing to be done
   });
-  afterEach(function() {
+  afterEach(function () {
     helper.unload();
   });
 
@@ -36,7 +36,6 @@ describe('persistent values config backend node', function() {
   const StorageFile = 'file';
 
   const NodeTypePersistentValuesConfig = 'persistent values config';
-
 
   // ==== Flow defaults ===============================================================================================
 
@@ -95,7 +94,7 @@ describe('persistent values config backend node', function() {
   const TestFlow = [
     ConfigNode1,
     ConfigNode2,
-    {id: FlowIdTestFlow, type: 'tab', label: 'Test flow'},
+    { id: FlowIdTestFlow, type: 'tab', label: 'Test flow' },
   ];
 
   const httpPathGenerateUUID = '/persistentvalues/config/generate_uuid';
@@ -104,11 +103,11 @@ describe('persistent values config backend node', function() {
 
   // ==== Generated UUID ======================================================
 
-  it(`should generate a new UUID`, function(done) {
-    helper.load([configNode], TestFlow, function() {
+  it(`should generate a new UUID`, function (done) {
+    helper.load([configNode], TestFlow, function () {
       helper.request()
         .get(httpPathGenerateUUID)
-        .expect(function(res) {
+        .expect(function (res) {
           const respUuid = res._body;
           uuid.validate(respUuid).should.be.true;
         })

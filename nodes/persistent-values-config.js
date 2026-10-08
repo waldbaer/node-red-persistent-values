@@ -1,9 +1,8 @@
-module.exports = function(RED) {
+module.exports = function (RED) {
   const uuid = require('uuid');
 
   // ---- Node main -------------------------------------------------------------------------------
-  RED.nodes.registerType('persistent values config', function(config) {
-    // eslint-disable-next-line no-invalid-this
+  RED.nodes.registerType('persistent values config', function (config) {
     const node = this;
     RED.nodes.createNode(node, config);
 
@@ -12,7 +11,7 @@ module.exports = function(RED) {
   });
 
   // HTTP API to generate a new UUID
-  RED.httpAdmin.get('/persistentvalues/config/generate_uuid', function(req, res) {
+  RED.httpAdmin.get('/persistentvalues/config/generate_uuid', function (req, res) {
     res.json(uuid.v1());
   });
 };

@@ -55,8 +55,8 @@
 
   const kDescriptionDefault = '';
 
-  (function() {
-    async function generateUuidFromBackend(id) {
+  (function () {
+    async function generateUuidFromBackend() {
       let uuid = undefined;
       try {
         uuid = await $.getJSON(httpPathGenerateUUID);
@@ -79,8 +79,8 @@
 
         const valuesWithIdenticalName = values.filter((item) => item.name === value.name);
         if (valuesWithIdenticalName.length > 1) {
-          console.error(`[Persistent Values][error]: `+
-                        `Value name '${value.name}' is not unique! The name is used ${valuesWithIdenticalName.length} times.`);
+          console.error(`[Persistent Values][error]: ` +
+            `Value name '${value.name}' is not unique! The name is used ${valuesWithIdenticalName.length} times.`);
           result = false;
         }
 
@@ -108,7 +108,7 @@
     RED.nodes.registerType('persistent values config', {
       category: 'config',
       defaults: {
-        name: {value: '', required: true},
+        name: { value: '', required: true },
         values: {
           value: [
             {
@@ -121,15 +121,15 @@
               storage: kStorageDefault,
             }],
           required: true,
-          validate: function(values) {
+          validate: function (values) {
             return validate(values);
           },
         },
       },
-      label: function() {
+      label: function () {
         return this.name;
       },
-      oneditprepare: function() {
+      oneditprepare: function () {
         // Build default config name if not configured
         if (this.name === null || this.name === undefined || this.name === '') {
           let numOfOtherConfigs = 0;
@@ -147,7 +147,7 @@
           .css('min-width', '700px')
           .css('padding', '0px')
           .editableList({
-            addItem: async function(container, index, value) {
+            addItem: async function (container, index, value) {
               container.css({
                 overflow: 'hidden',
                 whiteSpace: 'nowrap',
@@ -155,66 +155,73 @@
 
               const inputRows = $('<div></div>', {}).appendTo(container);
 
-              const row1 = $('<div></div>', {style: 'display: flex;', class: 'persistent-values-row'}).appendTo(inputRows);
-              const row2 = $('<div></div>', {style: 'display: flex;', class: 'persistent-values-row'}).appendTo(inputRows);
+              const row1 = $('<div></div>', { style: 'display: flex;', class: 'persistent-values-row' })
+                .appendTo(inputRows);
+              const row2 = $('<div></div>', { style: 'display: flex;', class: 'persistent-values-row' })
+                .appendTo(inputRows);
 
               // ---- Row 1 ----
 
               // Name
               const nameFieldRowItem = $('<div/>',
-                {style: 'display:flex;flex-grow:1;', class: 'persistent-values-row-item'}).appendTo(row1);
+                { style: 'display:flex;flex-grow:1;', class: 'persistent-values-row-item' }).appendTo(row1);
 
-              const nameField = $('<input/>', {class: 'node-input-value-name', type: 'text', width: '150px'})
+              const nameField = $('<input/>', { class: 'node-input-value-name', type: 'text', width: '150px' })
                 .appendTo(nameFieldRowItem)
-                .typedInput({types: [{label: 'Name', value: kDataTypeString}]});
+                .typedInput({ types: [{ label: 'Name', value: kDataTypeString }] });
 
               // ID (hidden)
-              const idField = $('<input/>', {class: 'node-input-value-id', type: 'hidden'})
+              const idField = $('<input/>', { class: 'node-input-value-id', type: 'hidden' })
                 .appendTo(nameFieldRowItem);
 
               // Datatype + Default value
               const datatypeDefaultFieldRowItem = $('<div/>',
-                {style: 'display:flex;flex-grow:0;', class: 'persistent-values-row-item'}).appendTo(row1);
+                { style: 'display:flex;flex-grow:0;', class: 'persistent-values-row-item' }).appendTo(row1);
               const datatypeDefaultField = $('<input/>',
-                {class: 'node-input-value-datatypedefault', type: 'text', width: '284px'})
+                { class: 'node-input-value-datatypedefault', type: 'text', width: '284px' })
                 .appendTo(datatypeDefaultFieldRowItem)
-                .typedInput({default: kDataTypeDefault, types: [kDataTypeString, kDataTypeNumber, kDataTypeBoolean, kDataTypeJson]});
+                .typedInput({
+                  default: kDataTypeDefault,
+                  types: [kDataTypeString, kDataTypeNumber, kDataTypeBoolean, kDataTypeJson],
+                });
 
               // ---- Row 2 ----
 
               // Description
               const descriptionFieldRowItem = $('<div/>',
-                {style: 'display:flex; flex-grow:1;', class: 'persistent-values-row2-item'}).appendTo(row2);
-              const descriptionField = $('<input/>', {class: 'node-input-value-description', type: 'text', width: '150px'})
+                { style: 'display:flex; flex-grow:1;', class: 'persistent-values-row2-item' }).appendTo(row2);
+              const descriptionField = $('<input/>',
+                { class: 'node-input-value-description', type: 'text', width: '150px' })
                 .appendTo(descriptionFieldRowItem)
                 .typedInput({
-                  types: [{value: 'storage', label: 'Description', showLabel: true}],
+                  types: [{ value: 'storage', label: 'Description', showLabel: true }],
                 });
 
               // Scope
               const scopeFieldRowItem = $('<div/>',
-                {style: 'display:flex; flex-grow:0;', class: 'persistent-values-row2-item'}).appendTo(row2);
+                { style: 'display:flex; flex-grow:0;', class: 'persistent-values-row2-item' }).appendTo(row2);
               const scopeField = $('<input/>',
-                {class: 'node-input-value-scope', type: 'text', width: '130px'})
+                { class: 'node-input-value-scope', type: 'text', width: '130px' })
                 .appendTo(scopeFieldRowItem)
                 .typedInput({
-                  types: [{value: 'scope', label: 'Scope', showLabel: true, options: kScopes}],
+                  types: [{ value: 'scope', label: 'Scope', showLabel: true, options: kScopes }],
                 });
 
               // Storage
               const storageFieldRowItem = $('<div/>',
-                {style: 'display:flex; flex-grow:0;', class: 'persistent-values-row2-item'}).appendTo(row2);
-              const storageField = $('<input/>', {class: 'node-input-value-storage', type: 'text', width: '150px'})
+                { style: 'display:flex; flex-grow:0;', class: 'persistent-values-row2-item' }).appendTo(row2);
+              const storageField = $('<input/>', { class: 'node-input-value-storage', type: 'text', width: '150px' })
                 .appendTo(storageFieldRowItem)
                 .typedInput({
-                  types: [{value: 'storage', label: 'Storage', showLabel: true, options: kStorages}],
+                  types: [{ value: 'storage', label: 'Storage', showLabel: true, options: kStorages }],
                 });
 
               // -- Populate --
               idField.val(value.id || await generateUuidFromBackend()); // Generate new UUID for new values
               nameField.typedInput('value', value.name || ('Value ' + (index + 1)));
               datatypeDefaultField.typedInput('type', value.datatype || kDataTypeDefault);
-              datatypeDefaultField.typedInput('value', (value.default !== undefined) ? value.default : kDefaultValueDefault );
+              datatypeDefaultField.typedInput('value',
+                (value.default !== undefined) ? value.default : kDefaultValueDefault);
               descriptionField.typedInput('value', value.description || kDescriptionDefault);
               scopeField.typedInput('value', value.scope || kScopeDefault);
 
@@ -243,7 +250,7 @@
           $('#node-config-input-values-container').editableList('addItem', value);
         }
       },
-      oneditsave: function() {
+      oneditsave: function () {
         this.name = $('#node-config-input-name').val();
         this.values = [];
         const values = $('#node-config-input-values-container').editableList('items');
@@ -271,11 +278,11 @@
           });
         }
       },
-      oneditcancel: function() { },
-      oneditresize: function(size) {
+      oneditcancel: function () { },
+      oneditresize: function (size) {
         const rows = $('#node-config-dialog-edit-form>div:not(.node-config-input-values-container-row');
         let height = size.height;
-        for (let i=0; i < rows.length; i++) {
+        for (let i = 0; i < rows.length; i++) {
           height -= $(rows[i]).outerHeight(true);
         }
         const editorRow = $('#node-config-dialog-edit-form>div.node-config-input-values-container-row');
@@ -285,7 +292,6 @@
       },
     });
 })();
-
 </script>
 
 <script type='text/html' data-template-name='persistent values config'>

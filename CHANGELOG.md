@@ -10,6 +10,9 @@ All notable changes to this project will be documented in this file.
 - Collect Values + Output Previous Value: 'read' collects entry with previous: undefined (#29).
 - Miscellaneous Editor Fixes (#34, #35, #36, #37, #38)
 
+### Improvements
+- Development infrastructure: moved to ESLint 10 (#39)
+
 ## [1.6.1] - 2024-09-10
 
 ### Improvements

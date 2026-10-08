@@ -25,11 +25,11 @@
   async function getContextKeyNameFromBackend(configName, valueName) {
     let name = undefined;
     try {
-      name = await $.getJSON(httpPathGetContextKey, {configName: configName, valueName: valueName});
+      name = await $.getJSON(httpPathGetContextKey, { configName: configName, valueName: valueName });
     } catch (error) {
       const reason = error.status ? `HTTP ${error.status} ${error.statusText}` : `no response (${error.statusText})`;
       logger.logWarning(`Failed to get context key name of value '${valueName}' in configuration '${configName}' ` +
-                        `from backend: ${reason}`);
+        `from backend: ${reason}`);
     }
     return name;
   }
@@ -46,16 +46,16 @@
     outputLabels: ['current value', 'on change'],
 
     defaults: {
-      name: {value: ''},
-      valuesConfig: {value: '', type: 'persistent values config'}, // The selected configuration (ID)
-      valuesConfigName: {required: false}, // Name of the selected configuration
-      valueId: {required: false}, // ID of the selected value
-      value: {required: true}, // Name of the selected value
-      command: {value: kCommandDefault, required: true},
+      name: { value: '' },
+      valuesConfig: { value: '', type: 'persistent values config' }, // The selected configuration (ID)
+      valuesConfigName: { required: false }, // Name of the selected configuration
+      valueId: { required: false }, // ID of the selected value
+      value: { required: true }, // Name of the selected value
+      command: { value: kCommandDefault, required: true },
       msgProperty: {
         value: 'payload',
         required: false,
-        validate: function(msgProperty) {
+        validate: function (msgProperty) {
           const msgProperties = new Set([msgProperty]);
           let numOfProperties = 1;
           if ($('#node-input-outputPreviousValue').prop('checked')) {
@@ -70,39 +70,42 @@
           return valid;
         },
       },
-      dynamicControl: {value: false, required: false},
-      dynamicCommandMsgProperty: {value: 'command', required: false},
-      dynamicValueMsgProperty: {value: 'topic', required: false},
-      deepCloneValue: {value: false, required: false},
-      outputPreviousValue: {value: false, required: false},
-      outputPreviousValueMsgProperty: {value: 'previous_value', required: false},
-      collectValues: {value: false, required: false},
+      dynamicControl: { value: false, required: false },
+      dynamicCommandMsgProperty: { value: 'command', required: false },
+      dynamicValueMsgProperty: { value: 'topic', required: false },
+      deepCloneValue: { value: false, required: false },
+      outputPreviousValue: { value: false, required: false },
+      outputPreviousValueMsgProperty: { value: 'previous_value', required: false },
+      collectValues: { value: false, required: false },
       collectValuesMsgProperty: {
         value: 'values',
         required: false,
       },
-      blockIfEnable: {value: false, required: false},
-      blockIfRule: {value: kBlockIfRuleDefault, required: false},
+      blockIfEnable: { value: false, required: false },
+      blockIfRule: { value: kBlockIfRuleDefault, required: false },
       blockIfCompareValue: {
         value: '',
         required: false,
-        validate: function() {
-          return $('#node-input-blockIfEnable').prop('checked') ?
-            $('#node-input-blockIfCompareValue').typedInput('validate') : true;
+        validate: function () {
+          return $('#node-input-blockIfEnable').prop('checked')
+            ? $('#node-input-blockIfCompareValue').typedInput('validate')
+            : true;
         },
       },
-      outputMetaData: {value: false, required: false},
-      outputMetaDataMsgProperty: {value: 'meta', required: false},
+      outputMetaData: { value: false, required: false },
+      outputMetaDataMsgProperty: { value: 'meta', required: false },
     },
 
-    label: function() {
+    label: function () {
       let label = this.name;
       if (!label) {
         const configName = this.valuesConfigName || 'Persistent Value';
         label = configName;
 
         if (this.value) {
-          let blockIfLabel = this.blockIfEnable ? `, block ${kBlockIfRules.get(this.blockIfRule)}${this.blockIfCompareValue}` : ``;
+          let blockIfLabel = this.blockIfEnable
+            ? `, block ${kBlockIfRules.get(this.blockIfRule)}${this.blockIfCompareValue}`
+            : ``;
           const blockIfLabelLimit = 20;
           if (blockIfLabel.length > blockIfLabelLimit) {
             blockIfLabel = blockIfLabel.substring(0, blockIfLabelLimit) + '...';
@@ -113,7 +116,7 @@
       }
       return label;
     },
-    oneditprepare: async function() {
+    oneditprepare: async function () {
       // UI properties
       const valuesConfigField = $('#node-input-valuesConfig');
       const valuesConfigNameField = $('#node-input-valuesConfigName');
@@ -139,7 +142,7 @@
       const dynamicCommandMsgPropertyField = $('#node-input-dynamicCommandMsgProperty');
       const dynamicValueMsgPropertyField = $('#node-input-dynamicValueMsgProperty');
 
-      const deepCloneFieldOption =$('#node-input-deepCloneValue-option');
+      const deepCloneFieldOption = $('#node-input-deepCloneValue-option');
 
       const outputPreviousValueField = $('#node-input-outputPreviousValue');
       const outputPreviousValueDetails = $('#node-input-outputPreviousValue-details');
@@ -160,12 +163,11 @@
       const outputMetaDataMsgPropertyField = $('#node-input-outputMetaDataMsgProperty');
 
       // Initialize all possible types of compare value field. Concrete type dynamically switched based on config.
-      blockIfCompareValueField.typedInput({type: 'str', types: ['str', 'num', 'bool', 'json']});
+      blockIfCompareValueField.typedInput({ type: 'str', types: ['str', 'num', 'bool', 'json'] });
 
       const node = this; // Store access to node configuration itself
 
-      valueSelectField.on('change', async function() {
-        // eslint-disable-next-line no-invalid-this
+      valueSelectField.on('change', async function () {
         const selected = $(this).find('option:selected');
 
         // Ignore re-population change
@@ -229,8 +231,7 @@
       });
 
       // Initially change triggered by editor loaded, later with every user interaction.
-      valuesConfigField.on('change', function() {
-        // eslint-disable-next-line no-invalid-this
+      valuesConfigField.on('change', function () {
         const selectedConfigId = $(this).val();
 
         // Skip the lookup if "add new config" is selected
@@ -245,7 +246,8 @@
             const optionText = `${value.name}`;
             const valueDescription = value.description || '-';
             valueSelectField.append(
-              `<option value="${value.name}" data-id="${value.id}" data-description="${encodeURIComponent(valueDescription)}" ` +
+              `<option value="${value.name}" data-id="${value.id}" ` +
+              `data-description="${encodeURIComponent(valueDescription)}" ` +
               `data-datatype="${value.datatype}" data-default="${encodeURIComponent(value.default)}" ` +
               `data-scope="${value.scope}" data-storage="${value.storage}">${optionText}</option>`);
           }
@@ -287,7 +289,7 @@
         commandField.append(`<option value="${value}">${label}</option>`);
       }
       commandField.val(this.command);
-      commandField.on('change', function() {
+      commandField.on('change', function () {
         if ((commandField.val() === kCommandRead) ||
           (commandField.val() === kCommandReset)
         ) {
@@ -300,33 +302,29 @@
       });
 
       // msg property
-      msgPropertyField.typedInput({types: [{label: 'msg.', value: 'str'}]});
+      msgPropertyField.typedInput({ types: [{ label: 'msg.', value: 'str' }] });
 
       // dynamicControl property
-      dynamicControlField.on('change', function() {
-        // eslint-disable-next-line no-invalid-this
+      dynamicControlField.on('change', function () {
         this.checked ? dynamicControlDetails.show() : dynamicControlDetails.hide();
       });
-      dynamicCommandMsgPropertyField.typedInput({types: [{label: 'msg.', value: 'str'}]});
-      dynamicValueMsgPropertyField.typedInput({types: [{label: 'msg.', value: 'str'}]});
+      dynamicCommandMsgPropertyField.typedInput({ types: [{ label: 'msg.', value: 'str' }] });
+      dynamicValueMsgPropertyField.typedInput({ types: [{ label: 'msg.', value: 'str' }] });
 
       // output Previous Value property
-      outputPreviousValueField.on('change', function() {
-        // eslint-disable-next-line no-invalid-this
+      outputPreviousValueField.on('change', function () {
         this.checked ? outputPreviousValueDetails.show() : outputPreviousValueDetails.hide();
       });
-      outputPreviousValueMsgPropertyField.typedInput({types: [{label: 'msg.', value: 'str'}]});
+      outputPreviousValueMsgPropertyField.typedInput({ types: [{ label: 'msg.', value: 'str' }] });
 
       // collectValues property
-      collectValuesField.on('change', function() {
-        // eslint-disable-next-line no-invalid-this
+      collectValuesField.on('change', function () {
         this.checked ? collectValuesDetails.show() : collectValuesDetails.hide();
       });
-      collectValuesMsgPropertyField.typedInput({types: [{label: 'msg.', value: 'str'}]});
+      collectValuesMsgPropertyField.typedInput({ types: [{ label: 'msg.', value: 'str' }] });
 
       // block if property
-      blockIfEnableField.on('change', function() {
-        // eslint-disable-next-line no-invalid-this
+      blockIfEnableField.on('change', function () {
         this.checked ? blockIfDetails.show() : blockIfDetails.hide();
       });
 
@@ -336,11 +334,10 @@
       blockIfRuleField.val(node.blockIfRule);
 
       // output MetaData property
-      outputMetaDataField.on('change', function() {
-        // eslint-disable-next-line no-invalid-this
+      outputMetaDataField.on('change', function () {
         this.checked ? outputMetaDataDetails.show() : outputMetaDataDetails.hide();
       });
-      outputMetaDataMsgPropertyField.typedInput({types: [{label: 'msg.', value: 'str'}]});
+      outputMetaDataMsgPropertyField.typedInput({ types: [{ label: 'msg.', value: 'str' }] });
     },
 });
 </script>
