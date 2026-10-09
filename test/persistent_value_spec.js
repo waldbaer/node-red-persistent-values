@@ -17,18 +17,18 @@ const nodejsAssert = require('assert');
 const valueNode = require('../nodes/persistent-value.js');
 const configNode = require('../nodes/persistent-values-config.js');
 
-describe('persistent value node', function() {
-  beforeEach(function() {
+describe('persistent value node', function () {
+  beforeEach(function () {
     // Update context storage settings
     helper.settings({
       contextStorage: {
         default: 'memory',
-        memory: {module: 'memory'},
-        file: {module: 'localfilesystem'},
+        memory: { module: 'memory' },
+        file: { module: 'localfilesystem' },
       },
     });
   });
-  afterEach(function() {
+  afterEach(function () {
     helper.unload();
   });
 
@@ -41,20 +41,20 @@ describe('persistent value node', function() {
   }
 
   function getContext(node) {
-    let context = undefined;
+    let context;
 
     switch (node.valueConfig.scope) {
-    case 'node':
-      context = node.context();
-      break;
-    case 'flow':
-      context = node.context().flow;
-      break;
-    case 'global':
-      context = node.context().global;
-      break;
-    default:
-      context = undefined;
+      case 'node':
+        context = node.context();
+        break;
+      case 'flow':
+        context = node.context().flow;
+        break;
+      case 'global':
+        context = node.context().global;
+        break;
+      default:
+        context = undefined;
     }
 
     return context;
@@ -110,7 +110,6 @@ describe('persistent value node', function() {
   const NodeTypePersistentValuesConfig = 'persistent values config';
   const NodeTypeHelper = 'helper';
 
-
   // ==== Flow defaults ===============================================================================================
   const FlowIdTestFlow = 'test_flow';
 
@@ -131,8 +130,8 @@ describe('persistent value node', function() {
   const ConfigValueIdJson = 'ae9c4df0-a591-11ed-b2b6-471886667bd8';
   const ConfigValueJson = 'json';
 
-  const NodeHelperCurrentValue = {id: NodeIdHelperCurrentValue, z: FlowIdTestFlow, type: NodeTypeHelper};
-  const NodeHelperOnChange = {id: NodeIdHelperOnChange, z: FlowIdTestFlow, type: NodeTypeHelper};
+  const NodeHelperCurrentValue = { id: NodeIdHelperCurrentValue, z: FlowIdTestFlow, type: NodeTypeHelper };
+  const NodeHelperOnChange = { id: NodeIdHelperOnChange, z: FlowIdTestFlow, type: NodeTypeHelper };
 
   const ConfigNodeAllVariants = {
     id: NodeIdConfig,
@@ -194,15 +193,15 @@ describe('persistent value node', function() {
     ConfigNodeAllVariants,
     NodeHelperCurrentValue,
     NodeHelperOnChange,
-    {id: FlowIdTestFlow, type: 'tab', label: 'Test flow'},
+    { id: FlowIdTestFlow, type: 'tab', label: 'Test flow' },
   ];
 
   // ==== Tests =======================================================================================================
 
   // ==== Load Tests ==========================================================
 
-  it('should be loaded with reference to configuration', function(done) {
-    helper.load([configNode, valueNode], FlowNodeAllVariants, function() {
+  it('should be loaded with reference to configuration', function (done) {
+    helper.load([configNode, valueNode], FlowNodeAllVariants, function () {
       const config = helper.getNode(NodeIdConfig);
       const pv = helper.getNode(NodeIdPersistentValue);
       config.should.have.property('name', 'TestConfig');
@@ -212,11 +211,11 @@ describe('persistent value node', function() {
     });
   });
 
-  it('should be loaded with deprecated missing reference to configuration', function(done) {
+  it('should be loaded with deprecated missing reference to configuration', function (done) {
     const flow = structuredClone(FlowNodeAllVariants);
     delete flow[0].valueId;
 
-    helper.load([configNode, valueNode], flow, function() {
+    helper.load([configNode, valueNode], flow, function () {
       const config = helper.getNode(NodeIdConfig);
       const pv = helper.getNode(NodeIdPersistentValue);
       config.should.have.property('name', 'TestConfig');
@@ -226,11 +225,11 @@ describe('persistent value node', function() {
     });
   });
 
-  it('should be not loaded without configuration', function(done) {
+  it('should be not loaded without configuration', function (done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].valuesConfig = ''; // No persistent value configuration selected
 
-    helper.load([configNode, valueNode], flow, function() {
+    helper.load([configNode, valueNode], flow, function () {
       const pv = helper.getNode(NodeIdPersistentValue);
       pv.should.have.property('_inputCallback', null);
       pv.should.have.property('_inputCallbacks', null);
@@ -239,11 +238,11 @@ describe('persistent value node', function() {
     });
   });
 
-  it('should be not loaded with an invalid selected value UUID', function(done) {
+  it('should be not loaded with an invalid selected value UUID', function (done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].valueId = 'NOT~AN~UUID'; // No persistent value configuration selected
 
-    helper.load([configNode, valueNode], flow, function() {
+    helper.load([configNode, valueNode], flow, function () {
       const pv = helper.getNode(NodeIdPersistentValue);
       pv.should.have.property('_inputCallback', null);
       pv.should.have.property('_inputCallbacks', null);
@@ -252,11 +251,11 @@ describe('persistent value node', function() {
     });
   });
 
-  it('should be not loaded with a selected value UUID missing in the configuration', function(done) {
+  it('should be not loaded with a selected value UUID missing in the configuration', function (done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].valueId = 'de9c4df0-a591-11ed-b2b6-471886667bd8'; // Valid UUID not used by the configuration
 
-    helper.load([configNode, valueNode], flow, function() {
+    helper.load([configNode, valueNode], flow, function () {
       const pv = helper.getNode(NodeIdPersistentValue);
       pv.should.have.property('_inputCallback', null);
       pv.should.have.property('_inputCallbacks', null);
@@ -265,12 +264,12 @@ describe('persistent value node', function() {
     });
   });
 
-  it('should be not loaded with a deprecated selected value name missing in the configuration', function(done) {
+  it('should be not loaded with a deprecated selected value name missing in the configuration', function (done) {
     const flow = structuredClone(FlowNodeAllVariants);
     delete flow[0].valueId; // No value selected by ID
     flow[0].value = 'unknown value'; // Value name not used by the configuration
 
-    helper.load([configNode, valueNode], flow, function() {
+    helper.load([configNode, valueNode], flow, function () {
       const pv = helper.getNode(NodeIdPersistentValue);
       pv.should.have.property('_inputCallback', null);
       pv.should.have.property('_inputCallbacks', null);
@@ -279,12 +278,12 @@ describe('persistent value node', function() {
     });
   });
 
-  it('should be not loaded without selected value UUID and without selected value name', function(done) {
+  it('should be not loaded without selected value UUID and without selected value name', function (done) {
     const flow = structuredClone(FlowNodeAllVariants);
     delete flow[0].valueId; // No value selected by ID
     delete flow[0].value; // No value selected by name
 
-    helper.load([configNode, valueNode], flow, function() {
+    helper.load([configNode, valueNode], flow, function () {
       const pv = helper.getNode(NodeIdPersistentValue);
       pv.should.have.property('_inputCallback', null);
       pv.should.have.property('_inputCallbacks', null);
@@ -294,15 +293,15 @@ describe('persistent value node', function() {
   });
 
   // ==== Node Status =========================================================
-  it('should show status without default storage if no default context is configured', function(done) {
+  it('should show status without default storage if no default context is configured', function (done) {
     // Remove any context storage setting.
     helper.settings({
       contextStorage: {},
     });
 
-    helper.load([configNode, valueNode], FlowNodeAllVariants, function() {
+    helper.load([configNode, valueNode], FlowNodeAllVariants, function () {
       const v = helper.getNode(NodeIdPersistentValue);
-      v.receive({payload: AnyInputString});
+      v.receive({ payload: AnyInputString });
       v.status.should.be.calledWithMatch({
         fill: 'green',
         shape: 'dot',
@@ -314,17 +313,17 @@ describe('persistent value node', function() {
 
   // ==== Read Tests ==========================================================
 
-  it('should read the default value - boolean', function(done) {
+  it('should read the default value - boolean', function (done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].valueId = ConfigValueIdBoolean;
     delete flow[0].value; // extra test: Reference selected value by name must be optional.
 
-    helper.load([configNode, valueNode], flow, function() {
+    helper.load([configNode, valueNode], flow, function () {
       const c = helper.getNode(NodeIdConfig);
       const v = helper.getNode(NodeIdPersistentValue);
       const h = helper.getNode(NodeIdHelperCurrentValue);
 
-      h.on(InputFunction, function(msg) {
+      h.on(InputFunction, function (msg) {
         try {
           msg.should.have.property(PropertyPayload, c.values[0].default);
           done();
@@ -332,23 +331,23 @@ describe('persistent value node', function() {
           done(err);
         }
       });
-      v.receive({payload: AnyInputString});
+      v.receive({ payload: AnyInputString });
     });
   });
 
-  it('should read the default value - number', function(done) {
+  it('should read the default value - number', function (done) {
     const flow = structuredClone(FlowNodeAllVariants);
 
     // extra test: backward compatibility <= 1.1.0: selected value not referenced via ID.
     delete flow[0].valueId;
     flow[0].value = ConfigValueNumber;
 
-    helper.load([configNode, valueNode], flow, function() {
+    helper.load([configNode, valueNode], flow, function () {
       const c = helper.getNode(NodeIdConfig);
       const v = helper.getNode(NodeIdPersistentValue);
       const h = helper.getNode(NodeIdHelperCurrentValue);
 
-      h.on(InputFunction, function(msg) {
+      h.on(InputFunction, function (msg) {
         try {
           msg.should.have.property(PropertyPayload, c.values[1].default);
           done();
@@ -356,21 +355,21 @@ describe('persistent value node', function() {
           done(err);
         }
       });
-      v.receive({payload: AnyInputString});
+      v.receive({ payload: AnyInputString });
     });
   });
 
-  it('should read the default value - string', function(done) {
+  it('should read the default value - string', function (done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].valueId = ConfigValueIdString;
     flow[0].command = undefined; // Extra test variant: Force usage of default command (read)
 
-    helper.load([configNode, valueNode], flow, function() {
+    helper.load([configNode, valueNode], flow, function () {
       const c = helper.getNode(NodeIdConfig);
       const v = helper.getNode(NodeIdPersistentValue);
       const h = helper.getNode(NodeIdHelperCurrentValue);
 
-      h.on(InputFunction, function(msg) {
+      h.on(InputFunction, function (msg) {
         try {
           msg.should.have.property(PropertyPayload, c.values[2].default);
           done();
@@ -378,22 +377,22 @@ describe('persistent value node', function() {
           done(err);
         }
       });
-      v.receive({payload: AnyInputString});
+      v.receive({ payload: AnyInputString });
     });
   });
 
-  it('should read the default value - JSON', function(done) {
+  it('should read the default value - JSON', function (done) {
     const flow = structuredClone(FlowNodeAllVariants);
 
     flow[0].valueId = ConfigValueIdJson;
 
-    helper.load([configNode, valueNode], flow, function() {
+    helper.load([configNode, valueNode], flow, function () {
       const c = helper.getNode(NodeIdConfig);
       const v = helper.getNode(NodeIdPersistentValue);
       const h = helper.getNode(NodeIdHelperCurrentValue);
 
       const expectedDefault = JSON.parse(c.values[3].default);
-      h.on(InputFunction, function(msg) {
+      h.on(InputFunction, function (msg) {
         try {
           nodejsAssert.deepStrictEqual(msg[PropertyPayload], expectedDefault);
           done();
@@ -401,15 +400,15 @@ describe('persistent value node', function() {
           done(err);
         }
       });
-      v.receive({payload: AnyInputString});
+      v.receive({ payload: AnyInputString });
     });
   });
 
-  it('should read the context value - boolean', function(done) {
+  it('should read the context value - boolean', function (done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].valueId = ConfigValueIdBoolean;
 
-    helper.load([configNode, valueNode], flow, function() {
+    helper.load([configNode, valueNode], flow, function () {
       const c = helper.getNode(NodeIdConfig);
       const v = helper.getNode(NodeIdPersistentValue);
       const h = helper.getNode(NodeIdHelperCurrentValue);
@@ -417,7 +416,7 @@ describe('persistent value node', function() {
       const simulatedValue = !c.values[0].default; // use inverted the default
       setContextValue(v, simulatedValue);
 
-      h.on(InputFunction, function(msg) {
+      h.on(InputFunction, function (msg) {
         try {
           msg.should.have.property(PropertyPayload, simulatedValue);
           done();
@@ -425,22 +424,22 @@ describe('persistent value node', function() {
           done(err);
         }
       });
-      v.receive({payload: AnyInputString});
+      v.receive({ payload: AnyInputString });
     });
   });
 
-  it('should read the context value - number', function(done) {
+  it('should read the context value - number', function (done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].valueId = ConfigValueIdNumber;
 
-    helper.load([configNode, valueNode], flow, function() {
+    helper.load([configNode, valueNode], flow, function () {
       const v = helper.getNode(NodeIdPersistentValue);
       const h = helper.getNode(NodeIdHelperCurrentValue);
 
       const simulatedValue = 2305;
       setContextValue(v, simulatedValue);
 
-      h.on(InputFunction, function(msg) {
+      h.on(InputFunction, function (msg) {
         try {
           msg.should.have.property(PropertyPayload, simulatedValue);
           done();
@@ -448,22 +447,22 @@ describe('persistent value node', function() {
           done(err);
         }
       });
-      v.receive({payload: AnyInputString});
+      v.receive({ payload: AnyInputString });
     });
   });
 
-  it('should read the context value - string', function(done) {
+  it('should read the context value - string', function (done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].valueId = ConfigValueIdString;
 
-    helper.load([configNode, valueNode], flow, function() {
+    helper.load([configNode, valueNode], flow, function () {
       const v = helper.getNode(NodeIdPersistentValue);
       const h = helper.getNode(NodeIdHelperCurrentValue);
 
       const simulatedValue = '❤ Node-RED';
       setContextValue(v, simulatedValue);
 
-      h.on(InputFunction, function(msg) {
+      h.on(InputFunction, function (msg) {
         try {
           msg.should.have.property(PropertyPayload, simulatedValue);
           done();
@@ -471,22 +470,22 @@ describe('persistent value node', function() {
           done(err);
         }
       });
-      v.receive({payload: AnyInputString});
+      v.receive({ payload: AnyInputString });
     });
   });
 
-  it('should read the context value - JSON', function(done) {
+  it('should read the context value - JSON', function (done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].valueId = ConfigValueIdJson;
 
-    helper.load([configNode, valueNode], flow, function() {
+    helper.load([configNode, valueNode], flow, function () {
       const v = helper.getNode(NodeIdPersistentValue);
       const h = helper.getNode(NodeIdHelperCurrentValue);
 
-      const simulatedValue = {'array': [1, 2, 3], 'obj': {'bool': false}};
+      const simulatedValue = { array: [1, 2, 3], obj: { bool: false } };
       setContextValue(v, simulatedValue);
 
-      h.on(InputFunction, function(msg) {
+      h.on(InputFunction, function (msg) {
         try {
           msg.should.have.property(PropertyPayload, simulatedValue);
           done();
@@ -494,23 +493,23 @@ describe('persistent value node', function() {
           done(err);
         }
       });
-      v.receive({payload: AnyInputString});
+      v.receive({ payload: AnyInputString });
     });
   });
 
-  it('should read the context value from scope flow', function(done) {
+  it('should read the context value from scope flow', function (done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].valueId = ConfigValueIdNumber;
     flow[1].values[1].scope = ScopeFlow;
 
-    helper.load([configNode, valueNode], flow, function() {
+    helper.load([configNode, valueNode], flow, function () {
       const v = helper.getNode(NodeIdPersistentValue);
       const h = helper.getNode(NodeIdHelperCurrentValue);
 
       const simulatedValue = 3.14159265359;
       setContextValue(v, simulatedValue);
 
-      h.on(InputFunction, function(msg) {
+      h.on(InputFunction, function (msg) {
         try {
           msg.should.have.property(PropertyPayload, simulatedValue);
           done();
@@ -518,23 +517,23 @@ describe('persistent value node', function() {
           done(err);
         }
       });
-      v.receive({payload: AnyInputString});
+      v.receive({ payload: AnyInputString });
     });
   });
 
-  it('should read the context value from scope node', function(done) {
+  it('should read the context value from scope node', function (done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].valueId = ConfigValueIdNumber;
     flow[1].values[1].scope = ScopeNode;
 
-    helper.load([configNode, valueNode], flow, function() {
+    helper.load([configNode, valueNode], flow, function () {
       const v = helper.getNode(NodeIdPersistentValue);
       const h = helper.getNode(NodeIdHelperCurrentValue);
 
       const simulatedValue = 23.05;
       setContextValue(v, simulatedValue);
 
-      h.on(InputFunction, function(msg) {
+      h.on(InputFunction, function (msg) {
         try {
           msg.should.have.property(PropertyPayload, simulatedValue);
           done();
@@ -542,89 +541,90 @@ describe('persistent value node', function() {
           done(err);
         }
       });
-      v.receive({payload: AnyInputString});
+      v.receive({ payload: AnyInputString });
     });
   });
 
-  it('should abort if an invalid scope is configured', function(done) {
+  it('should abort if an invalid scope is configured', function (done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].valueId = ConfigValueIdNumber;
     const kInvalidScopeName = 'invalidScope';
     flow[1].values[1].scope = kInvalidScopeName;
 
-    helper.load([configNode, valueNode], flow, function() {
+    helper.load([configNode, valueNode], flow, function () {
       const v = helper.getNode(NodeIdPersistentValue);
 
-      v.receive({payload: {invalidBigInt: BigInt(123)}});
+      v.receive({ payload: { invalidBigInt: BigInt(123) } });
       v.error.should.be.calledWithMatch(`Failed to get context scope '${kInvalidScopeName}'`);
       v.send.should.have.callCount(0);
       done();
     });
   });
 
-  it('should read the context value to non-default msg property', function(done) {
+  it('should read the context value to non-default msg property', function (done) {
     const flow = structuredClone(FlowNodeAllVariants);
     const OutputMsgProperty = 'output.non_default_output_property';
     flow[0].msgProperty = OutputMsgProperty;
 
-    helper.load([configNode, valueNode], flow, function() {
+    helper.load([configNode, valueNode], flow, function () {
       const v = helper.getNode(NodeIdPersistentValue);
       const h = helper.getNode(NodeIdHelperCurrentValue);
 
       const simulatedValue = '❤ Node-RED';
       setContextValue(v, simulatedValue);
 
-      h.on(InputFunction, function(msg) {
+      h.on(InputFunction, function (msg) {
         try {
-          nodejsAssert.deepStrictEqual(msg.output, {non_default_output_property: simulatedValue});
+          nodejsAssert.deepStrictEqual(msg.output, { non_default_output_property: simulatedValue });
           done();
         } catch (err) {
           done(err);
         }
       });
-      v.receive({payload: AnyInputString});
+      v.receive({ payload: AnyInputString });
     });
   });
 
-  it('should warn persisted value datatype is not matching to configured datatype', function(done) {
+  it('should warn persisted value datatype is not matching to configured datatype', function (done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].valueId = ConfigValueIdNumber;
 
-    helper.load([configNode, valueNode], flow, function() {
+    helper.load([configNode, valueNode], flow, function () {
       const v = helper.getNode(NodeIdPersistentValue);
       const h = helper.getNode(NodeIdHelperCurrentValue);
 
       const simulatedValue = true; // not matching configured type 'number'
       setContextValue(v, simulatedValue);
 
-      h.on(InputFunction, function(msg) {
+      h.on(InputFunction, function (msg) {
         try {
           msg.should.have.property(PropertyPayload, simulatedValue);
-          v.warn.should.be.calledWithMatch(`Persisted value TestConfig / number does not have the configured datatype 'num'`);
+          v.warn.should.be.calledWithMatch(
+            `Persisted value TestConfig / number does not have the configured datatype 'num'`);
           done();
         } catch (err) {
           done(err);
         }
       });
-      v.receive({payload: AnyInputString});
+      v.receive({ payload: AnyInputString });
     });
   });
 
   // ==== Write Tests =========================================================
 
-  it('should write to the context storage - default', function(done) {
+  it('should write to the context storage - default', function (done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].valueId = ConfigValueIdString;
     flow[0].command = CommandWrite;
 
-    helper.load([configNode, valueNode], flow, function() {
+    helper.load([configNode, valueNode], flow, function () {
       const v = helper.getNode(NodeIdPersistentValue);
       const h = helper.getNode(NodeIdHelperCurrentValue);
 
       setContextValue(v, '');
       const simulatedValue = 'Node-RED';
 
-      h.on(InputFunction, function(msg) {
+      h.on(InputFunction, function (msg) {
         try {
           msg.should.have.property(PropertyPayload, simulatedValue);
 
@@ -635,11 +635,11 @@ describe('persistent value node', function() {
           done(err);
         }
       });
-      v.receive({payload: simulatedValue});
+      v.receive({ payload: simulatedValue });
     });
   });
 
-  it('should write to the context storage - memory', function(done) {
+  it('should write to the context storage - memory', function (done) {
     const testedStorage = StorageMemory;
 
     const flow = structuredClone(FlowNodeAllVariants);
@@ -647,14 +647,14 @@ describe('persistent value node', function() {
     flow[0].valueId = ConfigValueIdString;
     flow[0].command = CommandWrite;
 
-    helper.load([configNode, valueNode], flow, function() {
+    helper.load([configNode, valueNode], flow, function () {
       const v = helper.getNode(NodeIdPersistentValue);
       const h = helper.getNode(NodeIdHelperOnChange);
 
       setContextValue(v, '', testedStorage);
       const simulatedValue = 'Store it to memory context';
 
-      h.on(InputFunction, function(msg) {
+      h.on(InputFunction, function (msg) {
         try {
           msg.should.have.property(PropertyPayload, simulatedValue);
 
@@ -666,11 +666,11 @@ describe('persistent value node', function() {
           done(err);
         }
       });
-      v.receive({payload: simulatedValue});
+      v.receive({ payload: simulatedValue });
     });
   });
 
-  it('should write to the context storage - file', function(done) {
+  it('should write to the context storage - file', function (done) {
     const testedStorage = StorageFile;
 
     const flow = structuredClone(FlowNodeAllVariants);
@@ -678,14 +678,14 @@ describe('persistent value node', function() {
     flow[0].valueId = ConfigValueIdString;
     flow[0].command = CommandWrite;
 
-    helper.load([configNode, valueNode], flow, function() {
+    helper.load([configNode, valueNode], flow, function () {
       const v = helper.getNode(NodeIdPersistentValue);
       const h = helper.getNode(NodeIdHelperOnChange);
 
       setContextValue(v, '', testedStorage);
       const simulatedValue = 'Store it to file context';
 
-      h.on(InputFunction, function(msg) {
+      h.on(InputFunction, function (msg) {
         try {
           msg.should.have.property(PropertyPayload, simulatedValue);
 
@@ -697,7 +697,7 @@ describe('persistent value node', function() {
           done(err);
         }
       });
-      v.receive({payload: simulatedValue});
+      v.receive({ payload: simulatedValue });
       v.status.should.be.calledWithMatch({
         fill: 'green', shape: 'dot',
         text: `${simulatedValue} [string,global,file]`,
@@ -705,14 +705,14 @@ describe('persistent value node', function() {
     });
   });
 
-  it('should write pure JSON object', function(done) {
+  it('should write pure JSON object', function (done) {
     const testedStorage = StorageFile;
 
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].valueId = ConfigValueIdJson;
     flow[0].command = CommandWrite;
 
-    helper.load([configNode, valueNode], flow, function() {
+    helper.load([configNode, valueNode], flow, function () {
       const v = helper.getNode(NodeIdPersistentValue);
       const h = helper.getNode(NodeIdHelperCurrentValue);
 
@@ -732,7 +732,7 @@ describe('persistent value node', function() {
         },
       };
 
-      h.on(InputFunction, function(msg) {
+      h.on(InputFunction, function (msg) {
         try {
           nodejsAssert.deepStrictEqual(msg[PropertyPayload], pureJsonObject);
 
@@ -744,40 +744,40 @@ describe('persistent value node', function() {
         }
       });
 
-      v.receive({payload: pureJsonObject});
+      v.receive({ payload: pureJsonObject });
       v.error.should.have.callCount(0);
     });
   });
 
-  it('should abort if an invalid JSON object is passed', function(done) {
+  it('should abort if an invalid JSON object is passed', function (done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].valueId = ConfigValueIdJson;
     flow[0].command = CommandWrite;
 
-    helper.load([configNode, valueNode], flow, function() {
+    helper.load([configNode, valueNode], flow, function () {
       const v = helper.getNode(NodeIdPersistentValue);
 
-      v.receive({payload: {invalidBigInt: BigInt(123)}});
+      v.receive({ payload: { invalidBigInt: BigInt(123) } });
       v.error.should.be.calledWithMatch(`does not have the configured datatype 'json'`);
       v.send.should.have.callCount(0);
       done();
     });
   });
 
-  it('should write to the context storage with scope flow', function(done) {
+  it('should write to the context storage with scope flow', function (done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].valueId = ConfigValueIdString;
     flow[0].command = CommandWrite;
     flow[1].values[1].scope = ScopeFlow;
 
-    helper.load([configNode, valueNode], flow, function() {
+    helper.load([configNode, valueNode], flow, function () {
       const v = helper.getNode(NodeIdPersistentValue);
       const h = helper.getNode(NodeIdHelperCurrentValue);
 
       setContextValue(v, '');
       const simulatedValue = 'write with scope flow';
 
-      h.on(InputFunction, function(msg) {
+      h.on(InputFunction, function (msg) {
         try {
           msg.should.have.property(PropertyPayload, simulatedValue);
 
@@ -788,24 +788,24 @@ describe('persistent value node', function() {
           done(err);
         }
       });
-      v.receive({payload: simulatedValue});
+      v.receive({ payload: simulatedValue });
     });
   });
 
-  it('should write to the context storage with scope node', function(done) {
+  it('should write to the context storage with scope node', function (done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].valueId = ConfigValueIdString;
     flow[0].command = CommandWrite;
     flow[1].values[1].scope = ScopeNode;
 
-    helper.load([configNode, valueNode], flow, function() {
+    helper.load([configNode, valueNode], flow, function () {
       const v = helper.getNode(NodeIdPersistentValue);
       const h = helper.getNode(NodeIdHelperCurrentValue);
 
       setContextValue(v, '');
       const simulatedValue = 'write with scope node';
 
-      h.on(InputFunction, function(msg) {
+      h.on(InputFunction, function (msg) {
         try {
           msg.should.have.property(PropertyPayload, simulatedValue);
 
@@ -816,11 +816,11 @@ describe('persistent value node', function() {
           done(err);
         }
       });
-      v.receive({payload: simulatedValue});
+      v.receive({ payload: simulatedValue });
     });
   });
 
-  it('should write to the context storage even if the input value is equal to the default value', function(done) {
+  it('should write to the context storage even if the input value is equal to the default value', function (done) {
     const testedStorage = StorageMemory;
 
     const flow = structuredClone(FlowNodeAllVariants);
@@ -828,7 +828,7 @@ describe('persistent value node', function() {
     flow[0].valueId = ConfigValueIdString;
     flow[0].command = CommandWrite;
 
-    helper.load([configNode, valueNode], flow, function() {
+    helper.load([configNode, valueNode], flow, function () {
       const v = helper.getNode(NodeIdPersistentValue);
       const h = helper.getNode(NodeIdHelperCurrentValue);
 
@@ -836,7 +836,7 @@ describe('persistent value node', function() {
 
       setContextValue(v, undefined, testedStorage); // Clear the context
 
-      h.on(InputFunction, function(msg) {
+      h.on(InputFunction, function (msg) {
         try {
           msg.should.have.property(PropertyPayload, simulatedInput);
           const contextValue = getContextValue(v, testedStorage);
@@ -846,27 +846,27 @@ describe('persistent value node', function() {
           done(err);
         }
       });
-      v.receive({payload: simulatedInput});
+      v.receive({ payload: simulatedInput });
     });
   });
 
-  it('should write to the context storage from non-default input msg property', function(done) {
+  it('should write to the context storage from non-default input msg property', function (done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].valueId = ConfigValueIdString;
     flow[0].command = CommandWrite;
     const InputMsgProperty = 'input.non_default_input_property';
     flow[0].msgProperty = InputMsgProperty;
 
-    helper.load([configNode, valueNode], flow, function() {
+    helper.load([configNode, valueNode], flow, function () {
       const v = helper.getNode(NodeIdPersistentValue);
       const h = helper.getNode(NodeIdHelperCurrentValue);
 
       setContextValue(v, '');
       const simulatedValue = 'Node-RED';
 
-      h.on(InputFunction, function(msg) {
+      h.on(InputFunction, function (msg) {
         try {
-          nodejsAssert.deepStrictEqual(msg.input, {non_default_input_property: simulatedValue});
+          nodejsAssert.deepStrictEqual(msg.input, { non_default_input_property: simulatedValue });
 
           const contextValue = getContextValue(v);
           contextValue.should.equal(simulatedValue);
@@ -876,40 +876,40 @@ describe('persistent value node', function() {
         }
       });
 
-      const msg = {input: {non_default_input_property: simulatedValue}};
+      const msg = { input: { non_default_input_property: simulatedValue } };
       v.receive(msg);
     });
   });
 
-  it('should abort if non-existing input msg property is used', function(done) {
+  it('should abort if non-existing input msg property is used', function (done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].command = CommandWrite;
     const InputMsgProperty = 'non_default_input_property';
     flow[0].msgProperty = InputMsgProperty;
 
-    helper.load([configNode, valueNode], flow, function() {
+    helper.load([configNode, valueNode], flow, function () {
       const v = helper.getNode(NodeIdPersistentValue);
 
-      v.receive({incorrect_msg_property: false});
+      v.receive({ incorrect_msg_property: false });
       v.error.should.be.calledWithMatch(`Passed msg does not have the configured input property '${InputMsgProperty}'`);
       v.send.should.have.callCount(0);
       done();
     });
   });
 
-  it('should write to the context storage and notify about changed value', function(done) {
+  it('should write to the context storage and notify about changed value', function (done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].valueId = ConfigValueIdString;
     flow[0].command = CommandWrite;
 
-    helper.load([configNode, valueNode], flow, function() {
+    helper.load([configNode, valueNode], flow, function () {
       const v = helper.getNode(NodeIdPersistentValue);
       const h = helper.getNode(NodeIdHelperOnChange);
 
       setContextValue(v, '');
       const simulatedValue = 'OnChange Node-RED';
 
-      h.on(InputFunction, function(msg) {
+      h.on(InputFunction, function (msg) {
         try {
           msg.should.have.property(PropertyPayload, simulatedValue);
           done();
@@ -917,39 +917,40 @@ describe('persistent value node', function() {
           done(err);
         }
       });
-      v.receive({payload: simulatedValue});
+      v.receive({ payload: simulatedValue });
     });
   });
 
-  it('should not write to the context storage and not notify about changed value if value is not modified', function(done) {
+  it('should not write to the context storage and not notify about changed value ' +
+    'if value is not modified', function (done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].valueId = ConfigValueIdJson;
     flow[0].command = CommandWrite;
 
-    helper.load([configNode, valueNode], flow, function() {
+    helper.load([configNode, valueNode], flow, function () {
       const v = helper.getNode(NodeIdPersistentValue);
 
-      const simulatedValue = {text: 'Not changed context value', extra: 123};
+      const simulatedValue = { text: 'Not changed context value', extra: 123 };
       setContextValue(v, simulatedValue);
 
       // Enforce write operation with cloned input to test deep strict equal comparison
-      const simulatedValueClone = {text: simulatedValue.text, extra: simulatedValue.extra};
-      const msg = {payload: simulatedValueClone};
+      const simulatedValueClone = { text: simulatedValue.text, extra: simulatedValue.extra };
+      const msg = { payload: simulatedValueClone };
       v.receive(msg);
       v.send.should.be.calledWithExactly([msg, null]); // no onChange message expected
       done();
     });
   });
 
-  it('should abort if input value datatype is not matching to configured datatype', function(done) {
+  it('should abort if input value datatype is not matching to configured datatype', function (done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].valueId = ConfigValueIdString;
     flow[0].command = CommandWrite;
 
-    helper.load([configNode, valueNode], flow, function() {
+    helper.load([configNode, valueNode], flow, function () {
       const v = helper.getNode(NodeIdPersistentValue);
 
-      v.receive({payload: true}); // not matching to configured type 'string'
+      v.receive({ payload: true }); // not matching to configured type 'string'
       v.error.should.be.calledWithMatch(`Passed value in msg.payload does not have the configured datatype 'str'`);
       v.send.should.have.callCount(0);
       done();
@@ -958,7 +959,7 @@ describe('persistent value node', function() {
 
   // ==== Reset Command =======================================================
 
-  it('should reset a non-default to the configured default value', function(done) {
+  it('should reset a non-default to the configured default value', function (done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].valueId = ConfigValueIdString;
     flow[0].command = CommandReset;
@@ -972,7 +973,7 @@ describe('persistent value node', function() {
     flow[0].collectValues = true;
     flow[0].collectValuesMsgProperty = CollectedValuesProperty;
 
-    helper.load([configNode, valueNode], flow, function() {
+    helper.load([configNode, valueNode], flow, function () {
       const c = helper.getNode(NodeIdConfig);
       const v = helper.getNode(NodeIdPersistentValue);
       const h = helper.getNode(NodeIdHelperCurrentValue);
@@ -982,7 +983,7 @@ describe('persistent value node', function() {
 
       const configuredDefaultValue = c.values[2].default;
 
-      h.on(InputFunction, function(msg) {
+      h.on(InputFunction, function (msg) {
         try {
           msg.should.have.property(PropertyPayload, configuredDefaultValue);
           msg.should.have.property(previousValueMsgProperty, previousValue);
@@ -1003,16 +1004,16 @@ describe('persistent value node', function() {
           done(err);
         }
       });
-      v.receive({payload: AnyInputString});
+      v.receive({ payload: AnyInputString });
     });
   });
 
-  it('should reset an empty value to the configured default value and notify onChange', function(done) {
+  it('should reset an empty value to the configured default value and notify onChange', function (done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].valueId = ConfigValueIdNumber;
     flow[0].command = CommandReset;
 
-    helper.load([configNode, valueNode], flow, function() {
+    helper.load([configNode, valueNode], flow, function () {
       const c = helper.getNode(NodeIdConfig);
       const v = helper.getNode(NodeIdPersistentValue);
       const h = helper.getNode(NodeIdHelperOnChange);
@@ -1020,7 +1021,7 @@ describe('persistent value node', function() {
       const configuredDefaultValue = c.values[1].default;
       setContextValue(v, undefined);
 
-      h.on(InputFunction, function(msg) {
+      h.on(InputFunction, function (msg) {
         try {
           msg.should.have.property(PropertyPayload, configuredDefaultValue);
 
@@ -1032,11 +1033,11 @@ describe('persistent value node', function() {
           done(err);
         }
       });
-      v.receive({payload: AnyInputString});
+      v.receive({ payload: AnyInputString });
     });
   });
 
-  it('should not reset if value is already the default value', function(done) {
+  it('should not reset if value is already the default value', function (done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].valueId = ConfigValueIdString;
     flow[0].command = CommandWrite;
@@ -1045,7 +1046,7 @@ describe('persistent value node', function() {
     const kMetaDataMsgProperty = 'meta_data';
     flow[0].outputMetaDataMsgProperty = kMetaDataMsgProperty;
 
-    helper.load([configNode, valueNode], flow, function() {
+    helper.load([configNode, valueNode], flow, function () {
       const c = helper.getNode(NodeIdConfig);
       const v = helper.getNode(NodeIdPersistentValue);
       const h = helper.getNode(NodeIdHelperCurrentValue);
@@ -1053,7 +1054,7 @@ describe('persistent value node', function() {
       const defaultValue = c.values[2].default;
       setContextValue(v, defaultValue);
 
-      h.on(InputFunction, function(msg) {
+      h.on(InputFunction, function (msg) {
         try {
           msg.should.have.property(PropertyPayload, defaultValue);
           msg[kMetaDataMsgProperty].should.have.property('command', CommandReset);
@@ -1073,13 +1074,13 @@ describe('persistent value node', function() {
     });
   });
 
-  it('should reset to a deep cloned value', function(done) {
+  it('should reset to a deep cloned value', function (done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].valueId = ConfigValueIdJson;
     flow[0].command = CommandReset;
     flow[0].deepCloneValue = true;
 
-    helper.load([configNode, valueNode], flow, function() {
+    helper.load([configNode, valueNode], flow, function () {
       const c = helper.getNode(NodeIdConfig);
       const v = helper.getNode(NodeIdPersistentValue);
       const h = helper.getNode(NodeIdHelperCurrentValue);
@@ -1087,7 +1088,7 @@ describe('persistent value node', function() {
 
       setContextValue(v, structuredClone(configuredDefaultValue));
 
-      h.on(InputFunction, function(msg) {
+      h.on(InputFunction, function (msg) {
         try {
           nodejsAssert.deepStrictEqual(msg[PropertyPayload], configuredDefaultValue);
 
@@ -1102,13 +1103,13 @@ describe('persistent value node', function() {
           done(err);
         }
       });
-      v.receive({payload: AnyInputString});
+      v.receive({ payload: AnyInputString });
     });
   });
 
   // ==== Dynamic Control - Value override (msg.value) Test ===================
 
-  it('should use the dynamic value override to read the context value with meta data', function(done) {
+  it('should use the dynamic value override to read the context value with meta data', function (done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].valueId = ConfigValueIdString;
     flow[0].dynamicControl = true; // enable dynamic controls
@@ -1117,7 +1118,7 @@ describe('persistent value node', function() {
     const kMetaDataMsgProperty = 'meta_data';
     flow[0].outputMetaDataMsgProperty = kMetaDataMsgProperty;
 
-    helper.load([configNode, valueNode], flow, function() {
+    helper.load([configNode, valueNode], flow, function () {
       const v = helper.getNode(NodeIdPersistentValue);
       const h = helper.getNode(NodeIdHelperCurrentValue);
 
@@ -1129,7 +1130,7 @@ describe('persistent value node', function() {
       const storage = undefined; // use default
       setContextValue(v, overrideValue, storage, overrideValueName);
 
-      h.on(InputFunction, function(msg) {
+      h.on(InputFunction, function (msg) {
         try {
           msg.should.have.property(PropertyPayload, overrideValue);
 
@@ -1152,11 +1153,11 @@ describe('persistent value node', function() {
       });
       v.receive({
         payload: AnyInputString,
-        override_topic: overrideValueName});
+        override_topic: overrideValueName });
     });
   });
 
-  it('should use the dynamic value override to write the context value with meta data', function(done) {
+  it('should use the dynamic value override to write the context value with meta data', function (done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].valueId = ConfigValueIdNumber;
     flow[0].command = CommandRead;
@@ -1165,7 +1166,7 @@ describe('persistent value node', function() {
     flow[0].dynamicValueMsgProperty = 'override_topic';
     flow[0].outputMetaData = true;
 
-    helper.load([configNode, valueNode], flow, function() {
+    helper.load([configNode, valueNode], flow, function () {
       const v = helper.getNode(NodeIdPersistentValue);
       const h = helper.getNode(NodeIdHelperCurrentValue);
 
@@ -1175,7 +1176,7 @@ describe('persistent value node', function() {
       const overrideValue = 'dynamic override value';
       const storage = undefined; // use default
 
-      h.on(InputFunction, function(msg) {
+      h.on(InputFunction, function (msg) {
         try {
           msg.should.have.property(PropertyPayload, overrideValue);
           // check additional meta data
@@ -1201,16 +1202,16 @@ describe('persistent value node', function() {
       v.receive({
         payload: overrideValue,
         cmd: CommandWrite,
-        override_topic: overrideValueName});
+        override_topic: overrideValueName });
     });
   });
 
-  it('should fall back to configured value if dynamic value override is invalid', function(done) {
+  it('should fall back to configured value if dynamic value override is invalid', function (done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].valueId = ConfigValueIdString;
     flow[0].dynamicControl = true;
 
-    helper.load([configNode, valueNode], flow, function() {
+    helper.load([configNode, valueNode], flow, function () {
       const v = helper.getNode(NodeIdPersistentValue);
       const h = helper.getNode(NodeIdHelperCurrentValue);
 
@@ -1224,7 +1225,7 @@ describe('persistent value node', function() {
 
       const invalidOverrideValue = false;
 
-      h.on(InputFunction, function(msg) {
+      h.on(InputFunction, function (msg) {
         try {
           msg.should.have.property(PropertyPayload, configuredValue);
           v.warn.should.be.calledWithMatch(
@@ -1242,13 +1243,13 @@ describe('persistent value node', function() {
     });
   });
 
-  it('should ignore the dynamic value override if dynamic control is disabled', function(done) {
+  it('should ignore the dynamic value override if dynamic control is disabled', function (done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].valueId = ConfigValueIdString;
     flow[0].dynamicControl = false; // disable dynamic controls
     flow[0].dynamicValueMsgProperty = 'override_topic'; // custom msg property
 
-    helper.load([configNode, valueNode], flow, function() {
+    helper.load([configNode, valueNode], flow, function () {
       const v = helper.getNode(NodeIdPersistentValue);
       const h = helper.getNode(NodeIdHelperCurrentValue);
 
@@ -1260,7 +1261,7 @@ describe('persistent value node', function() {
       const storage = undefined; // use default
       setContextValue(v, overrideValue, storage, overrideValueName);
 
-      h.on(InputFunction, function(msg) {
+      h.on(InputFunction, function (msg) {
         try {
           // Value of configured instead of overridden value expected
           msg.should.have.property(PropertyPayload, configuredValue);
@@ -1271,25 +1272,25 @@ describe('persistent value node', function() {
       });
       v.receive({
         payload: AnyInputString,
-        override_topic: overrideValueName});
+        override_topic: overrideValueName });
     });
   });
 
-  it('should use configure value if dynamic value override is enabled but msg property not set', function(done) {
+  it('should use configure value if dynamic value override is enabled but msg property not set', function (done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].valueId = ConfigValueIdNumber;
     flow[0].command = CommandWrite;
     flow[0].dynamicControl = true;
     flow[0].dynamicValueMsgProperty = 'override_topic';
 
-    helper.load([configNode, valueNode], flow, function() {
+    helper.load([configNode, valueNode], flow, function () {
       const v = helper.getNode(NodeIdPersistentValue);
       const h = helper.getNode(NodeIdHelperCurrentValue);
 
       setContextValue(v, '');
       const simulatedValue = 4223;
 
-      h.on(InputFunction, function(msg) {
+      h.on(InputFunction, function (msg) {
         try {
           msg.should.have.property(PropertyPayload, simulatedValue);
           const contextValue = getContextValue(v);
@@ -1299,13 +1300,13 @@ describe('persistent value node', function() {
           done(err);
         }
       });
-      v.receive({payload: simulatedValue});
+      v.receive({ payload: simulatedValue });
     });
   });
 
   // ==== Dynamic Control - Command override (msg.command) Tests ==============
 
-  it(`should use 'read' command override`, function(done) {
+  it(`should use 'read' command override`, function (done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].valueId = ConfigValueIdString;
     flow[0].command = CommandWrite;
@@ -1314,14 +1315,14 @@ describe('persistent value node', function() {
     flow[0].dynamicControl = false;
     flow[0].dynamicCommandMsgProperty = 'override_command'; // Custom msg property
 
-    helper.load([configNode, valueNode], flow, function() {
+    helper.load([configNode, valueNode], flow, function () {
       const v = helper.getNode(NodeIdPersistentValue);
       const h = helper.getNode(NodeIdHelperCurrentValue);
 
       const persistedValue = 'Use the read command override';
       setContextValue(v, persistedValue);
 
-      h.on(InputFunction, function(msg) {
+      h.on(InputFunction, function (msg) {
         try {
           msg.should.have.property(PropertyPayload, persistedValue);
 
@@ -1339,19 +1340,19 @@ describe('persistent value node', function() {
     });
   });
 
-  it(`should use 'write' command override`, function(done) {
+  it(`should use 'write' command override`, function (done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].valueId = ConfigValueIdString;
     delete flow[0].command; // extra test: No command configured. -> fallback to default command
 
-    helper.load([configNode, valueNode], flow, function() {
+    helper.load([configNode, valueNode], flow, function () {
       const v = helper.getNode(NodeIdPersistentValue);
       const h = helper.getNode(NodeIdHelperCurrentValue);
 
       const simulatedValue = 'Use the write command override';
       setContextValue(v, '');
 
-      h.on(InputFunction, function(msg) {
+      h.on(InputFunction, function (msg) {
         try {
           msg.should.have.property(PropertyPayload, simulatedValue);
 
@@ -1369,16 +1370,16 @@ describe('persistent value node', function() {
     });
   });
 
-  it(`should use the configured command if an unknown override is used`, function(done) {
+  it(`should use the configured command if an unknown override is used`, function (done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].command = CommandRead;
 
-    helper.load([configNode, valueNode], flow, function() {
+    helper.load([configNode, valueNode], flow, function () {
       const c = helper.getNode(NodeIdConfig);
       const v = helper.getNode(NodeIdPersistentValue);
       const h = helper.getNode(NodeIdHelperCurrentValue);
 
-      h.on(InputFunction, function(msg) {
+      h.on(InputFunction, function (msg) {
         try {
           msg.should.have.property(PropertyPayload, c.values[0].default);
           v.warn.should.be.calledWithMatch('not known / supported');
@@ -1389,27 +1390,27 @@ describe('persistent value node', function() {
       });
       v.receive({
         payload: AnyInputString,
-        command: {invalid_command: 'string instead of object type expected'},
+        command: { invalid_command: 'string instead of object type expected' },
       });
     });
   });
 
   // ==== Deep Clone Tests ====================================================
 
-  it('should deep clone read JSON value', function(done) {
+  it('should deep clone read JSON value', function (done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].valueId = ConfigValueIdJson;
     flow[0].deepCloneValue = true;
 
-    helper.load([configNode, valueNode], flow, function() {
+    helper.load([configNode, valueNode], flow, function () {
       const v = helper.getNode(NodeIdPersistentValue);
       const h = helper.getNode(NodeIdHelperCurrentValue);
 
-      const contextValue = {boolean: true};
-      const contextValueClone = {boolean: contextValue.boolean};
+      const contextValue = { boolean: true };
+      const contextValueClone = { boolean: contextValue.boolean };
       setContextValue(v, contextValue);
 
-      h.on(InputFunction, function(msg) {
+      h.on(InputFunction, function (msg) {
         try {
           const msgValue = msg[PropertyPayload];
           nodejsAssert.deepStrictEqual(msgValue, contextValue);
@@ -1427,24 +1428,24 @@ describe('persistent value node', function() {
           done(err);
         }
       });
-      v.receive({payload: AnyInputString});
+      v.receive({ payload: AnyInputString });
     });
   });
 
-  it('should deep clone written JSON value', function(done) {
+  it('should deep clone written JSON value', function (done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].valueId = ConfigValueIdJson;
     flow[0].command = CommandWrite;
     flow[0].deepCloneValue = true;
 
-    helper.load([configNode, valueNode], flow, function() {
+    helper.load([configNode, valueNode], flow, function () {
       const v = helper.getNode(NodeIdPersistentValue);
       const h = helper.getNode(NodeIdHelperCurrentValue);
 
-      const inputValue = {boolean: true};
-      const inputValueClone = {boolean: inputValue.boolean};
+      const inputValue = { boolean: true };
+      const inputValueClone = { boolean: inputValue.boolean };
 
-      h.on(InputFunction, function(msg) {
+      h.on(InputFunction, function () {
         try {
           const contextValue = getContextValue(v);
           nodejsAssert.deepStrictEqual(contextValue, inputValueClone);
@@ -1457,13 +1458,13 @@ describe('persistent value node', function() {
           done(err);
         }
       });
-      v.receive({payload: inputValue});
+      v.receive({ payload: inputValue });
     });
   });
 
   // ==== Output Previous Value Test ==========================================
 
-  it('should store the previous persisted value', function(done) {
+  it('should store the previous persisted value', function (done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].valueId = ConfigValueIdString;
     flow[0].command = CommandWrite;
@@ -1475,7 +1476,7 @@ describe('persistent value node', function() {
     flow[0].collectValues = true;
     flow[0].collectValuesMsgProperty = CollectedValuesProperty;
 
-    helper.load([configNode, valueNode], flow, function() {
+    helper.load([configNode, valueNode], flow, function () {
       const v = helper.getNode(NodeIdPersistentValue);
       const h = helper.getNode(NodeIdHelperOnChange);
 
@@ -1483,7 +1484,7 @@ describe('persistent value node', function() {
       setContextValue(v, expectedPreviousValue);
       const newValue = 'my new value';
 
-      h.on(InputFunction, function(msg) {
+      h.on(InputFunction, function (msg) {
         try {
           msg.should.have.property(PropertyPayload, newValue);
 
@@ -1504,13 +1505,13 @@ describe('persistent value node', function() {
           done(err);
         }
       });
-      v.receive({payload: newValue});
+      v.receive({ payload: newValue });
     });
   });
 
   // ==== Collect Values Tests ================================================
 
-  it('should collect the read values', function(done) {
+  it('should collect the read values', function (done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].valueId = ConfigValueIdNumber;
     const CollectedValuesProperty = 'collected_values';
@@ -1526,7 +1527,7 @@ describe('persistent value node', function() {
     FirstPersistentvalueNode.wires = [[NodeIdPersistentValue]], // Connect to other persisten value node
     flow.push(FirstPersistentvalueNode);
 
-    helper.load([configNode, valueNode], flow, function() {
+    helper.load([configNode, valueNode], flow, function () {
       const v1 = helper.getNode(FirstPersistentvalueNode.id);
       const v2 = helper.getNode(NodeIdPersistentValue);
       const h = helper.getNode(NodeIdHelperCurrentValue);
@@ -1536,7 +1537,7 @@ describe('persistent value node', function() {
       const simulatedNumberValue = 98;
       setContextValue(v2, simulatedNumberValue);
 
-      h.on(InputFunction, function(msg) {
+      h.on(InputFunction, function (msg) {
         try {
           const ExpectedCollectedValues = {};
           ExpectedCollectedValues[buildContextKeyName(v1)] = simulatedStringValue;
@@ -1548,11 +1549,11 @@ describe('persistent value node', function() {
           done(err);
         }
       });
-      v1.receive({payload: AnyInputString});
+      v1.receive({ payload: AnyInputString });
     });
   });
 
-  it('should collect the written values', function(done) {
+  it('should collect the written values', function (done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].valueId = ConfigValueIdString;
     flow[0].command = CommandWrite;
@@ -1560,14 +1561,14 @@ describe('persistent value node', function() {
     const CollectedValuesProperty = 'collected_values';
     flow[0].collectValuesMsgProperty = CollectedValuesProperty;
 
-    helper.load([configNode, valueNode], flow, function() {
+    helper.load([configNode, valueNode], flow, function () {
       const v = helper.getNode(NodeIdPersistentValue);
       const h = helper.getNode(NodeIdHelperCurrentValue);
 
       setContextValue(v, '');
       const simulatedValue = 'Collect written values';
 
-      h.on(InputFunction, function(msg) {
+      h.on(InputFunction, function (msg) {
         try {
           const ExpectedCollectedValues = {};
           ExpectedCollectedValues[buildContextKeyName(v)] = simulatedValue;
@@ -1577,11 +1578,11 @@ describe('persistent value node', function() {
           done(err);
         }
       });
-      v.receive({payload: simulatedValue});
+      v.receive({ payload: simulatedValue });
     });
   });
 
-  it('should skip value collection if msg property cannot be created', function(done) {
+  it('should skip value collection if msg property cannot be created', function (done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].valueId = ConfigValueIdNumber;
     flow[0].msgProperty = 'output';
@@ -1589,12 +1590,12 @@ describe('persistent value node', function() {
     flow[0].collectValues = true;
     flow[0].collectValuesMsgProperty = CollectedValuesProperty;
 
-    helper.load([configNode, valueNode], flow, function() {
+    helper.load([configNode, valueNode], flow, function () {
       const c = helper.getNode(NodeIdConfig);
       const v = helper.getNode(NodeIdPersistentValue);
       const h = helper.getNode(NodeIdHelperCurrentValue);
 
-      h.on(InputFunction, function(msg) {
+      h.on(InputFunction, function (msg) {
         try {
           msg.should.have.property('output', c.values[1].default);
           msg.payload.should.not.have.property('collected_values');
@@ -1603,12 +1604,12 @@ describe('persistent value node', function() {
           done(err);
         }
       });
-      v.receive({payload: AnyInputString});
+      v.receive({ payload: AnyInputString });
       v.warn.should.be.calledWithMatch(`Failed to create Object at msg.${CollectedValuesProperty}`);
     });
   });
 
-  it('should collect the read value without a previous member', function(done) {
+  it('should collect the read value without a previous member', function (done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].valueId = ConfigValueIdBoolean;
     const CollectedValuesProperty = 'collected_values';
@@ -1616,30 +1617,30 @@ describe('persistent value node', function() {
     flow[0].collectValuesMsgProperty = CollectedValuesProperty;
     flow[0].outputPreviousValue = true;
 
-    helper.load([configNode, valueNode], flow, function() {
+    helper.load([configNode, valueNode], flow, function () {
       const v = helper.getNode(NodeIdPersistentValue);
       const h = helper.getNode(NodeIdHelperCurrentValue);
 
       const simulatedValue = false;
       setContextValue(v, simulatedValue);
 
-      h.on(InputFunction, function(msg) {
+      h.on(InputFunction, function (msg) {
         try {
           const ExpectedCollectedValues = {};
-          ExpectedCollectedValues[buildContextKeyName(v)] = {current: simulatedValue};
+          ExpectedCollectedValues[buildContextKeyName(v)] = { current: simulatedValue };
           nodejsAssert.deepStrictEqual(msg[CollectedValuesProperty], ExpectedCollectedValues);
           done();
         } catch (err) {
           done(err);
         }
       });
-      v.receive({payload: AnyInputString});
+      v.receive({ payload: AnyInputString });
     });
   });
 
   // ==== Blocker Further Flow Processing Tests ===============================
 
-  it('should block further processing if equal rule matches to boolean value', function(done) {
+  it('should block further processing if equal rule matches to boolean value', function (done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].valueId = ConfigValueIdBoolean;
     flow[0].blockIfEnable = true;
@@ -1647,18 +1648,18 @@ describe('persistent value node', function() {
     const BlockIfCompareValue = true;
     flow[0].blockIfCompareValue = BlockIfCompareValue.toString(); // Stored as string by typed input
 
-    helper.load([configNode, valueNode], flow, function() {
+    helper.load([configNode, valueNode], flow, function () {
       const v = helper.getNode(NodeIdPersistentValue);
 
       setContextValue(v, BlockIfCompareValue);
 
-      v.receive({payload: AnyInputString});
+      v.receive({ payload: AnyInputString });
       v.send.should.be.calledWithExactly([null, null]);
       done();
     });
   });
 
-  it('should block further processing if equal rule matches to number value', function(done) {
+  it('should block further processing if equal rule matches to number value', function (done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].valueId = ConfigValueIdNumber;
     flow[0].blockIfEnable = true;
@@ -1666,19 +1667,18 @@ describe('persistent value node', function() {
     const BlockIfCompareValue = 2305;
     flow[0].blockIfCompareValue = BlockIfCompareValue;
 
-
-    helper.load([configNode, valueNode], flow, function() {
+    helper.load([configNode, valueNode], flow, function () {
       const v = helper.getNode(NodeIdPersistentValue);
 
       setContextValue(v, BlockIfCompareValue);
 
-      v.receive({payload: AnyInputString});
+      v.receive({ payload: AnyInputString });
       v.send.should.be.calledWithExactly([null, null]);
       done();
     });
   });
 
-  it('should block further processing if equal rule matches to string value', function(done) {
+  it('should block further processing if equal rule matches to string value', function (done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].valueId = ConfigValueIdString;
     flow[0].blockIfEnable = true;
@@ -1686,12 +1686,12 @@ describe('persistent value node', function() {
     const BlockIfCompareValue = 'match me';
     flow[0].blockIfCompareValue = BlockIfCompareValue;
 
-    helper.load([configNode, valueNode], flow, function() {
+    helper.load([configNode, valueNode], flow, function () {
       const v = helper.getNode(NodeIdPersistentValue);
 
       setContextValue(v, BlockIfCompareValue);
 
-      v.receive({payload: AnyInputString});
+      v.receive({ payload: AnyInputString });
       v.send.should.be.calledWithExactly([null, null]);
       v.status.should.be.calledWithMatch({
         fill: 'red',
@@ -1702,20 +1702,20 @@ describe('persistent value node', function() {
     });
   });
 
-  it('should block further processing if equal rule matches to JSON value', function(done) {
+  it('should block further processing if equal rule matches to JSON value', function (done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].valueId = ConfigValueIdJson;
     flow[0].blockIfEnable = true;
     flow[0].blockIfRule = BlockIfRuleEqual;
-    const BlockIfCompareValue = {boolean: true, string: 'match me'};
+    const BlockIfCompareValue = { boolean: true, string: 'match me' };
     flow[0].blockIfCompareValue = JSON.stringify(BlockIfCompareValue, null, 2);
 
-    helper.load([configNode, valueNode], flow, function() {
+    helper.load([configNode, valueNode], flow, function () {
       const v = helper.getNode(NodeIdPersistentValue);
 
       setContextValue(v, BlockIfCompareValue);
 
-      v.receive({payload: AnyInputString});
+      v.receive({ payload: AnyInputString });
       v.send.should.be.calledWithExactly([null, null]);
       v.status.should.be.calledWithMatch({
         fill: 'red',
@@ -1726,7 +1726,7 @@ describe('persistent value node', function() {
     });
   });
 
-  it('should block further processing if not-equal rule matches', function(done) {
+  it('should block further processing if not-equal rule matches', function (done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].valueId = ConfigValueIdBoolean;
     flow[0].blockIfEnable = true;
@@ -1734,19 +1734,18 @@ describe('persistent value node', function() {
     const BlockIfCompareValue = false;
     flow[0].blockIfCompareValue = BlockIfCompareValue.toString(); // Stored as string by typed input
 
-
-    helper.load([configNode, valueNode], flow, function() {
+    helper.load([configNode, valueNode], flow, function () {
       const v = helper.getNode(NodeIdPersistentValue);
 
       setContextValue(v, !BlockIfCompareValue);
 
-      v.receive({payload: AnyInputString});
+      v.receive({ payload: AnyInputString });
       v.send.should.be.calledWithExactly([null, null]);
       done();
     });
   });
 
-  it('should not block further processing if equal rule does not match', function(done) {
+  it('should not block further processing if equal rule does not match', function (done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].valueId = ConfigValueIdString;
     flow[0].command = CommandWrite;
@@ -1755,11 +1754,11 @@ describe('persistent value node', function() {
     const BlockIfCompareValue = 'does not match';
     flow[0].blockIfCompareValue = BlockIfCompareValue;
 
-    helper.load([configNode, valueNode], flow, function() {
+    helper.load([configNode, valueNode], flow, function () {
       const v = helper.getNode(NodeIdPersistentValue);
       const h = helper.getNode(NodeIdHelperCurrentValue);
 
-      h.on(InputFunction, function(msg) {
+      h.on(InputFunction, function (msg) {
         try {
           msg.should.have.property(PropertyPayload, AnyInputString);
           done();
@@ -1767,11 +1766,11 @@ describe('persistent value node', function() {
           done(err);
         }
       });
-      v.receive({payload: AnyInputString});
+      v.receive({ payload: AnyInputString });
     });
   });
 
-  it('should not block further processing if not-equal rule does not match', function(done) {
+  it('should not block further processing if not-equal rule does not match', function (done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].valueId = ConfigValueIdString;
     flow[0].command = CommandWrite;
@@ -1780,11 +1779,11 @@ describe('persistent value node', function() {
     const BlockIfCompareValue = 'does not match';
     flow[0].blockIfCompareValue = BlockIfCompareValue;
 
-    helper.load([configNode, valueNode], flow, function() {
+    helper.load([configNode, valueNode], flow, function () {
       const v = helper.getNode(NodeIdPersistentValue);
       const h = helper.getNode(NodeIdHelperCurrentValue);
 
-      h.on(InputFunction, function(msg) {
+      h.on(InputFunction, function (msg) {
         try {
           msg.should.have.property(PropertyPayload, BlockIfCompareValue);
           done();
@@ -1792,11 +1791,11 @@ describe('persistent value node', function() {
           done(err);
         }
       });
-      v.receive({payload: BlockIfCompareValue});
+      v.receive({ payload: BlockIfCompareValue });
     });
   });
 
-  it('should not block further processing if not matching compare value type is configured', function(done) {
+  it('should not block further processing if not matching compare value type is configured', function (done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].valueId = ConfigValueIdBoolean;
     flow[0].blockIfEnable = true;
@@ -1804,14 +1803,13 @@ describe('persistent value node', function() {
     const BlockIfCompareValue = 2305; // 'number' instead of expected type 'boolean'
     flow[0].blockIfCompareValue = BlockIfCompareValue;
 
-
-    helper.load([configNode, valueNode], flow, function() {
+    helper.load([configNode, valueNode], flow, function () {
       const v = helper.getNode(NodeIdPersistentValue);
       const h = helper.getNode(NodeIdHelperCurrentValue);
 
       setContextValue(v, BlockIfCompareValue);
 
-      h.on(InputFunction, function(msg) {
+      h.on(InputFunction, function (msg) {
         try {
           v.warn.should.be.calledWithMatch('Type mismatch of block flow values');
           msg.should.have.property(PropertyPayload, BlockIfCompareValue);
@@ -1820,11 +1818,11 @@ describe('persistent value node', function() {
           done(err);
         }
       });
-      v.receive({payload: AnyInputString});
+      v.receive({ payload: AnyInputString });
     });
   });
 
-  it('should not block further processing if an unknown rule is configured', function(done) {
+  it('should not block further processing if an unknown rule is configured', function (done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].valueId = ConfigValueIdNumber;
     flow[0].blockIfEnable = true;
@@ -1832,14 +1830,13 @@ describe('persistent value node', function() {
     const BlockIfCompareValue = 2305;
     flow[0].blockIfCompareValue = BlockIfCompareValue;
 
-
-    helper.load([configNode, valueNode], flow, function() {
+    helper.load([configNode, valueNode], flow, function () {
       const v = helper.getNode(NodeIdPersistentValue);
       const h = helper.getNode(NodeIdHelperCurrentValue);
 
       setContextValue(v, BlockIfCompareValue);
 
-      h.on(InputFunction, function(msg) {
+      h.on(InputFunction, function (msg) {
         try {
           v.warn.should.be.calledWithMatch('Unknown block-if rule');
           msg.should.have.property(PropertyPayload, BlockIfCompareValue);
@@ -1848,11 +1845,11 @@ describe('persistent value node', function() {
           done(err);
         }
       });
-      v.receive({payload: AnyInputString});
+      v.receive({ payload: AnyInputString });
     });
   });
 
-  it('should not block further processing if compare value type cannot be parsed - number', function(done) {
+  it('should not block further processing if compare value type cannot be parsed - number', function (done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].valueId = ConfigValueIdNumber;
     flow[0].blockIfEnable = true;
@@ -1860,14 +1857,13 @@ describe('persistent value node', function() {
     const BlockIfCompareValue = 'not a number';
     flow[0].blockIfCompareValue = BlockIfCompareValue;
 
-
-    helper.load([configNode, valueNode], flow, function() {
+    helper.load([configNode, valueNode], flow, function () {
       const v = helper.getNode(NodeIdPersistentValue);
       const h = helper.getNode(NodeIdHelperCurrentValue);
 
       setContextValue(v, BlockIfCompareValue);
 
-      h.on(InputFunction, function(msg) {
+      h.on(InputFunction, function (msg) {
         try {
           msg.should.have.property(PropertyPayload, BlockIfCompareValue);
           done();
@@ -1875,25 +1871,25 @@ describe('persistent value node', function() {
           done(err);
         }
       });
-      v.receive({payload: AnyInputString});
+      v.receive({ payload: AnyInputString });
     });
   });
 
-  it('should not block further processing if compare value type cannot be parsed - JSON', function(done) {
+  it('should not block further processing if compare value type cannot be parsed - JSON', function (done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].valueId = ConfigValueIdJson;
     flow[0].blockIfEnable = true;
     flow[0].blockIfRule = BlockIfRuleEqual;
     flow[0].blockIfCompareValue = '{ incomplete JSON: X';
 
-    helper.load([configNode, valueNode], flow, function() {
+    helper.load([configNode, valueNode], flow, function () {
       const v = helper.getNode(NodeIdPersistentValue);
       const h = helper.getNode(NodeIdHelperCurrentValue);
 
-      const simulatedContextValue = {valid: 'JSON object'};
+      const simulatedContextValue = { valid: 'JSON object' };
       setContextValue(v, simulatedContextValue);
 
-      h.on(InputFunction, function(msg) {
+      h.on(InputFunction, function (msg) {
         try {
           msg.should.have.property(PropertyPayload, simulatedContextValue);
           v.error.should.be.calledWithMatch(`Failed to convert value`);
@@ -1902,25 +1898,25 @@ describe('persistent value node', function() {
           done(err);
         }
       });
-      v.receive({payload: AnyInputString});
+      v.receive({ payload: AnyInputString });
     });
   });
 
-  it('should not block further processing if compare value type cannot be parsed - string', function(done) {
+  it('should not block further processing if compare value type cannot be parsed - string', function (done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].valueId = ConfigValueIdString;
     flow[0].blockIfEnable = true;
     flow[0].blockIfRule = BlockIfRuleEqual;
     flow[0].blockIfCompareValue = undefined;
 
-    helper.load([configNode, valueNode], flow, function() {
+    helper.load([configNode, valueNode], flow, function () {
       const v = helper.getNode(NodeIdPersistentValue);
       const h = helper.getNode(NodeIdHelperCurrentValue);
 
       const simulatedContextValue = 'valid string';
       setContextValue(v, simulatedContextValue);
 
-      h.on(InputFunction, function(msg) {
+      h.on(InputFunction, function (msg) {
         try {
           msg.should.have.property(PropertyPayload, simulatedContextValue);
           done();
@@ -1928,11 +1924,11 @@ describe('persistent value node', function() {
           done(err);
         }
       });
-      v.receive({payload: AnyInputString});
+      v.receive({ payload: AnyInputString });
     });
   });
 
-  it('should not block further processing if not supported compare value type is used', function(done) {
+  it('should not block further processing if not supported compare value type is used', function (done) {
     const flow = structuredClone(FlowNodeAllVariants);
     flow[0].valueId = ConfigValueIdString;
     flow[0].blockIfEnable = true;
@@ -1940,14 +1936,14 @@ describe('persistent value node', function() {
     flow[0].blockIfCompareValue = true;
     flow[1].values[2].datatype = 'not supported datatype';
 
-    helper.load([configNode, valueNode], flow, function() {
+    helper.load([configNode, valueNode], flow, function () {
       const v = helper.getNode(NodeIdPersistentValue);
       const h = helper.getNode(NodeIdHelperCurrentValue);
 
       const simulatedContextValue = true;
       setContextValue(v, simulatedContextValue);
 
-      h.on(InputFunction, function(msg) {
+      h.on(InputFunction, function (msg) {
         try {
           msg.should.have.property(PropertyPayload, simulatedContextValue);
           done();
@@ -1955,15 +1951,15 @@ describe('persistent value node', function() {
           done(err);
         }
       });
-      v.receive({payload: AnyInputString});
+      v.receive({ payload: AnyInputString });
     });
   });
 
   // ==== Backend HTTP API ====================================================
   const httpPathGetContextKey = '/persistentvalues/util/getcontextkey';
 
-  it(`backend API should return the context key`, function(done) {
-    helper.load([valueNode], FlowNodeAllVariants, function() {
+  it(`backend API should return the context key`, function (done) {
+    helper.load([valueNode], FlowNodeAllVariants, function () {
       const testConfigName = 'test/ Configuration';
       const testPersistedValueName = 'Persisted~Value';
 
@@ -1972,8 +1968,8 @@ describe('persistent value node', function() {
 
       helper.request()
         .get(httpPathGetContextKey)
-        .query({configName: testConfigName, valueName: testPersistedValueName})
-        .expect(function(res) {
+        .query({ configName: testConfigName, valueName: testPersistedValueName })
+        .expect(function (res) {
           const contextKeyName = res._body;
           contextKeyName.should.be.equal(expectedContextKey);
         })
@@ -1984,17 +1980,18 @@ describe('persistent value node', function() {
 
   // ==== Other / Error Handling Tests ========================================
 
-  it('should reject unknown / unsupported commands', function(done) {
+  it('should reject unknown / unsupported commands', function (done) {
     const flow = structuredClone(FlowNodeAllVariants);
     const unsupportedCommand = 'unsupported command';
     flow[0].command = unsupportedCommand;
 
-    helper.load([configNode, valueNode], flow, function() {
+    helper.load([configNode, valueNode], flow, function () {
       const v = helper.getNode(NodeIdPersistentValue);
 
-      v.receive({payload: AnyInputString});
+      v.receive({ payload: AnyInputString });
 
-      v.error.should.be.calledWithMatch(`Unknown or unsupported persistent value command '${unsupportedCommand}' used!`);
+      v.error.should.be.calledWithMatch(
+        `Unknown or unsupported persistent value command '${unsupportedCommand}' used!`);
       v.send.should.have.callCount(0);
       done();
     });
