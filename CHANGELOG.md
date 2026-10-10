@@ -2,12 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [1.6.2] - 2026-10-10
 
 ### Fixes
-- Dynamic value override: the runtime fallback for the `msg` property was `msg.value`
-  instead of the documented `msg.topic`.
-- Collect Values + Output Previous Value: 'read' collects entry with previous: undefined (#29).
+- Dynamic value override: the fallback for the `msg` property was `msg.value` instead of the documented `msg.topic`. (#30)
+- Collect Values + Output Previous Value: `read` command collected entry with `previous: undefined` (#29).
 - Miscellaneous Editor Fixes (#34, #35, #36, #37, #38)
 
 ### Improvements
