@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [1.6.2] - 2026-10-10
+## [1.6.3] - 2026-10-10
 
 ### Fixes
 - Dynamic value override: the fallback for the `msg` property was `msg.value` instead of the documented `msg.topic`. (#30)
